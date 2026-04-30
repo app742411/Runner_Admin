@@ -52,6 +52,7 @@ export const menuByRole = {
     'Document Management',
     'Generate Reports',
     'Property List',
+    'Support',
     'Notification',
     'Chat',
   ],

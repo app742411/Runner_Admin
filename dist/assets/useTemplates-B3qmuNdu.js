@@ -1,0 +1,1 @@
+import{G as t}from"./index-ELs6aUxi.js";import{c as r}from"./company-admin.api-1ddUVdoz.js";function p(){return t({queryKey:["templates"],queryFn:()=>r.getTemplates().then(e=>e.data)})}export{p as u};
