@@ -61,6 +61,7 @@ const InvoiceDetailsPage = lazy(() => import('src/pages/dashboard/invoice/detail
 const SupportListPage = lazy(() => import('src/pages/dashboard/support/list'));
 const SupportNewPage = lazy(() => import('src/pages/dashboard/support/new'));
 const ChatPage = lazy(() => import('src/pages/dashboard/chat'));
+const EmployeePaymentPage = lazy(() => import('src/pages/dashboard/finance/employee-payment'));
 // ----------------------------------------------------------------------
 // THIS IS THE KEY FIX: WRAPPER COMPONENT
 // Hooks are allowed ONLY here
@@ -227,7 +228,10 @@ export const dashboardRoutes = [
       },
       {
         path: 'finance',
-        element: <EmployeeFinancePage />,
+        children: [
+          { index: true, element: <EmployeeFinancePage /> },
+          { path: 'employee-payment', element: <EmployeePaymentPage /> },
+        ],
       },
       {
         path: 'template',

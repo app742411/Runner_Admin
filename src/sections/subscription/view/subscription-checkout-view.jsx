@@ -19,6 +19,7 @@ import { usePurchasePlan, usePlans } from 'src/features/plan/usePlans';
 import { setAuth } from 'src/store/auth/authSlice';
 import toast from 'react-hot-toast';
 import { Iconify } from 'src/components/iconify';
+import { fCurrency } from 'src/utils/format-number';
 
 const MOCK_PLANS = [
   {
@@ -149,16 +150,16 @@ export function SubscriptionCheckoutView() {
                     {t('subscription.checkout.subscribeTo')} {selectedPlan?.planName}
                  </Typography>
                  <Typography variant="h2" sx={{ fontWeight: 900 }}>
-                    CHF {selectedPlan?.monthlyFees || '0.00'}
+                    {fCurrency(selectedPlan?.monthlyFees || 0)}
                  </Typography>
 
                  <Stack direction="row" justifyContent="space-between" sx={{ mt: 3, opacity: 0.8 }}>
                     <Typography variant="body2">{t('subscription.checkout.tax') || 'Tax'}</Typography>
-                    <Typography variant="body2">CHF0.00</Typography>
+                    <Typography variant="body2">{fCurrency(0)}</Typography>
                  </Stack>
                  <Stack direction="row" justifyContent="space-between" sx={{ mt: 1, fontWeight: 700 }}>
                     <Typography variant="body1">{t('subscription.totalPayable')}</Typography>
-                    <Typography variant="body1">CHF {selectedPlan?.monthlyFees || '0.00'}</Typography>
+                    <Typography variant="body1">{fCurrency(selectedPlan?.monthlyFees || 0)}</Typography>
                  </Stack>
               </Box>
            </Card>

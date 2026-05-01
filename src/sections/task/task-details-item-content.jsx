@@ -39,7 +39,7 @@ export default function TaskDetailsItemContent({
 
   const getImageUrl = (img) => {
     if (!img) return '';
-    
+
     // Handle object structure from backend
     let path = typeof img === 'string' ? img : img.url;
     if (!path || typeof path !== 'string') return '';
@@ -80,7 +80,7 @@ export default function TaskDetailsItemContent({
                 {formatDecimalTime(currentSubTask.totalTimeSeconds || 0)} / {formatDecimalTime(currentSubTask.estimatedDurationSeconds || 0)}
               </Typography>
             </Stack>
-            
+
             <Label variant="soft" color={currentSubTask.status === 'completed' ? 'success' : currentSubTask.status === 'in_progress' ? 'warning' : 'info'} sx={{ textTransform: 'capitalize' }}>
               {currentSubTask.status ? (t(`task.status.${currentSubTask.status}`) || currentSubTask.status) : 'N/A'}
             </Label>
@@ -194,17 +194,17 @@ export default function TaskDetailsItemContent({
                 <input type="file" hidden accept="image/*" onChange={(e) => onUploadImage(e, currentSubTask._id, 'after')} />
               </Box>
             </Box>
-            
+
             <Stack spacing={1.5}>
               <Stack direction="row" alignItems="center" justifyContent="space-between">
                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Iconify icon="solar:notes-bold" width={18} color="text.secondary" />
                   {t('task.details.describeAfter')}
                 </Typography>
-                <LoadingButton 
-                  size="small" 
-                  variant="contained" 
-                  color="success" 
+                <LoadingButton
+                  size="small"
+                  variant="contained"
+                  color="success"
                   onClick={() => onSaveAfterDescription(currentSubTask._id, afterDescription)}
                   loading={uploadAfter.isPending}
                   sx={{ borderRadius: 1, fontWeight: 'bold' }}
@@ -212,18 +212,18 @@ export default function TaskDetailsItemContent({
                   {t('common.save') || 'Save'}
                 </LoadingButton>
               </Stack>
-              <TextField 
-                fullWidth 
-                multiline 
-                rows={4} 
-                placeholder={t('task.details.describeAfter')} 
-                variant="outlined" 
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                placeholder={t('task.details.describeAfter')}
+                variant="outlined"
                 value={afterDescription}
                 onChange={(e) => setAfterDescription(e.target.value)}
-                sx={{ 
+                sx={{
                   bgcolor: 'background.paper',
                   '& .MuiOutlinedInput-root': { borderRadius: 1.5 }
-                }} 
+                }}
               />
             </Stack>
           </Box>

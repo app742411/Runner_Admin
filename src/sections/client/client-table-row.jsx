@@ -12,7 +12,7 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export function ClientTableRow({ row, selected, onSelectRow }) {
+export function ClientTableRow({ row, selected, onSelectRow, onViewRow }) {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -43,9 +43,23 @@ export function ClientTableRow({ row, selected, onSelectRow }) {
   };
 
   return (
-    <TableRow hover selected={selected} sx={{ borderBottom: `1px dashed ${theme.palette.divider}` }}>
+    <TableRow 
+      hover 
+      selected={selected} 
+      onClick={onViewRow}
+      sx={{ 
+        borderBottom: `1px dashed ${theme.palette.divider}`,
+        cursor: 'pointer'
+      }}
+    >
       <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
+        <Checkbox 
+          checked={selected} 
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelectRow();
+          }} 
+        />
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center', py: 2 }}>
@@ -100,10 +114,12 @@ export function ClientTableRow({ row, selected, onSelectRow }) {
       </TableCell>
 
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        <IconButton color="inherit" sx={{ mr: 0.5 }}>
-          <Iconify icon="solar:pen-bold" width={20} />
-        </IconButton>
-        <IconButton color="default">
+        <IconButton 
+          color="default"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <Iconify icon="eva:more-vertical-fill" width={20} />
         </IconButton>
       </TableCell>

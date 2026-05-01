@@ -223,6 +223,12 @@ const navData = [
         icon: APP_ICONS.task,
       },
       {
+        id: 'Employee Payment',
+        title: 'nav.employee_payment',
+        path: paths.dashboard.finance.employeePayment,
+        icon: APP_ICONS.finance,
+      },
+      {
         id: 'Finance Settings',
         title: 'nav.financeSettings',
         path: paths.dashboard.finance.settings,

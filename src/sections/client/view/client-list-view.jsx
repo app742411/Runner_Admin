@@ -17,6 +17,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Avatar from '@mui/material/Avatar';
 
 import { useTranslation } from 'react-i18next';
 import { paths } from 'src/routes/paths';
@@ -54,6 +61,19 @@ export function ClientListView() {
   const [filters, setFilters] = useState({
     name: '',
   });
+
+  const [openDetails, setOpenDetails] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(null);
+
+  const handleOpenDetails = useCallback((row) => {
+    setSelectedClient(row);
+    setOpenDetails(true);
+  }, []);
+
+  const handleCloseDetails = useCallback(() => {
+    setOpenDetails(false);
+    setSelectedClient(null);
+  }, []);
 
   const { data, isLoading } = useClients({
     name: filters.name,
@@ -184,6 +204,7 @@ export function ClientListView() {
                       row={row}
                       selected={selected.includes(row.clientId)}
                       onSelectRow={() => handleSelectRow(row.clientId)}
+                      onViewRow={() => handleOpenDetails(row)}
                     />
                   ))
                 )}
@@ -222,7 +243,114 @@ export function ClientListView() {
           />
         </Stack>
       </Card>
+
+      <ClientDetailsDialog
+        open={openDetails}
+        onClose={handleCloseDetails}
+        client={selectedClient}
+      />
     </DashboardContent>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+function ClientDetailsDialog({ open, onClose, client }) {
+  const { t, i18n } = useTranslation();
+
+  if (!client) return null;
+
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle sx={{ bgcolor: 'background.neutral', pb: 2 }}>
+        <Stack direction="row" alignItems="center" spacing={2}>
+           <Avatar
+             alt={client.name}
+             src={client.clientLogo ? `${import.meta.env.VITE_BACKEND_API}/${client.clientLogo.replace(/\\/g, '/')}` : ''}
+             sx={{ width: 48, height: 48 }}
+           >
+             {client.name?.charAt(0).toUpperCase()}
+           </Avatar>
+           <Typography variant="h6">{client.name}</Typography>
+        </Stack>
+      </DialogTitle>
+
+      <DialogContent dividers sx={{ pt: 3 }}>
+        <Stack spacing={3}>
+          <Box>
+            <Typography variant="overline" sx={{ color: 'text.disabled', mb: 1, display: 'block' }}>
+              {t('client.details.info') || 'Client Information'}
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <DetailRow label={t('client.table.phone')} value={client.phone || '-'} />
+              </Grid>
+              <Grid item xs={6}>
+                <DetailRow label={t('client.table.email') || 'Email'} value={client.email || '-'} />
+              </Grid>
+              <Grid item xs={6}>
+                <DetailRow label={t('client.table.tasksNo')} value={client.totalTasks || 0} />
+              </Grid>
+              <Grid item xs={6}>
+                <DetailRow label={t('client.details.registered') || 'Registered'} value={new Date(client.createdAt).toLocaleDateString(i18n.language === 'de' ? 'de-DE' : 'en-GB')} />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Divider />
+
+          <Box>
+            <Typography variant="overline" sx={{ color: 'text.disabled', mb: 1, display: 'block' }}>
+              {t('client.details.properties') || 'Associated Properties'}
+            </Typography>
+            <Stack spacing={1}>
+              {(client.propertyNames && client.propertyNames.length > 0) ? (
+                client.propertyNames.map((prop, index) => (
+                  <Stack key={index} direction="row" alignItems="center" spacing={1}>
+                    <Iconify icon="solar:city-bold" width={18} sx={{ color: 'text.secondary' }} />
+                    <Typography variant="body2">{prop}</Typography>
+                  </Stack>
+                ))
+              ) : (
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {t('client.details.noProperties') || 'No properties associated.'}
+                </Typography>
+              )}
+            </Stack>
+          </Box>
+
+          <Divider />
+
+          <Box>
+            <Typography variant="overline" sx={{ color: 'text.disabled', mb: 1, display: 'block' }}>
+              {t('client.details.id') || 'Client ID'}
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {client.clientId}
+            </Typography>
+          </Box>
+        </Stack>
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose} color="inherit" variant="outlined">
+          {t('common.close') || 'Close'}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+function DetailRow({ label, value }) {
+  return (
+    <Stack direction="row" spacing={1}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 'medium' }}>
+        {label}:
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.primary' }}>
+        {value}
+      </Typography>
+    </Stack>
   );
 }
 

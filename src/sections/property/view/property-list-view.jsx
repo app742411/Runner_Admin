@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -20,6 +21,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -65,6 +71,19 @@ export function PropertyListView() {
     company: 'all',
     status: 'all',
   });
+
+  const [openDetails, setOpenDetails] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
+  const handleOpenDetails = useCallback((row) => {
+    setSelectedProperty(row);
+    setOpenDetails(true);
+  }, []);
+
+  const handleCloseDetails = useCallback(() => {
+    setOpenDetails(false);
+    setSelectedProperty(null);
+  }, []);
 
   const { data: companiesResponse } = useAllCompanies();
   const companyOptions = companiesResponse?.data || [];
@@ -190,6 +209,7 @@ export function PropertyListView() {
                       row={row}
                       selected={selected.includes(row.propertyId)}
                       onSelectRow={() => handleSelectRow(row.propertyId)}
+                      onViewRow={() => handleOpenDetails(row)}
                     />
                   ))
                 )}
@@ -226,7 +246,117 @@ export function PropertyListView() {
         label={t('property.list.dense') || 'Dense'}
         sx={{ px: 3, py: 2 }}
       />
+
+      <PropertyDetailsDialog
+        open={openDetails}
+        onClose={handleCloseDetails}
+        property={selectedProperty}
+      />
     </DashboardContent>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+function PropertyDetailsDialog({ open, onClose, property }) {
+  const { t, i18n } = useTranslation();
+
+  if (!property) return null;
+
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle sx={{ bgcolor: 'background.neutral', pb: 2 }}>
+        <Stack direction="row" alignItems="center" spacing={1}>
+           <Iconify icon="solar:city-bold" width={24} sx={{ color: 'primary.main' }} />
+           <Typography variant="h6">{property.propertyName}</Typography>
+        </Stack>
+      </DialogTitle>
+
+      <DialogContent dividers sx={{ pt: 3 }}>
+        <Stack spacing={3}>
+          <Box>
+            <Typography variant="overline" sx={{ color: 'text.disabled', mb: 1, display: 'block' }}>
+              {t('property.details.info') || 'Property Information'}
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <DetailRow label={t('property.table.propertyType')} value={property.propertyType} />
+              </Grid>
+              <Grid item xs={6}>
+                <DetailRow label={t('property.table.size')} value={`${property.sizeSqm} sqm`} />
+              </Grid>
+              <Grid item xs={6}>
+                <DetailRow label={t('property.table.residents')} value={property.noOfResidents} />
+              </Grid>
+              <Grid item xs={6}>
+                <DetailRow label={t('property.table.totalTasks')} value={property.totalTasks} />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Divider />
+
+          <Box>
+            <Typography variant="overline" sx={{ color: 'text.disabled', mb: 1, display: 'block' }}>
+              {t('property.details.client') || 'Client Details'}
+            </Typography>
+            <Stack spacing={1}>
+              <DetailRow label={t('property.table.client')} value={property.client?.clientName || '-'} />
+              <DetailRow label={t('property.table.email') || 'Email'} value={property.client?.email || '-'} />
+              <DetailRow label={t('property.table.phone') || 'Phone'} value={property.client?.phone || '-'} />
+            </Stack>
+          </Box>
+
+          <Divider />
+
+          <Box>
+            <Typography variant="overline" sx={{ color: 'text.disabled', mb: 1, display: 'block' }}>
+              {t('property.details.location') || 'Location'}
+            </Typography>
+            <Stack spacing={1}>
+              <DetailRow label={t('property.table.address')} value={property.location?.address || '-'} />
+              <DetailRow 
+                label={t('property.details.coordinates') || 'Coordinates'} 
+                value={property.location?.coordinates ? `${property.location.coordinates[1]}, ${property.location.coordinates[0]}` : '-'} 
+              />
+            </Stack>
+          </Box>
+
+          {property.description && (
+            <>
+              <Divider />
+              <Box>
+                <Typography variant="overline" sx={{ color: 'text.disabled', mb: 1, display: 'block' }}>
+                  {t('property.details.description') || 'Description'}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {property.description}
+                </Typography>
+              </Box>
+            </>
+          )}
+        </Stack>
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose} color="inherit" variant="outlined">
+          {t('common.close') || 'Close'}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+function DetailRow({ label, value }) {
+  return (
+    <Stack direction="row" spacing={1}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 'medium' }}>
+        {label}:
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.primary' }}>
+        {value}
+      </Typography>
+    </Stack>
   );
 }
 

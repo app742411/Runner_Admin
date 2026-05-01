@@ -237,3 +237,16 @@ export function fSub({
 
   return result;
 }
+
+// ----------------------------------------------------------------------
+
+export function fSecondsToDuration(seconds) {
+  if (!seconds || seconds === 0) {
+    return '0h 0m 0s';
+  }
+  const duration = dayjs.duration(seconds, 'seconds');
+  const h = Math.floor(duration.asHours());
+  const m = duration.minutes();
+  const s = duration.seconds();
+  return `${h}h ${m}m ${s}s`;
+}

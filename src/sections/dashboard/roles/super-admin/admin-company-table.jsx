@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
@@ -14,24 +15,20 @@ import { useTranslation } from 'react-i18next';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { fDate } from 'src/utils/format-time';
+import { SearchNotFound } from 'src/components/search-not-found';
 
 // ----------------------------------------------------------------------
 
-const COMPANIES = [
-  { id: 1, name: 'Company 1', activeType: 'Active', subscription: 'Active', dateToUse: '17 Jan 2022  10:00 PM', status: 'Active' },
-  { id: 2, name: 'Company 2', activeType: 'Inactive', subscription: 'Inactive', dateToUse: '14 Feb 2022  12:30 PM', status: 'Inactive' },
-  { id: 3, name: 'Company 3', activeType: 'Active', subscription: 'Active', dateToUse: '29 Mar 2022  11:15 AM', status: 'Active' },
-  { id: 4, name: 'Company 4', activeType: 'Active', subscription: 'Active', dateToUse: '05 Apr 2022  09:46 AM', status: 'Pending' },
-  { id: 5, name: 'Company 5', activeType: 'Inactive', subscription: 'Inactive', dateToUse: '10 May 2022  08:20 PM', status: 'Inactive' },
-];
-
 const STATUS_COLOR = {
-  Active: 'success',
-  Inactive: 'error',
-  Pending: 'warning',
+  active: 'success',
+  inactive: 'error',
+  pending: 'warning',
+  approved: 'success',
+  rejected: 'error',
 };
 
-export function AdminCompanyTable() {
+export function AdminCompanyTable({ companies = [] }) {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -57,17 +54,25 @@ export function AdminCompanyTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {COMPANIES.map((company) => (
-                <TableRow key={company.id} hover>
+              {companies.map((company) => (
+                <TableRow key={company._id} hover>
                   <TableCell>
-                    <Typography variant="subtitle2">{company.name}</Typography>
+                    <Typography variant="subtitle2">{company.companyName}</Typography>
                   </TableCell>
-                  <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>{t(`company.table.status.${company.activeType.toLowerCase()}`) || company.activeType}</TableCell>
-                  <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>{t(`company.table.status.${company.subscription.toLowerCase()}`) || company.subscription}</TableCell>
-                  <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>{company.dateToUse}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>
                     <Label variant="soft" color={STATUS_COLOR[company.status] || 'default'}>
-                      {t(`company.table.status.${company.status.toLowerCase()}`) || company.status}
+                      {t(`company.table.status.${company.status}`) || company.status}
+                    </Label>
+                  </TableCell>
+                  <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>
+                    <Label variant="soft" color={STATUS_COLOR[company.subscriptionStatus] || 'default'}>
+                      {t(`company.table.status.${company.subscriptionStatus}`) || company.subscriptionStatus}
+                    </Label>
+                  </TableCell>
+                  <TableCell sx={{ color: 'text.secondary', fontSize: 13 }}>{fDate(company.createdAt)}</TableCell>
+                  <TableCell>
+                    <Label variant="soft" color={STATUS_COLOR[company.isApproved] || 'default'}>
+                      {t(`company.table.status.${company.isApproved}`) || company.isApproved}
                     </Label>
                   </TableCell>
                   <TableCell align="right">
@@ -77,6 +82,14 @@ export function AdminCompanyTable() {
                   </TableCell>
                 </TableRow>
               ))}
+
+              {!companies.length && (
+                <TableRow>
+                  <TableCell colSpan={6}>
+                    <SearchNotFound query="" />
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
@@ -94,3 +107,7 @@ export function AdminCompanyTable() {
     </Card>
   );
 }
+
+AdminCompanyTable.propTypes = {
+  companies: PropTypes.array,
+};

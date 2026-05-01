@@ -42,7 +42,9 @@ export default function TaskDetailsToolbar({
           <Typography variant="h4" sx={{ color: '#00a8e8', fontWeight: 800, lineHeight: 1 }}>
             {formatTime(elapsedTime)}
           </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>{t('task.details.timeElapsed')}</Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
+            {status === 'completed' ? (t('task.details.totalTimeSpent') || 'Total Time Spent') : t('task.details.timeElapsed')}
+          </Typography>
         </Box>
       </Stack>
 

@@ -93,6 +93,7 @@ export const ROLE_API_MAP = {
       '/api/admin/getTask/',
       '/api/admin/assignUsers/',
       '/api/admin/removeUsers/',
+      '/api/company-admin/',
       '/api/ticket/',
     ],
     allowAll: false,

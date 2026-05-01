@@ -12,6 +12,7 @@ import { alpha, useTheme } from '@mui/material/styles';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { fDateTime } from 'src/utils/format-time';
+import { fCurrency } from 'src/utils/format-number';
 
 export default function TaskDetailsSummaryCard({ 
   task, 
@@ -35,6 +36,7 @@ export default function TaskDetailsSummaryCard({
     client,
     taskPrice 
   } = { ...task, ...taskDetail };
+  const status = task?.status || taskDetail?.status;
 
   return (
     <Grid container spacing={3}>
@@ -80,7 +82,11 @@ export default function TaskDetailsSummaryCard({
                   <DetailItem icon="solar:calendar-bold" label={t('task.details.createdAt')} value={fDateTime(createdAt)} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <DetailItem icon="solar:calendar-bold" label={t('task.details.updatedAt') || 'Updated At'} value={fDateTime(updatedAt)} />
+                  <DetailItem 
+                    icon="solar:calendar-bold" 
+                    label={status === 'completed' ? (t('task.details.completedAt') || 'Completed At') : (t('task.details.updatedAt') || 'Updated At')} 
+                    value={fDateTime(updatedAt)} 
+                  />
                 </Grid>
               </Grid>
             </Box>
@@ -201,7 +207,7 @@ export default function TaskDetailsSummaryCard({
               <Box>
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>{t('task.details.workPrice')}</Typography>
                 <Typography variant="h3" color="error.main" sx={{ fontWeight: 'bold' }}>
-                  CHF {taskPrice}
+                  {fCurrency(taskPrice)}
                 </Typography>
               </Box>
 

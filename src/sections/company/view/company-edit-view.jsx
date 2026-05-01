@@ -10,6 +10,7 @@ import { Breadcrumbs as MuiBreadcrumbs } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
+import { DashboardContent } from 'src/layouts/dashboard/main';
 import { useSettingsContext } from 'src/components/settings';
 
 import { useCompanyDetails } from 'src/features/company/useCompanies';
@@ -21,12 +22,10 @@ import { CompanyNewForm } from '../company-new-form';
 export function CompanyEditView({ id }) {
   const { t } = useTranslation();
 
-  const settings = useSettingsContext();
-
   const { data: currentCompany, isLoading } = useCompanyDetails(id);
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+    <DashboardContent maxWidth={false}>
       <Stack spacing={1} sx={{ mb: { xs: 3, md: 5 } }}>
         <Typography variant="h4">{t('company.edit')}</Typography>
         <MuiBreadcrumbs
@@ -51,7 +50,7 @@ export function CompanyEditView({ id }) {
       ) : (
         <CompanyNewForm currentCompany={currentCompany} />
       )}
-    </Container>
+    </DashboardContent>
   );
 }
 

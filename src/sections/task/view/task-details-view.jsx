@@ -89,6 +89,11 @@ export function TaskDetailsView({ id }) {
   };
 
   useEffect(() => {
+    if (status === 'completed') {
+      setElapsedTime(subTasks.reduce((acc, st) => acc + (st.totalTimeSeconds || 0), 0));
+      return;
+    }
+
     let interval;
     const activeST = subTasks.find((st) => st.timerStartedAt && !st.timerCompletedAt && st.status === 'in_progress');
 
@@ -103,7 +108,7 @@ export function TaskDetailsView({ id }) {
       setElapsedTime(activeST?.totalTimeSeconds || 0);
     }
     return () => clearInterval(interval);
-  }, [subTasks]);
+  }, [subTasks, status]);
 
   useEffect(() => {
     if (subTasks.length > 0 && !activeSubTaskId) {
@@ -189,6 +194,15 @@ export function TaskDetailsView({ id }) {
     formData.append('description', description);
 
     try {
+      // Get dynamic location
+      try {
+        const coords = await getCurrentLocation();
+        formData.append('lat', String(coords.lat));
+        formData.append('lng', String(coords.lng));
+      } catch (geoError) {
+        console.warn('Geolocation failed, proceeding without coordinates:', geoError.message);
+      }
+
       await uploadAfter.mutateAsync({ subTaskId, formData });
       toast.success(t('task.details.successSaveDescription') || 'Description saved successfully');
     } catch (error) {

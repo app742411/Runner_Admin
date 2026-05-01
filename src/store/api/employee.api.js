@@ -30,5 +30,6 @@ export const employeeApi = {
   updateProfile: (data) => api.put('/api/employee/updateEmployeeProfile', data, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
+  getEmployeePayments: (params) => api.get('/api/admin/getEmployeePayments', { params }),
 };
 

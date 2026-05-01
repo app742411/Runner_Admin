@@ -6,3 +6,4 @@ export * from "./company.api";
 export * from "./contract.api";
 export * from "./group.api";
 export * from "./ticket.api";
+export * from "./super-admin.api";

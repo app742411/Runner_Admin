@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { useTranslation } from 'react-i18next';
 import { Label } from 'src/components/label';
 import { fDateTime } from 'src/utils/format-time';
 import { paths } from 'src/routes/paths';
@@ -22,6 +23,7 @@ import { useAcceptTicket } from 'src/features/support/useTickets';
 // ----------------------------------------------------------------------
 
 export default function SupportTicketCard({ ticket }) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const { user } = useSelector((state) => state.auth);
   const acceptTicketMutation = useAcceptTicket();
@@ -44,16 +46,16 @@ export default function SupportTicketCard({ ticket }) {
     const newStatus = event.target.value;
     try {
       await acceptTicketMutation.mutateAsync({ ticketId: _id, status: newStatus });
-      toast.success(`Status updated to ${newStatus}`);
+      toast.success(t('support.status_updated', { status: newStatus }));
     } catch (error) {
-      toast.error(error.message || 'Failed to update status');
+      toast.error(error.message || t('support.status_update_failed'));
     }
   };
 
   const STATUS_OPTIONS = [
-    ...(status !== 'accepted' && status !== 'closed' ? [{ value: status, label: status.charAt(0).toUpperCase() + status.slice(1) }] : []),
-    { value: 'accepted', label: 'Accepted' },
-    { value: 'closed', label: 'Closed' },
+    ...(status !== 'accepted' && status !== 'closed' ? [{ value: status, label: t(`support.status.${status.toLowerCase().replace('-', '_')}`) || status }] : []),
+    { value: 'accepted', label: t('support.status.accepted') },
+    { value: 'closed', label: t('support.status.closed') },
   ];
 
   let statusColor = 'grey';
@@ -74,7 +76,7 @@ export default function SupportTicketCard({ ticket }) {
         <Box sx={{ flexGrow: 1 }} />
 
         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-          Posted at {fDateTime(createdAt)}
+          {t('support.posted_at', { time: fDateTime(createdAt) })}
         </Typography>
       </Stack>
 
@@ -86,7 +88,7 @@ export default function SupportTicketCard({ ticket }) {
         <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
           <Iconify icon="eva:attach-2-fill" width={16} sx={{ color: 'text.disabled' }} />
           <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-            {attachments.length} {attachments.length === 1 ? 'attachment' : 'attachments'}
+            {attachments.length} {attachments.length === 1 ? t('support.attachment') : t('support.attachments')}
           </Typography>
         </Stack>
       )}
@@ -100,7 +102,7 @@ export default function SupportTicketCard({ ticket }) {
               sx={{ width: 28, height: 28 }}
             />
             <Typography variant="caption">
-              By: {createdBy?.firstName} {createdBy?.lastName}
+              {t('support.by')}: {createdBy?.firstName} {createdBy?.lastName}
             </Typography>
           </Stack>
 
@@ -112,7 +114,7 @@ export default function SupportTicketCard({ ticket }) {
                 sx={{ width: 28, height: 28 }}
               />
               <Typography variant="caption">
-                Assigned: {assignedTo?.firstName} {assignedTo?.lastName}
+                {t('support.assigned')}: {assignedTo?.firstName} {assignedTo?.lastName}
               </Typography>
             </Stack>
           )}
@@ -149,7 +151,7 @@ export default function SupportTicketCard({ ticket }) {
             variant="subtitle2"
             sx={{ color: 'primary.main', textDecoration: 'underline', mr: 2 }}
           >
-            Open Chat
+            {t('support.open_chat')}
           </Link>
 
           <Link
@@ -159,7 +161,7 @@ export default function SupportTicketCard({ ticket }) {
             variant="subtitle2"
             sx={{ color: 'primary.main', textDecoration: 'underline' }}
           >
-            Open Ticket
+            {t('support.open_ticket')}
           </Link>
         </Stack>
       </Stack>

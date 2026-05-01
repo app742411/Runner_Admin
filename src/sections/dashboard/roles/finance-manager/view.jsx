@@ -11,6 +11,7 @@ import { FinanceSummaryCard } from './finance-summary-card';
 import { FinanceBalanceCard, FinanceCurrentBalanceCard } from './finance-balance-card';
 import { FinanceExpensePie, FinanceRevenueTrend, FinanceExpenseDonut, FinanceLiquidityForecast } from './finance-charts';
 import { FinanceApprovalsList, FinanceOverdueInvoices, FinancePayrollActions, FinanceMWSTCard, FinanceAlerts } from './finance-lists';
+import { fCurrency } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -49,30 +50,30 @@ export default function FinanceManagerView() {
                <Grid xs={12} sm={6} md={3}>
                   <FinanceSummaryCard
                      title={t('finance_dashboard.openReceivables')}
-                     amount="CHF 125,400"
-                     subtitle={`CHF 24,000 ${t('finance_dashboard.pending').toLowerCase()}`}
+                     amount={fCurrency(125400)}
+                     subtitle={`${fCurrency(24000)} ${t('finance_dashboard.pending').toLowerCase()}`}
                      trend="down"
                   />
                </Grid>
                <Grid xs={12} sm={6} md={3}>
                   <FinanceSummaryCard
                      title={t('finance_dashboard.openPayables')}
-                     amount="CHF 84,300"
-                     subtitle={`CHF 12,500 ${t('finance_dashboard.thisMonth').toLowerCase()}`}
+                     amount={fCurrency(84300)}
+                     subtitle={`${fCurrency(12500)} ${t('finance_dashboard.thisMonth').toLowerCase()}`}
                   />
                </Grid>
                <Grid xs={12} sm={6} md={3}>
                   <FinanceSummaryCard
                      title={t('finance_dashboard.bankBalance')}
-                     amount="CHF 245,680"
-                     subtitle={`Last sync: 2 min ago`}
+                     amount={fCurrency(245680)}
+                     subtitle={t('finance_dashboard.last_sync', { time: '2 min ago' })}
                   />
                </Grid>
                <Grid xs={12} sm={6} md={3}>
                   <FinanceSummaryCard
                      title={t('finance_dashboard.liquidity')}
                      amount="136%"
-                     subtitle="Healthy liquidity"
+                     subtitle={t('finance_dashboard.healthy_liquidity')}
                      percent={2.4}
                   />
                </Grid>
@@ -82,17 +83,17 @@ export default function FinanceManagerView() {
             <Grid container spacing={2.5}>
                <Grid xs={12} md={4}>
                   <FinanceBalanceCard
-                     balance="CHF 45,678.90"
+                     balance={fCurrency(45678.90)}
                      cardNumber="**** **** **** 4567"
                      accountType={t('finance_dashboard.totalBalance')}
                   />
                </Grid>
                <Grid xs={12} md={4}>
                   <FinanceCurrentBalanceCard
-                     total="$9,990"
-                     orderTotal="$10,999"
-                     earning="$1,168"
-                     refunded="$83.10"
+                     total={fCurrency(9990)}
+                     orderTotal={fCurrency(10999)}
+                     earning={fCurrency(1168)}
+                     refunded={fCurrency(83.10)}
                   />
                </Grid>
                <Grid xs={12} md={4}>
@@ -143,9 +144,9 @@ export default function FinanceManagerView() {
                   <FinanceApprovalsList
                      label={t('finance_dashboard.cost_approvals')}
                      items={[
-                        { title: 'Q3-Marketingkampagne', subtitle: 'Anf. von Samir M. • Marketing', amount: 'CHF 12,500' },
-                        { title: 'IT-Hardware-Upgrade', subtitle: 'Anf. von David K. • IT-Abteilung', amount: 'CHF 4,200' },
-                        { title: 'Kundenessen - Zürich', subtitle: 'Anf. von Marc G. • Vertrieb', amount: 'CHF 450' },
+                        { title: 'Q3-Marketingkampagne', subtitle: 'Anf. von Samir M. • Marketing', amount: fCurrency(12500) },
+                        { title: 'IT-Hardware-Upgrade', subtitle: 'Anf. von David K. • IT-Abteilung', amount: fCurrency(4200) },
+                        { title: 'Kundenessen - Zürich', subtitle: 'Anf. von Marc G. • Vertrieb', amount: fCurrency(450) },
                      ]}
                      count={3}
                   />
@@ -155,9 +156,9 @@ export default function FinanceManagerView() {
                      label={t('finance_dashboard.overdue_invoices')}
                      countLabel={`2 ${t('finance_dashboard.critical')}`}
                      items={[
-                        { company: 'TechSolutions AG', dueHint: 'Fällig: 15. Okt (3 Tage überfällig)', amount: 'CHF 8,450', isOverdue: true, showAction: true },
-                        { company: 'Global Logistics GmbH', dueHint: 'Fällig: 10. Okt (8 Tage überfällig)', amount: 'CHF 3,200', isOverdue: true, showAction: true },
-                        { company: 'Müller', dueHint: 'Fällig: Heute', amount: 'CHF 1,180', isOverdue: false, showAction: true },
+                        { company: 'TechSolutions AG', dueHint: 'Fällig: 15. Okt (3 Tage überfällig)', amount: fCurrency(8450), isOverdue: true, showAction: true },
+                        { company: 'Global Logistics GmbH', dueHint: 'Fällig: 10. Okt (8 Tage überfällig)', amount: fCurrency(3200), isOverdue: true, showAction: true },
+                        { company: 'Müller', dueHint: 'Fällig: Heute', amount: fCurrency(1180), isOverdue: false, showAction: true },
                      ]}
                   />
                </Grid>
@@ -165,11 +166,11 @@ export default function FinanceManagerView() {
                   <FinancePayrollActions
                      label={t('finance_dashboard.payroll_actions')}
                      nextRun="25 Oct 2023"
-                     totalAmount="CHF 145k"
+                     totalAmount={fCurrency(145000)}
                      checklists={[
-                        { title: 'Gehälter überprüft', status: 'done' },
-                        { title: 'Spesenabrechnungen', status: 'review', statusLabel: 'Review' },
-                        { title: 'Bankdatei Gen.', status: 'outstanding', statusLabel: t('finance_dashboard.pending') },
+                        { title: t('finance_dashboard.salaries_reviewed'), status: 'done' },
+                        { title: t('finance_dashboard.expense_reports'), status: 'review', statusLabel: t('finance_dashboard.review') },
+                        { title: t('finance_dashboard.bank_file_gen'), status: 'outstanding', statusLabel: t('finance_dashboard.pending') },
                      ]}
                   />
                </Grid>
@@ -182,8 +183,8 @@ export default function FinanceManagerView() {
                      label={t('finance_dashboard.overdue_invoices')}
                      countLabel={`3 ${t('finance_dashboard.pending')}`}
                      items={[
-                        { company: 'TechCorp AG', dueHint: 'INV-2024-001 • 15 days overdue', amount: 'CHF 8,500', isOverdue: true },
-                        { company: 'Swiss Solutions', dueHint: 'INV-2024-045 • Due today', amount: 'CHF 3,200', isOverdue: false },
+                        { company: 'TechCorp AG', dueHint: `INV-2024-001 • 15 ${t('finance_dashboard.days_overdue') || 'days overdue'}`, amount: fCurrency(8500), isOverdue: true },
+                        { company: 'Swiss Solutions', dueHint: `INV-2024-045 • ${t('invoice.due_date') || 'Due today'}`, amount: fCurrency(3200), isOverdue: false },
                      ]}
                   />
                </Grid>
@@ -205,8 +206,8 @@ export default function FinanceManagerView() {
                   <FinanceApprovalsList
                      label={t('finance_dashboard.cost_approvals')}
                      items={[
-                        { title: 'Office Equipment', subtitle: 'By: M. Weber', amount: 'CHF 2,400' },
-                        { title: 'Marketing Campaign', subtitle: 'By: S. Mueller', amount: 'CHF 15,000' },
+                        { title: 'Office Equipment', subtitle: `${t('support.by')}: M. Weber`, amount: fCurrency(2400) },
+                        { title: 'Marketing Campaign', subtitle: `${t('support.by')}: S. Mueller`, amount: fCurrency(15000) },
                      ]}
                   />
                </Grid>
@@ -215,7 +216,7 @@ export default function FinanceManagerView() {
             {/* ─── ROW 6: Final Row ─── */}
             <Grid container spacing={2.5}>
                <Grid xs={12} md={4}>
-                  <FinanceMWSTCard amount="CHF 6,040" />
+                  <FinanceMWSTCard amount={fCurrency(6040)} />
                </Grid>
                <Grid xs={12} md={4}>
                   <FinanceLiquidityForecast
@@ -232,8 +233,8 @@ export default function FinanceManagerView() {
                   <FinanceAlerts
                      title={t('finance_dashboard.alerts')}
                      items={[
-                        { icon: '⚠️', title: '3 overdue Invoices', subtitle: 'Total: CHF 24,800', color: '#FF5630' },
-                        { icon: '💳', title: '2 failed payments', subtitle: 'Requires attention', color: '#FFAB00' },
+                        { icon: '⚠️', title: t('finance_dashboard.overdue_alert', { count: 3 }), subtitle: `${t('common.total')}: ${fCurrency(24800)}`, color: '#FF5630' },
+                        { icon: '💳', title: t('finance_dashboard.failed_payments_alert', { count: 2 }), subtitle: t('finance_dashboard.requires_attention'), color: '#FFAB00' },
                      ]}
                   />
                </Grid>

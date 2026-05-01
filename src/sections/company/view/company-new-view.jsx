@@ -16,7 +16,7 @@ export function CompanyNewView() {
   const { t } = useTranslation();
 
   return (
-    <DashboardContent>
+    <DashboardContent maxWidth={false}>
       <Stack spacing={1} sx={{ mb: 5 }}>
         <Typography variant="h4">{t('company.title')}</Typography>
         <MuiBreadcrumbs

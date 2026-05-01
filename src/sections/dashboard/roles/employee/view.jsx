@@ -33,6 +33,7 @@ import {
 } from 'recharts';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
+import { fCurrency } from 'src/utils/format-number';
 import { useEmployeeDashboard } from 'src/features/employee/useEmployees';
 
 // ----------------------------------------------------------------------
@@ -184,7 +185,7 @@ export default function EmployeeView() {
           {t(`dashboard.priority.label`, { priority: t(`dashboard.priority.${priority.toLowerCase()}`) })}
         </Label>
         <Typography variant="h6" sx={{ color: '#22c55e', fontWeight: 800 }}>
-          CHF{earning}
+          {fCurrency(earning)}
         </Typography>
       </Stack>
     </Box>
@@ -204,7 +205,7 @@ export default function EmployeeView() {
           {renderStatCard(t('dashboard.tasksCompleted'), cards.completedTasks || 0, 'solar:check-square-bold-duotone', '#22c55e', alpha('#22c55e', 0.08))}
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          {renderStatCard(t('dashboard.totalEarning'), `CHF ${cards.totalEarnings || 0}`, 'solar:wallet-bold-duotone', '#8e33ff', alpha('#8e33ff', 0.08))}
+          {renderStatCard(t('dashboard.totalEarning'), fCurrency(cards.totalEarnings || 0), 'solar:wallet-bold-duotone', '#8e33ff', alpha('#8e33ff', 0.08))}
         </Grid>
       </Grid>
 
@@ -308,15 +309,15 @@ export default function EmployeeView() {
             <Stack spacing={3.5}>
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography color="text.secondary" variant="body1" sx={{ fontWeight: 600 }}>{t('dashboard.earningsPerTask')}</Typography>
-                <Typography variant="h6" sx={{ fontWeight: 800 }}>CHF {financial.earningsPerTask || '89.50'}</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 800 }}>{fCurrency(financial.earningsPerTask || 89.50)}</Typography>
               </Stack>
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography color="text.secondary" variant="body1" sx={{ fontWeight: 600 }}>{t('dashboard.weeklyIncome')}</Typography>
-                <Typography variant="h6" sx={{ fontWeight: 800 }}>CHF {financial.weeklyIncome || '1,250'}</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 800 }}>{fCurrency(financial.weeklyIncome || 1250)}</Typography>
               </Stack>
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography color="text.secondary" variant="body1" sx={{ fontWeight: 600 }}>{t('dashboard.monthlyTarget')}</Typography>
-                <Typography variant="h6" sx={{ fontWeight: 800 }}>CHF {financial.monthlyTarget || '5,000'}</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 800 }}>{fCurrency(financial.monthlyTarget || 5000)}</Typography>
               </Stack>
               <Box sx={{ mt: 2 }}>
                 <Stack direction="row" justifyContent="space-between" sx={{ mb: 1.5 }}>
@@ -358,7 +359,7 @@ export default function EmployeeView() {
 
           {/* Recent Activity */}
           <Card sx={{ p: 4, borderRadius: 2, border: 'none', boxShadow: (theme) => `0 8px 24px 0 ${alpha(theme.palette.common.black, 0.05)}` }}>
-            <Typography variant="h5" sx={{ mb: 4, fontWeight: 800 }}>{t('dashboard.recentActivity')}</Typography>
+            <Typography variant="h5" sx={{ mb: 4, fontWeight: 800 }}>{t('dashboard.recentActivity.title')}</Typography>
             <Stack spacing={4}>
               {recentActivity.length > 0 ? (
                 recentActivity.map((activity) => (

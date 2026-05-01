@@ -12,6 +12,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { usePlans } from 'src/features/plan/usePlans';
 import { Iconify } from 'src/components/iconify';
+import { fCurrency } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -99,7 +100,7 @@ export function SubscriptionSelectView() {
 
               <Stack direction="row" alignItems="baseline" sx={{ mb: 5 }}>
                 <Typography variant="h3" sx={{ fontWeight: 800 }}>
-                  CHF{plan.monthlyFees}
+                  {fCurrency(plan.monthlyFees)}
                 </Typography>
                 <Typography variant="subtitle2" sx={{ color: 'text.secondary', ml: 0.5 }}>
                   /{t('subscription.month')}

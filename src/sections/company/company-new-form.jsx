@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { z as zod } from 'zod';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Card from '@mui/material/Card';
@@ -13,6 +13,9 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import { alpha } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -20,9 +23,12 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
+import MapPicker from 'src/components/map/map-picker';
+import AddressAutocomplete from 'src/components/map/address-autocomplete';
 
 import { useUpdateCompany } from 'src/features/company/useCompanies';
 import { companyApi } from 'src/store/api/company.api';
+import { fData } from 'src/utils/format-number';
 
 import toast from 'react-hot-toast';
 
@@ -48,6 +54,9 @@ export const NewCompanySchema = zod.object({
   pincode: zod.string().min(1, 'company.validation.pincode'),
   // Upload
   licenseDocuments: zod.any().optional(),
+  logo: zod.any().optional(),
+  latitude: zod.number().optional(),
+  longitude: zod.number().optional(),
 }).refine((data) => {
   if (data.adminPassword || data.confirmPassword) {
     return data.adminPassword === data.confirmPassword;
@@ -57,8 +66,9 @@ export const NewCompanySchema = zod.object({
   message: "company.validation.passwordMatch",
   path: ['confirmPassword'],
 }).refine((data) => {
-  if (!data.id && (!data.adminPassword || data.adminPassword.length < 6)) {
-    return false;
+  if (!data.id && (!data.adminPassword || (data.adminPassword && data.adminPassword.length < 6))) {
+    // Only require for new companies
+    return data.id ? true : (data.adminPassword ? data.adminPassword.length >= 6 : false);
   }
   return true;
 }, {
@@ -93,7 +103,10 @@ export function CompanyNewForm({ currentCompany }) {
       state: currentCompany?.address?.state || '',
       country: currentCompany?.address?.country || '',
       pincode: currentCompany?.address?.pincode || '',
+      latitude: currentCompany?.address?.location?.coordinates[1] || 0,
+      longitude: currentCompany?.address?.location?.coordinates[0] || 0,
       licenseDocuments: null,
+      logo: currentCompany?.logo || null,
     }),
     [currentCompany]
   );
@@ -105,9 +118,13 @@ export function CompanyNewForm({ currentCompany }) {
 
   const {
     reset,
+    watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const values = watch();
 
   useEffect(() => {
     if (currentCompany) {
@@ -119,29 +136,28 @@ export function CompanyNewForm({ currentCompany }) {
     try {
       const formData = new FormData();
 
-      // Common fields
       formData.append('companyName', data.companyName);
       formData.append('contactEmail', data.contactEmail);
       formData.append('phoneNumber', data.phoneNumber);
-      
-      // Address fields
       formData.append('addressLine1', data.addressLine1);
       formData.append('addressLine2', data.addressLine2 || '');
       formData.append('city', data.city);
       formData.append('state', data.state);
       formData.append('country', data.country);
       formData.append('pincode', data.pincode);
+      
+      if (data.latitude && data.longitude) {
+        formData.append('latitude', String(data.latitude));
+        formData.append('longitude', String(data.longitude));
+      }
 
-      // License
       formData.append('licenseNo', data.licenseNo);
       formData.append('licenseExpiryDate', data.licenseExpiryDate instanceof Date ? data.licenseExpiryDate.toISOString() : data.licenseExpiryDate);
 
-      // Password (only if set)
       if (data.adminPassword) {
         formData.append('adminPassword', data.adminPassword);
       }
 
-      // Files
       if (data.licenseDocuments) {
         if (Array.isArray(data.licenseDocuments)) {
           data.licenseDocuments.forEach(file => {
@@ -152,14 +168,16 @@ export function CompanyNewForm({ currentCompany }) {
         }
       }
 
+      if (data.logo instanceof File) {
+        formData.append('logo', data.logo);
+      }
+
       if (isEdit) {
         await updateCompany.mutateAsync({ id: currentCompany._id || currentCompany.companyId, data: formData });
         toast.success(t('company.messages.successUpdate'));
       } else {
-        // Only for new company
         formData.append('firstName', data.firstName);
         formData.append('lastName', data.lastName);
-        
         await companyApi.create(formData);
         toast.success(t('company.messages.successCreate'));
       }
@@ -174,138 +192,233 @@ export function CompanyNewForm({ currentCompany }) {
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
-      <Grid container spacing={3} justifyContent="center">
-        <Grid item xs={12} md={10}>
-          <Card sx={{ p: 4, borderRadius: 2 }}>
-            <Stack spacing={4}>
-              {/* Company Information */}
-              <Stack spacing={3}>
-                <Typography variant="h6">{t('company.form.info')}</Typography>
-                <Grid container spacing={2}>
-                  {!isEdit && (
-                    <>
-                      <Grid item xs={12} md={6}>
-                        <Field.Text name="firstName" label={t('company.form.firstName')} />
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Field.Text name="lastName" label={t('company.form.lastName')} />
-                      </Grid>
-                    </>
-                  )}
-                  <Grid item xs={12} md={6}>
-                    <Field.Text name="companyName" label={t('company.form.companyName')} />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Field.Text name="contactEmail" label={t('company.form.email')} />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Field.Phone name="phoneNumber" label={t('company.form.phoneNumber')} />
-                  </Grid>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={8}>
+          <Stack spacing={3}>
+            {/* Company Information */}
+            <Card sx={{
+              p: 3,
+              boxShadow: (theme) => `0 0 2px 0 ${alpha(theme.palette.grey[500], 0.2)}, 0 12px 24px -4px ${alpha(theme.palette.grey[500], 0.12)}`,
+              borderRadius: 2,
+              border: (theme) => `1px solid ${alpha(theme.palette.grey[500], 0.08)}`
+            }}>
+              <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
+                <Box sx={{ width: 40, height: 40, borderRadius: 1.5, bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
+                  <Iconify icon="solar:info-circle-bold" width={24} />
+                </Box>
+                {t('company.form.info')}
+              </Typography>
+
+              <Grid container spacing={2.5}>
+                {!isEdit && (
+                  <>
+                    <Grid item xs={12} md={6}>
+                      <Field.Text name="firstName" label={t('company.form.firstName')} />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Field.Text name="lastName" label={t('company.form.lastName')} />
+                    </Grid>
+                  </>
+                )}
+                <Grid item xs={12} md={6}>
+                  <Field.Text name="companyName" label={t('company.form.companyName')} />
                 </Grid>
-              </Stack>
-
-              {/* License Information */}
-              <Stack spacing={3}>
-                <Typography variant="h6">{t('company.form.licenseInfo')}</Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <Field.Text name="licenseNo" label={t('company.form.licenseNo')} />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Field.DatePicker name="licenseExpiryDate" label={t('company.form.licenseExpiry')} />
-                  </Grid>
+                <Grid item xs={12} md={6}>
+                  <Field.Text name="contactEmail" label={t('company.form.email')} />
                 </Grid>
-              </Stack>
-
-              {/* Address Details */}
-              <Stack spacing={3}>
-                <Typography variant="h6">{t('company.form.addressDetails')}</Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <Field.Text name="addressLine1" label={t('company.form.address1')} />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Field.Text name="addressLine2" label={t('company.form.address2')} />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <Field.Text name="city" label={t('company.form.city')} />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <Field.Text name="state" label={t('company.form.state')} />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <Field.Text name="pincode" label={t('company.form.pincode')} />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Field.CountrySelect name="country" label={t('company.form.country')} placeholder={t('company.form.selectCountry')} />
-                  </Grid>
-
-                  {/* Passwords - Required for new, optional for edit */}
-                  <Grid item xs={12} md={6}>
-                    <Field.Text
-                      name="adminPassword"
-                      label={isEdit ? t('company.form.newPasswordOptional') : t('company.form.password')}
-                      placeholder={t('company.form.placeholder.password')}
-                      type={password.value ? 'text' : 'password'}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton onClick={password.onToggle} edge="end">
-                              <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Field.Text
-                      name="confirmPassword"
-                      label={t('company.form.confirmPassword')}
-                      placeholder={t('company.form.placeholder.password')}
-                      type={password.value ? 'text' : 'password'}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton onClick={password.onToggle} edge="end">
-                              <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
+                <Grid item xs={12}>
+                  <Field.Phone name="phoneNumber" label={t('company.form.phoneNumber')} />
                 </Grid>
-              </Stack>
+              </Grid>
+            </Card>
 
-              {/* File Upload */}
-              <Stack spacing={1.5}>
+            {/* Address Details */}
+            <Card sx={{
+              p: 3,
+              boxShadow: (theme) => `0 0 2px 0 ${alpha(theme.palette.grey[500], 0.2)}, 0 12px 24px -4px ${alpha(theme.palette.grey[500], 0.12)}`,
+              borderRadius: 2,
+              border: (theme) => `1px solid ${alpha(theme.palette.grey[500], 0.08)}`
+            }}>
+              <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
+                <Box sx={{ width: 40, height: 40, borderRadius: 1.5, bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
+                  <Iconify icon="solar:map-point-bold" width={24} />
+                </Box>
+                {t('company.form.addressDetails')}
+              </Typography>
+
+              <Grid container spacing={2.5}>
+                <Grid item xs={12}>
+                  <AddressAutocomplete
+                    label={t('company.form.addressSearch')}
+                    onAddressSelect={(addressData) => {
+                      setValue('addressLine1', addressData.addressLine1);
+                      setValue('city', addressData.city);
+                      setValue('state', addressData.state);
+                      setValue('country', addressData.country);
+                      setValue('pincode', addressData.pincode);
+                      setValue('latitude', addressData.latitude);
+                      setValue('longitude', addressData.longitude);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Field.Text name="addressLine1" label={t('company.form.address1')} />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Field.Text name="addressLine2" label={t('company.form.address2')} />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Field.Text name="city" label={t('company.form.city')} />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Field.Text name="state" label={t('company.form.state')} />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Field.Text name="pincode" label={t('company.form.pincode')} />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field.CountrySelect name="country" label={t('company.form.country')} placeholder={t('company.form.selectCountry')} />
+                </Grid>
+              </Grid>
+            </Card>
+
+            {/* Security */}
+            <Card sx={{
+              p: 3,
+              boxShadow: (theme) => `0 0 2px 0 ${alpha(theme.palette.grey[500], 0.2)}, 0 12px 24px -4px ${alpha(theme.palette.grey[500], 0.12)}`,
+              borderRadius: 2,
+              border: (theme) => `1px solid ${alpha(theme.palette.grey[500], 0.08)}`
+            }}>
+              <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
+                <Box sx={{ width: 40, height: 40, borderRadius: 1.5, bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
+                  <Iconify icon="solar:lock-password-bold" width={24} />
+                </Box>
+                {t('company.form.security')}
+              </Typography>
+
+              <Grid container spacing={2.5}>
+                <Grid item xs={12} md={6}>
+                  <Field.Text
+                    name="adminPassword"
+                    label={isEdit ? t('company.form.newPasswordOptional') : t('company.form.password')}
+                    type={password.value ? 'text' : 'password'}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={password.onToggle} edge="end">
+                            <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Field.Text
+                    name="confirmPassword"
+                    label={t('company.form.confirmPassword')}
+                    type={password.value ? 'text' : 'password'}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={password.onToggle} edge="end">
+                            <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Card>
+          </Stack>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Stack spacing={3}>
+            {/* Logo Upload */}
+            <Card sx={{
+              p: 3,
+              textAlign: 'center',
+              boxShadow: (theme) => `0 0 2px 0 ${alpha(theme.palette.grey[500], 0.2)}, 0 12px 24px -4px ${alpha(theme.palette.grey[500], 0.12)}`,
+              borderRadius: 2,
+              border: (theme) => `1px solid ${alpha(theme.palette.grey[500], 0.08)}`
+            }}>
+              <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                <Box sx={{ width: 40, height: 40, borderRadius: 1.5, bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
+                  <Iconify icon="solar:camera-add-bold" width={24} />
+                </Box>
+                {t('company.form.companyLogo')}
+              </Typography>
+
+              <Field.UploadAvatar
+                name="logo"
+                maxSize={3145728}
+                onDrop={(acceptedFiles) => {
+                  const file = acceptedFiles[0];
+                  if (file) {
+                    setValue('logo', Object.assign(file, { preview: URL.createObjectURL(file) }), { shouldValidate: true });
+                  }
+                }}
+                helperText={
+                  <Typography variant="caption" sx={{ mt: 3, mx: 'auto', display: 'block', color: 'text.disabled' }}>
+                    {t('company.form.allowedFiles')}
+                    <br /> {t('company.form.maxSizeOf')} {fData(3145728)}
+                  </Typography>
+                }
+              />
+            </Card>
+
+            {/* License Information */}
+            <Card sx={{
+              p: 3,
+              boxShadow: (theme) => `0 0 2px 0 ${alpha(theme.palette.grey[500], 0.2)}, 0 12px 24px -4px ${alpha(theme.palette.grey[500], 0.12)}`,
+              borderRadius: 2,
+              border: (theme) => `1px solid ${alpha(theme.palette.grey[500], 0.08)}`
+            }}>
+              <Typography variant="h6" sx={{ mb: 3, color: 'primary.main', display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
+                <Box sx={{ width: 40, height: 40, borderRadius: 1.5, bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
+                  <Iconify icon="solar:document-bold" width={24} />
+                </Box>
+                {t('company.form.licenseInfo')}
+              </Typography>
+
+              <Stack spacing={2.5}>
+                <Field.Text name="licenseNo" label={t('company.form.licenseNo')} />
+                <Field.DatePicker name="licenseExpiryDate" label={t('company.form.licenseExpiry')} />
+                
+                <Divider sx={{ borderStyle: 'dashed' }} />
+
                 <Typography variant="body2">{isEdit ? t('company.form.updateLicense') : t('company.form.uploadLicense')}</Typography>
                 <Field.Upload 
                   multiple 
                   name="licenseDocuments" 
                   maxSize={3145728} 
-                  onDrop={(acceptedFiles) => methods.setValue('licenseDocuments', acceptedFiles)} 
+                  onDrop={(acceptedFiles) => setValue('licenseDocuments', acceptedFiles)} 
                 />
               </Stack>
+            </Card>
 
-              <Stack alignItems="flex-end">
-                <LoadingButton
-                  type="submit"
-                  variant="contained"
-                  loading={isSubmitting}
-                  sx={{ bgcolor: '#003b51', '&:hover': { bgcolor: '#002636' }, px: 4, py: 1.5 }}
-                >
-                  {isEdit ? t('company.form.updateInfo') : t('company.form.addInfo')}
-                </LoadingButton>
-              </Stack>
-            </Stack>
-          </Card>
+            <LoadingButton
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+              sx={{ py: 1.5, boxShadow: (theme) => theme.customShadows.primary }}
+            >
+              {isEdit ? t('company.form.updateInfo') : t('company.form.addInfo')}
+            </LoadingButton>
+          </Stack>
         </Grid>
       </Grid>
     </Form>
   );
 }
+
+CompanyNewForm.propTypes = {
+  currentCompany: PropTypes.object,
+};
 
 CompanyNewForm.propTypes = {
   currentCompany: PropTypes.object,

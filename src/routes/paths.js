@@ -118,6 +118,7 @@ export const paths = {
       vat: `${ROOTS.DASHBOARD}/finance/vat`,
       statements: `${ROOTS.DASHBOARD}/finance/statements`,
       payroll: `${ROOTS.DASHBOARD}/finance/payroll`,
+      employeePayment: `${ROOTS.DASHBOARD}/finance/employee-payment`,
       analytics: `${ROOTS.DASHBOARD}/finance/analytics`,
       taskCost: `${ROOTS.DASHBOARD}/finance/task-cost`,
       settings: `${ROOTS.DASHBOARD}/finance/settings`,

@@ -51,11 +51,11 @@ export function InvoiceListView() {
 
   const TABLE_HEAD = [
     { id: 'checkbox', label: '', width: 48 },
-    { id: 'invoiceNumber', label: t('invoice.table.invoiceName') || 'Invoice Name' },
-    { id: 'clientName', label: t('invoice.table.clientName') || 'Client Name' },
-    { id: 'amount', label: t('invoice.table.amount') || 'Amount' },
-    { id: 'dueDate', label: t('invoice.table.dueDate') || 'Due Date' },
-    { id: 'status', label: t('invoice.table.status') || 'Status' },
+    { id: 'invoiceNumber', label: t('invoice.table.invoiceName') },
+    { id: 'clientName', label: t('invoice.table.clientName') },
+    { id: 'amount', label: t('invoice.table.amount') },
+    { id: 'dueDate', label: t('invoice.table.dueDate') },
+    { id: 'status', label: t('invoice.table.status') },
     { id: 'action', label: t('invoice.table.action'), align: 'right', width: 48 },
   ];
 
@@ -134,7 +134,7 @@ export function InvoiceListView() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
         <Stack spacing={1}>
           <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-            {t('invoice.title') || 'Invoice'}
+            {t('invoice.title')}
           </Typography>
           <Breadcrumbs
             separator={
@@ -145,12 +145,12 @@ export function InvoiceListView() {
             }
           >
             <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.root)} sx={{ cursor: 'pointer' }}>
-              {t('nav.dashboard') || 'Dashboard'}
+              {t('nav.dashboard')}
             </Link>
             <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.invoice?.root || '#')} sx={{ cursor: 'pointer' }}>
-              {t('nav.invoice') || 'Invoice'}
+              {t('nav.invoice')}
             </Link>
-            <Typography color="text.primary">{t('invoice.list') || 'Invoice List'}</Typography>
+            <Typography color="text.primary">{t('invoice.list')}</Typography>
           </Breadcrumbs>
         </Stack>
 
@@ -160,13 +160,13 @@ export function InvoiceListView() {
             startIcon={<Iconify icon="eva:cloud-download-fill" />}
             color="inherit"
           >
-            {t('invoice.export') || 'Export'}
+            {t('invoice.export')}
           </Button>
           <Button
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            {t('invoice.newInvoice') || 'New Invoice'}
+            {t('invoice.newInvoice')}
           </Button>
         </Stack>
       </Stack>
@@ -191,14 +191,14 @@ export function InvoiceListView() {
                 bgcolor: 'background.paper',
               }}
             >
-              {t('invoice.filters') || 'Filters'}
+              {t('invoice.filters')}
             </Typography>
             <Select
               value="featured"
               displayEmpty
               onChange={() => { }}
             >
-              <MenuItem value="featured">{t('invoice.sortBy') || 'Sort By: Featured'}</MenuItem>
+              <MenuItem value="featured">{t('invoice.sortBy')}</MenuItem>
             </Select>
           </FormControl>
 
@@ -312,9 +312,9 @@ function InvoiceTableRow({ row, selected, onSelectRow, onViewRow }) {
       try {
         popover.onClose();
         await sendInvoice.mutateAsync(row._id);
-        toast.success('Invoice sent successfully!');
+        toast.success(t('invoice.send_success'));
       } catch (error) {
-        toast.error('Failed to send invoice');
+        toast.error(t('invoice.send_error'));
       }
     },
     [sendInvoice, row._id, popover]
@@ -388,7 +388,7 @@ function InvoiceTableRow({ row, selected, onSelectRow, onViewRow }) {
           }}
         >
           <Iconify icon="solar:eye-bold" />
-          View Details
+          {t('invoice.popover.view')}
         </MenuItem>
 
         <MenuItem
@@ -396,19 +396,19 @@ function InvoiceTableRow({ row, selected, onSelectRow, onViewRow }) {
           disabled={sendInvoice.isPending}
         >
           <Iconify icon="solar:paper-plane-bold" />
-          Send Invoice
+          {t('invoice.send_invoice')}
         </MenuItem>
 
         <MenuItem onClick={popover.onClose}>
           <Iconify icon="solar:pen-bold" />
-          Edit
+          {t('common.edit')}
         </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={popover.onClose} sx={{ color: 'error.main' }}>
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          {t('common.delete')}
         </MenuItem>
       </CustomPopover>
     </>

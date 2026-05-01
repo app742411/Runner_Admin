@@ -1,21 +1,26 @@
 import { useSelector } from 'react-redux';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { taskApi } from '../../store/api/task.api';
+import { ROLES } from '../../config/roles';
 
 export function useTasks(params) {
   const user = useSelector((state) => state.auth.user);
-  const isAdmin = user?.role === 'superAdmin';
-  const isEmployee = user?.role === 'employee';
+
+  const isAdmin = user?.role === ROLES.SUPER_ADMIN;
+  const isEmployee = user?.role === ROLES.EMPLOYEE;
+  const isGroupAdmin = user?.role === ROLES.GROUP_ADMIN;
 
   return useQuery({
     queryKey: ['tasks', params, user?.role],
     queryFn: () => {
       let apiCall = taskApi.getAllTasksCompany;
+
       if (isAdmin) {
         apiCall = taskApi.getAllTasksAdmin;
       } else if (isEmployee) {
         apiCall = taskApi.getMySubTasks;
       }
+
       return apiCall(params).then((res) => res.data);
     },
   });

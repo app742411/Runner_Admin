@@ -13,12 +13,19 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export function DocumentTableToolbar({ filters, onFilters }) {
+export function DocumentTableToolbar({ filters, onFilters, isSuperAdmin, companies }) {
   const { t } = useTranslation();
 
   const handleFilterName = useCallback(
     (event) => {
       onFilters('name', event.target.value);
+    },
+    [onFilters]
+  );
+
+  const handleFilterCompany = useCallback(
+    (event) => {
+      onFilters('companyId', event.target.value);
     },
     [onFilters]
   );
@@ -30,6 +37,37 @@ export function DocumentTableToolbar({ filters, onFilters }) {
       direction={{ xs: 'column', md: 'row' }}
       sx={{ p: 2.5, pr: { xs: 2.5, md: 1 } }}
     >
+      {isSuperAdmin && (
+        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'text.disabled',
+              position: 'absolute',
+              top: -8,
+              left: 14,
+              zIndex: 1,
+              px: 1,
+              bgcolor: 'background.paper',
+            }}
+          >
+            {t('nav.company')}
+          </Typography>
+          <Select
+            value={filters.companyId}
+            onChange={handleFilterCompany}
+            displayEmpty
+          >
+            <MenuItem value="">{t('company.list.all') || 'All Companies'}</MenuItem>
+            {companies.map((company) => (
+              <MenuItem key={company._id} value={company._id}>
+                {company.companyName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+
       <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
         <Typography
           variant="caption"
@@ -43,15 +81,14 @@ export function DocumentTableToolbar({ filters, onFilters }) {
             bgcolor: 'background.paper',
           }}
         >
-          {t('document.filters') || 'Filters'}
+          {t('common.type') || 'Type'}
         </Typography>
         <Select
-          value="latest"
-          displayEmpty
-          onChange={() => {}}
+          value={filters.type}
+          onChange={(e) => onFilters('type', e.target.value)}
         >
-          <MenuItem value="latest">{t('document.latest') || 'Latest'}</MenuItem>
-          <MenuItem value="oldest">{t('document.oldest') || 'Oldest'}</MenuItem>
+          <MenuItem value="employee">{t('nav.employee')}</MenuItem>
+          <MenuItem value="contract">{t('nav.contract')}</MenuItem>
         </Select>
       </FormControl>
 

@@ -15,13 +15,14 @@ export const menuByRole = {
     'Support',
     'Contract',
     'Subscription',
-    'Roles Management',
+    // 'Roles Management',
     'Financial Management',
-    'Mail',
+    // 'Mail',
     'Notification',
     'Settings',
     'Templates',
     'Chat',
+    'Employee Payment',
   ],
 
   [ROLES.COMPANY_ADMIN]: [
@@ -43,6 +44,7 @@ export const menuByRole = {
     'Settings',
     'Templates',
     'Invoice',
+    'Employee Payment',
   ],
 
   [ROLES.GROUP_ADMIN]: [
@@ -60,7 +62,6 @@ export const menuByRole = {
   [ROLES.EMPLOYEE]: [
     'Dashboard',
     'Task',
-    'Generate Reports',
     'Support',
     'Chat',
     'Calendar',

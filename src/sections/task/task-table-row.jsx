@@ -15,6 +15,7 @@ import { useRouter } from 'src/routes/hooks';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { fDate } from 'src/utils/format-time';
+import { fCurrency } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +51,7 @@ export function TaskTableRow({ row, selected, onSelectRow }) {
   const displayPrice = isSubTask ? (taskData?.taskPrice || 0) : taskPrice;
   const displayCompany = isSubTask ? (row.company || '-') : company;
   const displayAssignedBy = assignedBy?.name || assignedBy?.firstName ? `${assignedBy?.firstName || ''} ${assignedBy?.lastName || ''}`.trim() : '-';
-  
+
   const navigationId = isSubTask ? taskData?._id : (taskId || row._id);
 
   let labelColor = 'default';
@@ -93,7 +94,7 @@ export function TaskTableRow({ row, selected, onSelectRow }) {
       </TableCell>
 
       <TableCell onClick={(e) => e.stopPropagation()}>
-        <Tooltip 
+        <Tooltip
           title={
             <Stack spacing={0.5} sx={{ p: 0.5 }}>
               {subTasks?.length > 0 ? (
@@ -104,8 +105,8 @@ export function TaskTableRow({ row, selected, onSelectRow }) {
                 <Typography variant="caption">{t('task.noSubtasks') || 'No subtasks'}</Typography>
               )}
             </Stack>
-          } 
-          placement="top" 
+          }
+          placement="top"
           arrow
         >
           <Box sx={{ p: 1, borderRadius: 1, border: `1px solid ${theme.palette.divider}`, display: 'inline-block', typography: 'caption', color: 'text.secondary', cursor: 'pointer' }}>
@@ -115,7 +116,7 @@ export function TaskTableRow({ row, selected, onSelectRow }) {
       </TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
-        CHF {Number(displayPrice).toFixed(2)}
+        {fCurrency(displayPrice)}
       </TableCell>
 
       <TableCell>

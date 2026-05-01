@@ -28,7 +28,9 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { DashboardContent } from 'src/layouts/dashboard/main';
 import { Scrollbar } from 'src/components/scrollbar';
-import { useInvoice } from 'src/features/invoice/useInvoices';
+import { LoadingButton } from '@mui/lab';
+import { toast } from 'react-hot-toast';
+import { useInvoice, useSendInvoice } from 'src/features/invoice/useInvoices';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +40,16 @@ export function InvoiceDetailsView({ id }) {
   const router = useRouter();
 
   const { data: invoice, isLoading, error } = useInvoice(id);
+  const sendInvoice = useSendInvoice();
+
+  const handleSendInvoice = useCallback(async () => {
+    try {
+      await sendInvoice.mutateAsync(id);
+      toast.success(t('invoice.send_success'));
+    } catch (error) {
+      toast.error(t('invoice.send_error'));
+    }
+  }, [id, sendInvoice, t]);
 
   if (isLoading) {
     return (
@@ -50,7 +62,7 @@ export function InvoiceDetailsView({ id }) {
   if (error || !invoice) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-        <Typography variant="h5">Invoice not found</Typography>
+        <Typography variant="h5">{t('invoice.not_found')}</Typography>
       </Box>
     );
   }
@@ -58,6 +70,8 @@ export function InvoiceDetailsView({ id }) {
   const {
     invoiceNumber,
     createdAt,
+    updatedAt,
+    sentAt,
     dueDate,
     status,
     amount,
@@ -74,35 +88,48 @@ export function InvoiceDetailsView({ id }) {
       {/* ─── Header ─── */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: { xs: 3, md: 5 } }}>
         <Stack spacing={1}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Invoice Details</Typography>
+          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{t('invoice.details.title')}</Typography>
           <Breadcrumbs
             separator={<Box component="span" sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'text.disabled' }} />}
           >
             <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.root)} sx={{ cursor: 'pointer' }}>
-              Dashboard
+              {t('common.dashboard')}
             </Link>
             <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.invoice.root)} sx={{ cursor: 'pointer' }}>
-              Invoices
+              {t('nav.invoice')}
             </Link>
             <Typography color="text.disabled">{invoiceNumber}</Typography>
           </Breadcrumbs>
         </Stack>
 
         <Stack direction="row" spacing={1.5}>
+          <LoadingButton
+            variant="contained"
+            color="success"
+            loading={sendInvoice.isPending}
+            onClick={handleSendInvoice}
+            startIcon={<Iconify icon="solar:paper-plane-bold" />}
+            sx={{ borderRadius: 1.5 }}
+          >
+            {t('invoice.send_invoice')}
+          </LoadingButton>
+
           <Button
             variant="outlined"
             color="inherit"
             startIcon={<Iconify icon="solar:printer-minimalistic-bold" />}
+            sx={{ borderRadius: 1.5 }}
           >
-            Print
+            {t('common.print')}
           </Button>
+
           <Button
             variant="contained"
             color="primary"
-            sx={{ bgcolor: '#00334e' }}
+            sx={{ bgcolor: '#00334e', borderRadius: 1.5 }}
             startIcon={<Iconify icon="solar:download-bold" />}
           >
-            Download PDF
+            {t('common.download_pdf')}
           </Button>
         </Stack>
       </Stack>
@@ -111,7 +138,7 @@ export function InvoiceDetailsView({ id }) {
         {/* ─── Summary Cards ─── */}
         <Grid xs={12} md={4}>
           <SummaryCard
-            title="Total Amount"
+            title={t('invoice.total_amount')}
             value={fCurrency(amount)}
             icon="solar:bill-list-bold"
             color="primary"
@@ -119,7 +146,7 @@ export function InvoiceDetailsView({ id }) {
         </Grid>
         <Grid xs={12} md={4}>
           <SummaryCard
-            title="Paid Amount"
+            title={t('invoice.paid_amount')}
             value={fCurrency(paidAmount)}
             icon="solar:check-circle-bold"
             color="success"
@@ -127,7 +154,7 @@ export function InvoiceDetailsView({ id }) {
         </Grid>
         <Grid xs={12} md={4}>
           <SummaryCard
-            title="Remaining Balance"
+            title={t('invoice.remaining_balance')}
             value={fCurrency(remainingAmount)}
             icon="solar:clock-circle-bold"
             color="warning"
@@ -160,7 +187,7 @@ export function InvoiceDetailsView({ id }) {
                 {/* Billing Info */}
                 <Grid xs={12} sm={6}>
                   <Typography variant="overline" sx={{ color: 'text.secondary', display: 'block', mb: 2 }}>
-                    Bill From
+                    {t('invoice.bill_from')}
                   </Typography>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar sx={{ bgcolor: 'primary.main', width: 48, height: 48 }}>
@@ -175,7 +202,7 @@ export function InvoiceDetailsView({ id }) {
 
                 <Grid xs={12} sm={6}>
                   <Typography variant="overline" sx={{ color: 'text.secondary', display: 'block', mb: 2 }}>
-                    Bill To
+                    {t('invoice.bill_to')}
                   </Typography>
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar sx={{ bgcolor: 'secondary.main', width: 48, height: 48 }}>
@@ -194,15 +221,15 @@ export function InvoiceDetailsView({ id }) {
                 {/* Contract Info */}
                 <Grid xs={12} sm={6}>
                   <DetailItem 
-                    label="Contract Number" 
+                    label={t('invoice.contract_number')} 
                     value={contract?.contractNumber} 
                     icon="solar:document-bold"
                   />
                 </Grid>
                 <Grid xs={12} sm={6}>
                   <DetailItem 
-                    label="Billing Type" 
-                    value={billingType} 
+                    label={t('invoice.billing_type')} 
+                    value={billingType?.replace(/_/g, ' ')} 
                     icon="solar:tag-bold"
                     sx={{ textTransform: 'capitalize' }}
                   />
@@ -210,14 +237,14 @@ export function InvoiceDetailsView({ id }) {
 
                 <Grid xs={12} sm={6}>
                   <DetailItem 
-                    label="Issue Date" 
+                    label={t('invoice.issue_date')} 
                     value={fDate(createdAt)} 
                     icon="solar:calendar-bold"
                   />
                 </Grid>
                 <Grid xs={12} sm={6}>
                   <DetailItem 
-                    label="Due Date" 
+                    label={t('invoice.due_date')} 
                     value={fDate(dueDate)} 
                     icon="solar:calendar-bold"
                     color="error.main"
@@ -231,8 +258,8 @@ export function InvoiceDetailsView({ id }) {
                 <Table sx={{ minWidth: 640 }}>
                   <TableBody>
                     <TableRow sx={{ bgcolor: alpha(theme.palette.grey[500], 0.04) }}>
-                      <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 'bold' }}>Total</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }}>{t('common.description')}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 'bold' }}>{t('common.total')}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
@@ -253,15 +280,15 @@ export function InvoiceDetailsView({ id }) {
             <Box sx={{ p: 3, textAlign: 'right', ml: 'auto', width: { xs: 1, sm: 0.5 } }}>
               <Stack spacing={2}>
                 <Stack direction="row" justifyContent="space-between">
-                  <Typography variant="body2" color="text.secondary">Subtotal</Typography>
+                  <Typography variant="body2" color="text.secondary">{t('invoice.subtotal')}</Typography>
                   <Typography variant="subtitle2">{fCurrency(amount)}</Typography>
                 </Stack>
                 <Stack direction="row" justifyContent="space-between">
-                  <Typography variant="body2" color="text.secondary">Discount</Typography>
+                  <Typography variant="body2" color="text.secondary">{t('invoice.discount')}</Typography>
                   <Typography variant="subtitle2" color="error.main">-</Typography>
                 </Stack>
                 <Stack direction="row" justifyContent="space-between">
-                  <Typography variant="h6">Total</Typography>
+                  <Typography variant="h6">{t('common.total')}</Typography>
                   <Typography variant="h6">{fCurrency(amount)}</Typography>
                 </Stack>
               </Stack>
@@ -273,21 +300,28 @@ export function InvoiceDetailsView({ id }) {
         <Grid xs={12} md={4}>
           <Stack spacing={3}>
             <Card sx={{ p: 3, borderRadius: 2 }}>
-              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>Timeline</Typography>
+              <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>{t('invoice.timeline')}</Typography>
               <Stack spacing={2}>
                 <TimelineItem 
-                  label="Invoice Created" 
+                  label={t('invoice.created')} 
                   time={fDateTime(createdAt)} 
                   active 
                 />
                 <TimelineItem 
-                  label="Invoice Sent" 
-                  time={invoice.sentAt ? fDateTime(invoice.sentAt) : 'Pending'} 
-                  active={!!invoice.sentAt} 
+                  label={t('invoice.sent')} 
+                  time={sentAt ? fDateTime(sentAt) : t('invoice.pending')} 
+                  active={!!sentAt} 
                 />
+                {updatedAt && updatedAt !== createdAt && (
+                  <TimelineItem 
+                    label={t('report.details.updatedAt')} 
+                    time={fDateTime(updatedAt)} 
+                    active 
+                  />
+                )}
                 <TimelineItem 
-                  label="Payment Received" 
-                  time={paidAmount > 0 ? 'Recorded' : 'Awaiting Payment'} 
+                  label={t('invoice.payment_received')} 
+                  time={paidAmount > 0 ? t('invoice.recorded') : t('invoice.awaiting_payment')} 
                   active={paidAmount > 0} 
                 />
               </Stack>
@@ -298,9 +332,9 @@ export function InvoiceDetailsView({ id }) {
                 <Box sx={{ p: 1.5, borderRadius: '50%', bgcolor: 'primary.main', color: 'white' }}>
                   <Iconify icon="solar:info-circle-bold" width={24} />
                 </Box>
-                <Typography variant="subtitle2">Note</Typography>
+                <Typography variant="subtitle2">{t('common.note')}</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Please ensure payment is made by the due date to avoid any service interruptions. Thank you for your business!
+                  {t('invoice.note_text')}
                 </Typography>
               </Stack>
             </Card>

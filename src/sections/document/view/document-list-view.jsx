@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
@@ -25,48 +26,48 @@ import { DocumentTableToolbar } from '../document-table-toolbar';
 
 // ----------------------------------------------------------------------
 
-const STATIC_DATA = Array.from({ length: 14 }, (_, index) => ({
-  id: `USR00${index + 1}`,
-  name: 'John Doe',
-  userId: `USR00${index + 1}`,
-  age: 28,
-  gender: 'Male',
-  email: 'john@example.com',
-  mobileNo: '9876543210',
-  role: 'Cleaner',
-  joiningDate: '2023-06-15',
-  department: 'Engineering',
-  documentStatus: 'ID Card',
-}));
+import { useAllCompanies } from 'src/features/company/useCompanies';
+import { useDocuments } from 'src/features/document/useDocuments';
+
+// ----------------------------------------------------------------------
 
 export function DocumentListView() {
   const { t } = useTranslation();
 
   const TABLE_HEAD = useMemo(() => [
     { id: 'name', label: t('document.table.name') },
-    { id: 'userId', label: t('document.table.userId') },
-    { id: 'age', label: t('document.table.age') },
-    { id: 'gender', label: t('document.table.gender') },
     { id: 'email', label: t('document.table.email') },
-    { id: 'mobileNo', label: t('document.table.mobileNo') },
-    { id: 'role', label: t('document.table.role') },
-    { id: 'joiningDate', label: t('document.table.joiningDate') },
-    { id: 'department', label: t('document.table.department') },
-    { id: 'documentStatus', label: t('document.table.document'), align: 'left' },
+    { id: 'type', label: t('common.type') || 'Type' },
+    { id: 'documents', label: t('document.table.document'), align: 'center' },
     { id: '', label: t('document.table.action'), align: 'right' },
   ], [t]);
+
+  const user = useSelector((state) => state.auth.user);
+  const isSuperAdmin = user?.role === 'super_admin';
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selected, setSelected] = useState([]);
   const [dense, setDense] = useState(false);
-  const [filters, setFilters] = useState({ name: '' });
+  const [filters, setFilters] = useState({ 
+    name: '',
+    type: 'employee',
+    companyId: ''
+  });
 
-  const tableData = STATIC_DATA.filter((item) =>
-    item.name.toLowerCase().includes(filters.name.toLowerCase())
-  );
+  const { data: companiesData } = useAllCompanies();
+  const companies = companiesData?.data || [];
 
-  const paginatedData = tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const { data, isLoading } = useDocuments({
+    search: filters.name,
+    type: filters.type,
+    companyId: filters.companyId,
+    page: page + 1,
+    limit: rowsPerPage
+  });
+
+  const tableData = data?.data || [];
+  const totalItems = data?.total || 0;
 
   const handleFilters = useCallback((name, value) => {
     setFilters((prevState) => ({
@@ -78,7 +79,7 @@ export function DocumentListView() {
 
   const handleSelectAllRows = (checked) => {
     if (checked) {
-      setSelected(tableData.map((n) => n.userId));
+      setSelected(tableData.map((n) => n.email));
       return;
     }
     setSelected([]);
@@ -132,7 +133,12 @@ export function DocumentListView() {
         </Button>
       </Stack>
 
-      <DocumentTableToolbar filters={filters} onFilters={handleFilters} />
+      <DocumentTableToolbar 
+        filters={filters} 
+        onFilters={handleFilters} 
+        isSuperAdmin={isSuperAdmin}
+        companies={companies}
+      />
 
       <Card sx={{ borderRadius: 2 }}>
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -155,14 +161,22 @@ export function DocumentListView() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((row) => (
+                {tableData.map((row) => (
                   <DocumentTableRow
-                    key={row.userId}
+                    key={row.email}
                     row={row}
-                    selected={selected.includes(row.userId)}
-                    onSelectRow={() => handleSelectRow(row.userId)}
+                    selected={selected.includes(row.email)}
+                    onSelectRow={() => handleSelectRow(row.email)}
                   />
                 ))}
+
+                {isLoading && (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center">
+                      <Typography variant="body1">Loading...</Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
 
                 {notFound && (
                   <TableRow>
@@ -179,7 +193,7 @@ export function DocumentListView() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={tableData.length}
+          count={totalItems}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

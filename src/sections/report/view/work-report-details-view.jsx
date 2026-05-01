@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -26,7 +27,7 @@ import { alpha, useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-import { fDateTime } from 'src/utils/format-time';
+import { fDateTime, fSecondsToDuration } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -44,6 +45,8 @@ export function WorkReportDetailsView() {
   const { t } = useTranslation();
   const { id } = useParams();
   const router = useRouter();
+  const user = useSelector((state) => state.auth.user);
+  const isGroupAdmin = user?.role === 'group_admin';
 
   const { data, isLoading, error } = useWorkReportDetails(id);
   const report = data?.data;
@@ -140,36 +143,63 @@ export function WorkReportDetailsView() {
           </Breadcrumbs>
         </Stack>
 
-        <Stack direction="row" spacing={1.5} alignItems="center">
-          <Label variant="soft" color={(report.reviewStatus === 'approved' && 'success') || 'warning'} sx={{ height: 28 }}>
-            {t(`report.table.${report.reviewStatus}`) || report.reviewStatus.toUpperCase()}
-          </Label>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold', textTransform: 'uppercase' }}>
+              {t('report.table.status')}:
+            </Typography>
+            <Label 
+              variant="soft" 
+              color={(report.status === 'approved' && 'success') || (report.status === 'rejected' && 'error') || 'info'} 
+              sx={{ height: 28, textTransform: 'capitalize' }}
+            >
+              {t(`report.table.${report.status}`) || report.status}
+            </Label>
+          </Stack>
+
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold', textTransform: 'uppercase' }}>
+              {t('report.table.reviewStatus')}:
+            </Typography>
+            <Label 
+              variant="soft" 
+              color={(report.reviewStatus === 'approved' && 'success') || (report.reviewStatus === 'rejected' && 'error') || 'warning'} 
+              sx={{ height: 28 }}
+            >
+              {t(`report.table.${report.reviewStatus}`) || report.reviewStatus.toUpperCase()}
+            </Label>
+          </Stack>
+
           <Label variant="soft" color={report.isBilled ? 'success' : 'info'} sx={{ height: 28 }}>
             {report.isBilled ? t('report.details.billed') : t('report.details.unbilled')}
           </Label>
 
-          {report.reviewStatus === 'pending' && (
+          {(report.reviewStatus === 'pending' || report.status === 'pending') && (
             <Stack direction="row" spacing={1.5}>
-              <LoadingButton
-                variant="outlined"
-                color="primary"
-                loading={isReviewing}
-                onClick={handleReview}
-                startIcon={<Iconify icon="solar:clipboard-check-bold" />}
-                sx={{ borderRadius: 1.5 }}
-              >
-                {t('report.details.review')}
-              </LoadingButton>
-              <LoadingButton
-                variant="contained"
-                color="success"
-                loading={isApproving}
-                onClick={handleApprove}
-                startIcon={<Iconify icon="solar:check-read-bold" />}
-                sx={{ borderRadius: 1.5, boxShadow: theme.customShadows.success }}
-              >
-                {t('report.details.approve')}
-              </LoadingButton>
+              {isGroupAdmin && report.reviewStatus === 'pending' && (
+                <LoadingButton
+                  variant="outlined"
+                  color="primary"
+                  loading={isReviewing}
+                  onClick={handleReview}
+                  startIcon={<Iconify icon="solar:clipboard-check-bold" />}
+                  sx={{ borderRadius: 1.5 }}
+                >
+                  {t('report.details.review')}
+                </LoadingButton>
+              )}
+              {report.status === 'pending' && (
+                <LoadingButton
+                  variant="contained"
+                  color="success"
+                  loading={isApproving}
+                  onClick={handleApprove}
+                  startIcon={<Iconify icon="solar:check-read-bold" />}
+                  sx={{ borderRadius: 1.5, boxShadow: theme.customShadows.success }}
+                >
+                  {t('report.details.approve')}
+                </LoadingButton>
+              )}
             </Stack>
           )}
         </Stack>
@@ -182,8 +212,8 @@ export function WorkReportDetailsView() {
             icon="solar:clock-circle-bold"
             color="info"
             label={t('report.details.totalTime')}
-            value={`${totalHours} hrs`}
-            caption={`(${totalTimeSeconds} ${t('task.details.seconds') || 'seconds'})`}
+            value={fSecondsToDuration(totalTimeSeconds)}
+            caption={`(${totalTimeSeconds} ${t('common.units.seconds')})`}
           />
         </Grid>
 
@@ -193,7 +223,7 @@ export function WorkReportDetailsView() {
             color="success"
             label={t('report.details.billingType')}
             value={contract?.billingType}
-            caption={`${t('contract.form.hourlyRate')}: ${fCurrency(contract?.hourlyRate || 0)} / hr`}
+            caption={`${t('contract.form.hourlyRate')}: ${fCurrency(contract?.hourlyRate || 0)} / ${t('common.units.hr')}`}
             sx={{ textTransform: 'capitalize' }}
           />
         </Grid>
@@ -204,7 +234,7 @@ export function WorkReportDetailsView() {
             color="warning"
             label={t('report.details.contractInfo')}
             value={contract?.contractNumber}
-            caption={`Ref: ${contract?.referenceNumber}`}
+            caption={`${t('report.details.reference')}: ${contract?.referenceNumber}`}
           />
         </Grid>
 
@@ -229,6 +259,22 @@ export function WorkReportDetailsView() {
                   <DetailItem label={t('report.details.scheduledFor')} value={fDateTime(task?.scheduledDate)} />
                 </Grid>
 
+                {(report.approvedAt || report.reviewedAt) && (
+                   <>
+                    <Grid xs={12}><Divider sx={{ borderStyle: 'dashed' }} /></Grid>
+                    {report.approvedAt && (
+                      <Grid xs={12} sm={6}>
+                        <DetailItem label={t('report.details.approvedAt')} value={fDateTime(report.approvedAt)} />
+                      </Grid>
+                    )}
+                    {report.reviewedAt && (
+                      <Grid xs={12} sm={6}>
+                        <DetailItem label={t('report.details.reviewedAt')} value={fDateTime(report.reviewedAt)} />
+                      </Grid>
+                    )}
+                   </>
+                )}
+
                 <Grid xs={12}><Divider sx={{ borderStyle: 'dashed' }} /></Grid>
 
                 <Grid xs={12} sm={6}>
@@ -252,6 +298,12 @@ export function WorkReportDetailsView() {
                     <Box>
                       <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{contract?.property?.propertyName}</Typography>
                       <Typography variant="body2" color="text.secondary">{contract?.property?.location?.address || contract?.property?.address}</Typography>
+                      {contract?.property?.location?.coordinates && (
+                        <Typography variant="caption" color="primary.main" sx={{ display: 'block', mt: 0.5, fontWeight: 'bold' }}>
+                          <Iconify icon="solar:map-point-bold" width={12} sx={{ mr: 0.5 }} />
+                          {contract.property.location.coordinates[1]}, {contract.property.location.coordinates[0]}
+                        </Typography>
+                      )}
                       <Typography variant="caption" color="text.disabled">{contract?.property?.sizeSqm} sqm • {contract?.property?.propertyType}</Typography>
                     </Box>
                   </Stack>
@@ -283,12 +335,12 @@ export function WorkReportDetailsView() {
                     <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                       <Typography variant="subtitle2" noWrap sx={{ fontWeight: 'bold' }}>{item.employee?.firstName} {item.employee?.lastName}</Typography>
                       <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block' }}>
-                        {item.employee?.employeeProfile?.jobPosition} • {item.totalTasks} {t('task.title') || 'Tasks'}
+                        {item.employee?.employeeProfile?.jobPosition} • {item.totalTasks} {t('task.title')}
                       </Typography>
                     </Box>
                     <Box sx={{ textAlign: 'right' }}>
                       <Typography variant="subtitle2" color="primary.main" sx={{ fontWeight: 'bold' }}>
-                        {(item.totalTimeSeconds / 3600).toFixed(2)} hrs
+                        {fSecondsToDuration(item.totalTimeSeconds)}
                       </Typography>
                     </Box>
                   </Stack>
@@ -330,7 +382,7 @@ export function WorkReportDetailsView() {
                         </Typography>
                         <Stack direction="row" spacing={1.5} sx={{ mt: 1 }}>
                           <Label color="success" variant="soft" startIcon={<Iconify icon="solar:clock-circle-bold" />}>
-                            {(sub.timeSeconds / 3600).toFixed(2)} hrs
+                            {fSecondsToDuration(sub.timeSeconds)}
                           </Label>
                           {sub.subTaskId?.subtaskPrice > 0 && (
                              <Label color="info" variant="soft">
@@ -349,8 +401,8 @@ export function WorkReportDetailsView() {
 
                     <Box sx={{ mb: 4, p: 2, borderRadius: 1.5, bgcolor: 'background.neutral', borderLeft: `4px solid ${theme.palette.primary.main}` }}>
                       <Typography variant="overline" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>{t('report.details.comments')}</Typography>
-                      <Typography variant="body2" sx={{ fontStyle: sub.subTaskId?.afterWorkImagesdescription ? 'normal' : 'italic' }}>
-                        {sub.subTaskId?.afterWorkImagesdescription || 'No comments provided.'}
+                      <Typography variant="body2" sx={{ fontStyle: (sub.afterWorkImagesdescription || sub.subTaskId?.afterWorkImagesdescription) ? 'normal' : 'italic' }}>
+                        {sub.afterWorkImagesdescription || sub.subTaskId?.afterWorkImagesdescription || t('report.details.noComments')}
                       </Typography>
                     </Box>
 
@@ -367,7 +419,7 @@ export function WorkReportDetailsView() {
                             </ImageListItem>
                           ))}
                           {(!sub.subTaskId?.beforeWorkImages || sub.subTaskId.beforeWorkImages.length === 0) && (
-                            <Typography variant="caption" color="text.disabled">No images uploaded</Typography>
+                            <Typography variant="caption" color="text.disabled">{t('report.details.noImages')}</Typography>
                           )}
                         </ImageList>
                       </Grid>
@@ -384,7 +436,7 @@ export function WorkReportDetailsView() {
                             </ImageListItem>
                           ))}
                            {(!sub.subTaskId?.afterWorkImages || sub.subTaskId.afterWorkImages.length === 0) && (
-                            <Typography variant="caption" color="text.disabled">No images uploaded</Typography>
+                            <Typography variant="caption" color="text.disabled">{t('report.details.noImages')}</Typography>
                           )}
                         </ImageList>
                       </Grid>

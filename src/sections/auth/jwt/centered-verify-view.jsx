@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
@@ -22,12 +23,13 @@ import { useResendOtp } from '../../../features/auth/useResendOtp';
 // ----------------------------------------------------------------------
 
 export const VerifySchema = zod.object({
-  code: zod.string().min(6, { message: 'Code must be 6 digits!' }),
+  code: zod.string().min(6, { message: 'verify.validation.codeRequired' }),
 });
 
 // ----------------------------------------------------------------------
 
 export function CenteredVerifyView() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const idRef = useRef(sessionStorage.getItem('fp_id'));
   const id = idRef.current;
@@ -65,7 +67,7 @@ export function CenteredVerifyView() {
 
   const onSubmit = handleSubmit((data) => {
     if (!id) {
-      toast.error('Session expired. Please request OTP again.');
+      toast.error(t('verify.sessionExpired'));
       return;
     }
 
@@ -77,7 +79,7 @@ export function CenteredVerifyView() {
 
   const handleResendOtp = () => {
     if (!email) {
-      toast.error('Email not found. Please restart forgot password.');
+      toast.error(t('verify.emailNotFound'));
       navigate('/auth/jwt/forgot-password');
       return;
     }
@@ -119,9 +121,9 @@ export function CenteredVerifyView() {
         <EmailInboxIcon sx={{ mx: 'auto' }} />
 
         <Stack spacing={1} sx={{ mt: 3, mb: 5, textAlign: 'center' }}>
-          <Typography variant="h5">Please check your email</Typography>
+          <Typography variant="h5">{t('verify.title')}</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            We’ve emailed a 6-digit confirmation code.
+            {t('verify.description')}
           </Typography>
         </Stack>
 
@@ -137,20 +139,20 @@ export function CenteredVerifyView() {
               type="submit"
               variant="contained"
               loading={isPending}
-              loadingIndicator="Verifying..."
+              loadingIndicator={t('verify.verifying')}
             >
-              Verify
+              {t('verify.button')}
             </LoadingButton>
 
             {/* Resend OTP */}
             <Typography variant="body2" sx={{ mx: 'auto' }}>
               {canResend ? (
                 <Link variant="subtitle2" sx={{ cursor: 'pointer' }} onClick={handleResendOtp}>
-                  Resend code
+                  {t('verify.resendCode')}
                 </Link>
               ) : (
                 <>
-                  Resend code in <strong>{seconds}s</strong>
+                  {t('verify.resendIn', { seconds })}
                 </>
               )}
             </Typography>
@@ -164,7 +166,7 @@ export function CenteredVerifyView() {
               sx={{ mx: 'auto', display: 'inline-flex', alignItems: 'center' }}
             >
               <Iconify icon="eva:arrow-ios-back-fill" width={16} sx={{ mr: 0.5 }} />
-              Return to sign in
+              {t('verify.returnSignIn')}
             </Link>
           </Stack>
         </Form>

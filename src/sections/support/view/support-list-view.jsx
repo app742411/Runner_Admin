@@ -31,15 +31,6 @@ import SupportTicketCard from '../support-ticket-card';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [
-  { value: 'all', label: 'All Tickets' },
-  { value: 'new', label: 'New' },
-  { value: 'on-going', label: 'On-Going' },
-  { value: 'resolved', label: 'Resolved' },
-];
-
-// ----------------------------------------------------------------------
-
 export default function SupportListView() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -75,11 +66,18 @@ export default function SupportListView() {
   const { user } = useSelector((state) => state.auth);
   const isSuperAdmin = user?.role === 'superAdmin';
 
+  const STATUS_OPTIONS_TRANSLATED = [
+    { value: 'all', label: t('support.status.all') },
+    { value: 'new', label: t('support.status.new') },
+    { value: 'on-going', label: t('support.status.on_going') },
+    { value: 'resolved', label: t('support.status.resolved') },
+  ];
+
   return (
     <DashboardContent maxWidth={false}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 5 }}>
         <Stack spacing={1}>
-          <Typography variant="h4">{t('support.list_title') || 'Support Tickets'}</Typography>
+          <Typography variant="h4">{t('support.list_title')}</Typography>
           <Breadcrumbs
             separator={
               <Box
@@ -88,8 +86,10 @@ export default function SupportListView() {
               />
             }
           >
-            <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.root)} sx={{ cursor: 'pointer' }}>Dashboard</Link>
-            <Typography color="text.primary">Support</Typography>
+            <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.root)} sx={{ cursor: 'pointer' }}>
+              {t('common.dashboard')}
+            </Link>
+            <Typography color="text.primary">{t('nav.support')}</Typography>
           </Breadcrumbs>
         </Stack>
 
@@ -101,7 +101,7 @@ export default function SupportListView() {
             startIcon={<Iconify icon="mingcute:add-line" />}
             sx={{ bgcolor: '#00334e' }}
           >
-            {t('support.new_ticket') || 'New Ticket'}
+            {t('support.new_ticket')}
           </Button>
         )}
       </Stack>
@@ -110,7 +110,7 @@ export default function SupportListView() {
         <Stack direction="row" spacing={2} alignItems="center">
           <TextField
             fullWidth
-            placeholder="Search for ticket"
+            placeholder={t('support.search_placeholder')}
             value={search}
             onChange={handleSearch}
             InputProps={{
@@ -124,12 +124,12 @@ export default function SupportListView() {
 
           <TextField
             select
-            label="Select status"
+            label={t('support.select_status')}
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             sx={{ minWidth: 160 }}
           >
-            {STATUS_OPTIONS.map((option) => (
+            {STATUS_OPTIONS_TRANSLATED.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -138,18 +138,18 @@ export default function SupportListView() {
 
           <TextField
             select
-            label="Date Filter"
+            label={t('support.date_filter')}
             defaultValue="this_week"
             sx={{ minWidth: 160 }}
           >
-            <MenuItem value="this_week">This Week</MenuItem>
-            <MenuItem value="last_week">Last Week</MenuItem>
-            <MenuItem value="this_month">This Month</MenuItem>
+            <MenuItem value="this_week">{t('support.this_week')}</MenuItem>
+            <MenuItem value="last_week">{t('support.last_week')}</MenuItem>
+            <MenuItem value="this_month">{t('support.this_month')}</MenuItem>
           </TextField>
         </Stack>
 
         {isLoading ? (
-          <Box sx={{ py: 10, textAlign: 'center' }}>Loading...</Box>
+          <Box sx={{ py: 10, textAlign: 'center' }}>{t('support.loading')}</Box>
         ) : (
           <>
             {tickets.length > 0 ? (

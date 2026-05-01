@@ -5,8 +5,24 @@
     "save": "Speichern",
     "delete": "Löschen",
     "cancel": "Abbrechen",
+    "close": "Schließen",
     "search": "Suchen...",
-    "dense": "Kompakt"
+    "dense": "Kompakt",
+    "print": "Drucken",
+    "download_pdf": "PDF herunterladen",
+    "description": "Beschreibung",
+    "total": "Gesamt",
+    "note": "Hinweis",
+    "back": "Zurück",
+    "edit": "Bearbeiten",
+    "type": "Typ",
+    "and": "und",
+    "units": {
+      "hours": "Stunden",
+      "hrs": "Std.",
+      "seconds": "Sekunden",
+      "hr": "Std."
+    }
   },
   "header": {
     "help": "Hilfe benötigt?",
@@ -51,6 +67,8 @@
     "chat": "Chatten",
     "client": "Kunde",
     "offer": "Angebot",
+    "invoice": "Rechnung",
+    "employee_payment": "Mitarbeiterzahlungen",
     "group": "Gruppe",
     "profile": "Profil",
     "calendar": "Kalender",
@@ -80,7 +98,9 @@
     "financeSettings": "Einstellungen (Finanzen)",
     "taskCost": "Aufgabe & Kosten",
     "invoice": "Rechnung",
-    "work_reports": "Arbeitsberichte"
+    "work_reports": "Arbeitsberichte",
+    "employee_payment": "Mitarbeiterzahlung",
+    "employee_payments": "Mitarbeiterzahlungen"
   },
   "finance_dashboard": {
     "title": "Finanzübersicht",
@@ -121,7 +141,53 @@
     "checkPayroll": "Gehaltsabrechnungsstapel prüfen",
     "mwstDue": "MWST fällig",
     "prepareMwst": "MWST-Erklärung vorbereiten",
-    "critical": "Kritisch"
+    "critical": "Kritisch",
+    "last_sync": "Letzte Synchronisierung: {{time}}",
+    "healthy_liquidity": "Gute Liquidität",
+    "salaries_reviewed": "Gehälter überprüft",
+    "expense_reports": "Spesenabrechnungen",
+    "bank_file_gen": "Bankdatei-Generierung",
+    "review": "Überprüfung",
+    "done": "Erledigt",
+    "overdue_alert": "{{count}} überfällige Rechnungen",
+    "failed_payments_alert": "{{count}} fehlgeschlagene Zahlungen",
+    "requires_attention": "Erfordert Aufmerksamkeit"
+  },
+  "employee_payment": {
+    "title": "Mitarbeiterzahlungen",
+    "totalAmount": "Gesamtbetrag",
+    "totalPaid": "Gesamt Bezahlt",
+    "totalPending": "Gesamt Ausstehend",
+    "summaryByEmployee": "Zusammenfassung nach Mitarbeiter",
+    "paymentDetails": "Zahlungsdetails",
+    "groupByEmployee": "Nach Mitarbeiter gruppieren",
+    "table": {
+      "employee": "Mitarbeiter",
+      "contract": "Vertrag",
+      "type": "Typ",
+      "tasks": "Aufgaben",
+      "time": "Zeit",
+      "amount": "Betrag",
+      "status": "Status",
+      "date": "Datum"
+    },
+    "details": {
+      "employee": "Mitarbeiter",
+      "contract": "Vertrag",
+      "paymentType": "Zahlungsart",
+      "totalTasks": "Aufgaben Gesamt",
+      "totalTime": "Zeit Gesamt",
+      "amount": "Betrag",
+      "status": "Status",
+      "createdAt": "Erstellt am",
+      "minutes": "Minuten"
+    },
+    "status": {
+      "all": "Alle",
+      "pending": "Ausstehend",
+      "paid": "Bezahlt",
+      "cancelled": "Storniert"
+    }
   },
   "invoice": {
     "title": "Rechnung",
@@ -221,11 +287,21 @@
     "reviewMessage": "Ihr Unternehmensprofil wurde zur Prüfung gesendet. Sie werden innerhalb von 24 Stunden per registrierter E-Mail benachrichtigt, sobald Ihr Profil genehmigt wurde.",
     "redirectMessage": "Weiterleitung zur Login-Seite in {{countdown}} Sekunden...",
     "goToLogin": "Zum Login",
+    "security": "Sicherheit",
+    "companyLogo": "Firmenlogo",
+    "addressSearch": "Adresse suchen",
+    "allowedFiles": "Erlaubt *.jpeg, *.jpg, *.png, *.gif",
+    "maxSizeOf": "Maximalgröße von",
     "validation": {
       "companyRequired": "Unternehmensname ist erforderlich",
       "emailRequired": "E-Mail ist erforderlich",
       "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein",
       "phoneRequired": "Telefonnummer ist erforderlich",
+      "addressRequired": "Adresse ist erforderlich",
+      "cityRequired": "Stadt ist erforderlich",
+      "stateRequired": "Bundesland / Kanton ist erforderlich",
+      "countryRequired": "Land ist erforderlich",
+      "pincodeRequired": "Postleitzahl ist erforderlich",
       "onlyNumbers": "Nur Zahlen erlaubt",
       "minDigits": "Mindestens 10 Stellen",
       "maxDigits": "Maximal 15 Stellen",
@@ -263,6 +339,7 @@
       "all": "Alle"
     },
     "table": {
+      "companyId": "Firmen-ID",
       "companyName": "Firmenname",
       "adminName": "Admin-Name",
       "phone": "Telefonnummer",
@@ -295,15 +372,14 @@
     "details": {
       "totalEarning": "Gesamtverdienst",
       "totalTask": "Gesamtaufgaben",
+      "totalSubTask": "Gesamtunteraufgaben",
       "totalEmployee": "Gesamtmitarbeiter",
-      "totalProperty": "Gesamtobjekte",
-      "numberOfUsers": "Anzahl der Benutzer",
-      "requestsSupport": "Anzahl der Anfragen & Supportfälle",
-      "internalEffort": "Unser interner Aufwand",
-      "netProfitLoss": "Netto Gewinn oder Verlust",
+      "totalContract": "Gesamtverträge",
+      "netProfit": "Nettogewinn",
       "viewDetails": "Details anzeigen",
       "companyDetails": "Unternehmensdetails",
       "subscriptionTitle": "Abonnement-Details:",
+      "renewalDate": "Verlängerungsdatum",
       "tinNo": "Steuernummer :",
       "documents": "Dokument",
       "docName": "Dokumentname",
@@ -311,7 +387,8 @@
       "uploadedOn": "Hochgeladen am",
       "allEmployees": "Alle Mitarbeiter",
       "userName": "Benutzername",
-      "position": "Position"
+      "position": "Position",
+      "createdBy": "Erstellt von"
     },
     "form": {
       "info": "Unternehmensinformationen",
@@ -334,6 +411,12 @@
       "password": "Passwort",
       "confirmPassword": "Passwort bestätigen",
       "newPasswordOptional": "Neues Passwort (optional)",
+      "security": "Sicherheit",
+      "companyLogo": "Firmenlogo",
+      "allowedFiles": "Erlaubt *.jpeg, *.jpg, *.png, *.gif",
+      "maxSizeOf": "Maximalgröße von",
+      "addressSearch": "Adresse suchen",
+      "addressDetails": "Adressdetails",
       "placeholder": {
         "password": "Mindestens 6 Zeichen"
       },
@@ -491,13 +574,15 @@
     "taskCompletion": "Aufgabenerledigung",
     "qualityScore": "Qualitätsbewertung",
     "onTimeDelivery": "Termingerechte Lieferung",
-    "recentActivity": "Kürzliche Aktivitäten",
     "monthlyIncome": "Monatliches Einkommen",
     "completionVsEarnings": "Aufgabenerledigung vs. Verdienst",
-    "highPriority": "Hohe Priorität",
-    "mediumPriority": "Mittlere Priorität",
-    "lowPriority": "Niedrige Priorität",
-    "due": "Fällig",
+    "priority": {
+      "high": "Hoch",
+      "medium": "Mittel",
+      "low": "Niedrig",
+      "label": "Priorität: {{priority}}"
+    },
+    "due": "Fällig: {{due}}",
     "taskCompleted": "Aufgabe abgeschlossen",
     "newTaskAssigned": "Neue Aufgabe zugewiesen",
     "deadlineReminder": "Frist-Erinnerung",
@@ -685,7 +770,9 @@
       "describeAfter": "Beschreibung (Nach der Arbeit)",
       "selectSubtask": "Wählen Sie eine Unteraufgabe aus, um Details anzuzeigen",
       "successSaveDescription": "Beschreibung erfolgreich gespeichert",
-      "successUpload": "Bild erfolgreich hochgeladen"
+      "successUpload": "Bild erfolgreich hochgeladen",
+      "updatedAt": "Aktualisiert am",
+      "totalTimeSpent": "Gesamtarbeitszeit"
     }
   },
   "client": {
@@ -693,6 +780,13 @@
     "dashboard": "Übersicht",
     "clients": "Kunden",
     "list_of_clients": "Kundenliste",
+    "details": {
+      "info": "Kundeninformationen",
+      "properties": "Zugehörige Objekte",
+      "noProperties": "Keine Objekte zugeordnet.",
+      "id": "Kunden-ID",
+      "registered": "Registriert"
+    },
     "newClient": "Neuer Kunde",
     "export": "Exportieren",
     "dense": "Kompakt",
@@ -974,15 +1068,9 @@
       "specialFeatureEndDate": "Enddatum der Besonderheiten",
       "propertyDescription": "Objektbeschreibung",
       "propertyLocationSearch": "Objektstandort suchen",
-      "locationAddress": "Standortadresse",
-      "latitude": "Breitengrad",
-      "longitude": "Längengrad",
-      "additionalDocuments": "Zusätzliche Dokumente",
       "dropFiles": "Dateien hier ablegen oder zum Durchsuchen klicken",
       "uploadText": "Erlaubt *.jpeg, *.jpg, *.png, *.gif",
       "maxSize": "Maximale Größe von 3 Mb",
-      "taskManagement": "Aufgabenverwaltung",
-      "addMultipleTasks": "(Sie können mehrere Aufgaben hinzufügen)",
       "taskName": "Aufgabenname",
       "category": "Kategorie",
       "subCategory": "Unterkategorie",
@@ -1020,6 +1108,11 @@
       "totalTime": "Gesamtzeit",
       "totalCost": "Gesamtkosten",
       "vatIncluded": "(inkl. MwSt., falls zutreffend)",
+      "vatExcluded": "(exkl. MwSt.)",
+      "createContractSuccess": "Vertrag erfolgreich erstellt!",
+      "validationFailed": "Bitte überprüfen Sie das Formular auf Fehler und versuchen Sie es erneut.",
+      "fillTaskFields": "Bitte füllen Sie alle erforderlichen Aufgabenfelder aus",
+      "fillSubTaskFields": "Bitte geben Sie den Namen und die Dauer der Teilaufgabe ein",
       "validation": {
         "typeRequired": "Vertragstyp ist erforderlich",
         "startDateRequired": "Startdatum ist erforderlich",
@@ -1066,6 +1159,13 @@
   "property": {
     "title": "Objekt",
     "listTitle": "Objektliste",
+    "details": {
+      "info": "Objektinformationen",
+      "client": "Kundendetails",
+      "location": "Standort",
+      "coordinates": "Koordinaten",
+      "description": "Beschreibung"
+    },
     "export": "Exportieren",
     "filter": "Filtern",
     "search": "Suchen...",
@@ -1194,13 +1294,21 @@
       "beforeWork": "Vor der Arbeit",
       "afterWork": "Nach der Arbeit",
       "comments": "Kommentare",
+      "approvedAt": "Genehmigt am",
+      "approvedBy": "Genehmigt von",
+      "reviewedAt": "Geprüft am",
+      "reviewedBy": "Geprüft von",
+      "noComments": "Keine Kommentare vorhanden.",
+      "noImages": "Keine Bilder hochgeladen",
+      "reference": "Referenz",
       "approveSuccess": "Bericht erfolgreich genehmigt",
       "approveError": "Bericht konnte nicht genehmigt werden",
       "reviewSuccess": "Bericht erfolgreich geprüft",
       "reviewError": "Bericht konnte nicht geprüft werden",
       "saveSuccess": "Beschreibung erfolgreich aktualisiert",
       "saveError": "Beschreibung konnte nicht aktualisiert werden",
-      "notFound": "Bericht nicht gefunden"
+      "notFound": "Bericht nicht gefunden",
+      "updatedAt": "Aktualisiert am"
     },
     "generate": "Bericht erstellen",
     "select": "Bericht auswählen",
@@ -1225,7 +1333,10 @@
       "createdAt": "Erstellt am",
       "status": "Status",
       "reviewStatus": "Überprüfungsstatus",
-      "action": "Aktion"
+      "action": "Aktion",
+      "approved": "Genehmigt",
+      "pending": "Ausstehend",
+      "rejected": "Abgelehnt"
     }
   },
   "notification": {
@@ -1255,6 +1366,34 @@
     "list_title": "Support-Tickets",
     "new_ticket": "Neues Ticket",
     "add_new": "Neues Support-Ticket hinzufügen",
+    "search_placeholder": "Nach Ticket suchen",
+    "select_status": "Status auswählen",
+    "date_filter": "Datumsfilter",
+    "this_week": "Diese Woche",
+    "last_week": "Letzte Woche",
+    "this_month": "Diesen Monat",
+    "loading": "Laden...",
+    "status": {
+      "all": "Alle Tickets",
+      "new": "Neu",
+      "on_going": "In Bearbeitung",
+      "resolved": "Gelöst",
+      "accepted": "Akzeptiert",
+      "closed": "Geschlossen",
+      "pending": "Ausstehend",
+      "created": "Erstellt",
+      "open": "Offen",
+      "in_progress": "In Arbeit"
+    },
+    "posted_at": "Gepostet am {{time}}",
+    "attachment": "Anhang",
+    "attachments": "Anhänge",
+    "by": "Von",
+    "assigned": "Zugewiesen",
+    "open_chat": "Chat öffnen",
+    "open_ticket": "Ticket öffnen",
+    "status_updated": "Status aktualisiert auf {{status}}",
+    "status_update_failed": "Status konnte nicht aktualisiert werden",
     "form": {
       "title": "Titel",
       "category": "Kategorie",
@@ -1263,9 +1402,14 @@
       "assignedTo": "Zuweisen an",
       "uploadText": "Klicken oder ziehen, um Medien hochzuladen",
       "maxSize": "Maximale Dateigröße 3 MB",
-      "submit": "Einreichen",
+      "submit": "Absenden",
       "createSuccess": "Ticket erfolgreich erstellt!",
       "fillFields": "Bitte füllen Sie alle erforderlichen Felder aus",
+      "fill_details": "Geben Sie Ihre Details ein",
+      "title_label": "Titel eingeben",
+      "assigned_to": "Zuweisen an",
+      "description_label": "Detaillierte Beschreibung des Problems oder der Anfrage",
+      "upload_media": "Medien hochladen",
       "validation": {
         "titleRequired": "Titel ist erforderlich",
         "categoryRequired": "Kategorie ist erforderlich",
@@ -1273,6 +1417,127 @@
         "descriptionRequired": "Beschreibung ist erforderlich",
         "assignedToRequired": "Bitte jemandem zuweisen"
       }
+    }
+  },
+  "invoice": {
+    "details": {
+      "title": "Rechnungsdetails"
+    },
+    "title": "Rechnung",
+    "list": "Rechnungsliste",
+    "export": "Exportieren",
+    "newInvoice": "Neue Rechnung",
+    "filters": "Filter",
+    "sortBy": "Sortieren nach: Beliebteste",
+    "table": {
+      "invoiceName": "Rechnungsname",
+      "clientName": "Kundenname",
+      "amount": "Betrag",
+      "dueDate": "Fälligkeitsdatum",
+      "status": "Status",
+      "action": "Aktion"
+    },
+    "popover": {
+      "view": "Details anzeigen"
+    },
+    "not_found": "Rechnung nicht gefunden",
+    "total_amount": "Gesamtbetrag",
+    "paid_amount": "Gezahlter Betrag",
+    "remaining_balance": "Restbetrag",
+    "bill_from": "Rechnung von",
+    "bill_to": "Rechnung an",
+    "contract_number": "Vertragsnummer",
+    "billing_type": "Abrechnungsart",
+    "issue_date": "Ausstellungsdatum",
+    "due_date": "Fälligkeitsdatum",
+    "subtotal": "Zwischensumme",
+    "discount": "Rabatt",
+    "timeline": "Zeitplan",
+    "created": "Rechnung erstellt",
+    "sent": "Rechnung gesendet",
+    "payment_received": "Zahlung erhalten",
+    "awaiting_payment": "Warten auf Zahlung",
+    "recorded": "Erfasst",
+    "pending": "Ausstehend",
+    "send_invoice": "Rechnung senden",
+    "send_success": "Rechnung erfolgreich gesendet!",
+    "send_error": "Fehler beim Senden der Rechnung",
+    "note_text": "Bitte stellen Sie sicher, dass die Zahlung bis zum Fälligkeitsdatum erfolgt, um Serviceunterbrechungen zu vermeiden. Vielen Dank für Ihr Geschäft!"
+  },
+  "chat": {
+    "title": "Chat",
+    "search": "Kontakte suchen...",
+    "direct": "Direkt",
+    "group": "Gruppe",
+    "ticket": "Ticket",
+    "no_messages": "Noch keine Nachrichten"
+  },
+  "auth": {
+    "set_new_password": "Neues Passwort festlegen",
+    "enter_new_password": "Bitte geben Sie unten Ihr neues Passwort ein.",
+    "new_password": "Neues Passwort",
+    "confirm_password": "Neues Passwort bestätigen",
+    "update_password": "Passwort aktualisieren",
+    "updating": "Aktualisierung...",
+    "return_to_signin": "Zurück zum Login",
+    "signInTitle": "In Ihr Konto einloggen",
+    "email": "E-Mail-Adresse",
+    "forgotPassword": "Passwort vergessen?",
+    "password": "Passwort",
+    "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+    "signingIn": "Anmeldung...",
+    "signIn": "Anmelden",
+    "noAccount": "Sie haben noch kein Konto?",
+    "getStarted": "Jetzt loslegen",
+    "emailRequired": "E-Mail ist erforderlich!",
+    "emailInvalid": "E-Mail muss eine gültige E-Mail-Adresse sein!",
+    "passwordRequired": "Passwort ist erforderlich!",
+    "passwordMin": "Passwort muss mindestens 6 Zeichen lang sein!",
+    "loginError": "Anmeldung fehlgeschlagen! Bitte überprüfen Sie Ihre Zugangsdaten.",
+    "resetPassword": {
+      "title": "Passwort vergessen?",
+      "description": "Bitte geben Sie die mit Ihrem Konto verknüpfte E-Mail-Adresse ein. Wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+      "emailLabel": "E-Mail-Adresse",
+      "emailPlaceholder": "beispiel@domain.de",
+      "sendRequest": "Anfrage senden",
+      "returnSignIn": "Zurück zum Login"
+    }
+  },
+  "signUp": {
+    "title": "Völlig kostenlos loslegen",
+    "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+    "signIn": "Anmelden",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+    "createAccount": "Konto erstellen",
+    "agreeTo": "Mit der Anmeldung erkläre ich mich einverstanden mit den",
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzbestimmungen",
+    "failed": "Registrierung fehlgeschlagen! Bitte versuchen Sie es erneut.",
+    "validation": {
+      "firstNameRequired": "Vorname ist erforderlich!",
+      "lastNameRequired": "Nachname ist erforderlich!",
+      "emailRequired": "E-Mail ist erforderlich!",
+      "emailInvalid": "E-Mail muss eine gültige E-Mail-Adresse sein!",
+      "passwordRequired": "Passwort ist erforderlich!",
+      "passwordMin": "Passwort muss mindestens 6 Zeichen lang sein!"
+    }
+  },
+  "verify": {
+    "title": "Bitte überprüfen Sie Ihre E-Mails",
+    "description": "Wir haben einen 6-stelligen Bestätigungscode per E-Mail gesendet.",
+    "button": "Bestätigen",
+    "verifying": "Verifizierung...",
+    "resendCode": "Code erneut senden",
+    "resendIn": "Code erneut senden in {{seconds}}s",
+    "returnSignIn": "Zurück zum Login",
+    "sessionExpired": "Sitzung abgelaufen. Bitte fordern Sie erneut einen OTP an.",
+    "emailNotFound": "E-Mail nicht gefunden. Bitte starten Sie das Zurücksetzen des Passworts erneut.",
+    "validation": {
+      "codeRequired": "Der Code muss 6-stellig sein!"
     }
   },
   "pagination": {

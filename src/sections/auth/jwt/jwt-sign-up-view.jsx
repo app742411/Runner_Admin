@@ -137,7 +137,7 @@ export function JwtSignUpView() {
         <Link underline="always" color="text.primary">
           {t('signUp.terms')}
         </Link>{' '}
-        and{' '}
+        {t('common.and')}{' '}
         <Link underline="always" color="text.primary">
           {t('signUp.privacy')}
         </Link>

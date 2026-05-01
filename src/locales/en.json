@@ -5,8 +5,24 @@
     "save": "Save",
     "delete": "Delete",
     "cancel": "Cancel",
+    "close": "Close",
     "search": "Search...",
-    "dense": "Dense"
+    "dense": "Dense",
+    "print": "Print",
+    "download_pdf": "Download PDF",
+    "description": "Description",
+    "total": "Total",
+    "note": "Note",
+    "back": "Back",
+    "edit": "Edit",
+    "type": "Type",
+    "and": "and",
+    "units": {
+      "hours": "hours",
+      "hrs": "hrs",
+      "seconds": "seconds",
+      "hr": "hr"
+    }
   },
   "header": {
     "help": "Need help?",
@@ -52,6 +68,8 @@
     "chat": "Chat",
     "client": "Client",
     "offer": "Offer",
+    "invoice": "Invoice",
+    "employee_payment": "Employee Payments",
     "group": "Group",
     "profile": "Profile",
     "calendar": "Calendar",
@@ -80,7 +98,9 @@
     "taskCost": "Task & Cost",
     "financeSettings": "Settings (Finance-related)",
     "invoice": "Invoice",
-    "work_reports": "Work Reports"
+    "work_reports": "Work Reports",
+    "employee_payment": "Employee Payment",
+    "employee_payments": "Employee Payments"
   },
   "finance_dashboard": {
     "title": "Finance Overview",
@@ -121,7 +141,53 @@
     "checkPayroll": "Check the payroll batch",
     "mwstDue": "MWST Due",
     "prepareMwst": "Prepare MWST Return",
-    "critical": "Critical"
+    "critical": "Critical",
+    "last_sync": "Last sync: {{time}}",
+    "healthy_liquidity": "Healthy liquidity",
+    "salaries_reviewed": "Salaries reviewed",
+    "expense_reports": "Expense reports",
+    "bank_file_gen": "Bank file generation",
+    "review": "Review",
+    "done": "Done",
+    "overdue_alert": "{{count}} overdue Invoices",
+    "failed_payments_alert": "{{count}} failed payments",
+    "requires_attention": "Requires attention"
+  },
+  "employee_payment": {
+    "title": "Employee Payments",
+    "totalAmount": "Total Amount",
+    "totalPaid": "Total Paid",
+    "totalPending": "Total Pending",
+    "summaryByEmployee": "Summary by Employee",
+    "paymentDetails": "Payment Details",
+    "groupByEmployee": "Group by Employee",
+    "table": {
+      "employee": "Employee",
+      "contract": "Contract",
+      "type": "Type",
+      "tasks": "Tasks",
+      "time": "Time",
+      "amount": "Amount",
+      "status": "Status",
+      "date": "Date"
+    },
+    "details": {
+      "employee": "Employee",
+      "contract": "Contract",
+      "paymentType": "Payment Type",
+      "totalTasks": "Total Tasks",
+      "totalTime": "Total Time",
+      "amount": "Amount",
+      "status": "Status",
+      "createdAt": "Created At",
+      "minutes": "minutes"
+    },
+    "status": {
+      "all": "All",
+      "pending": "Pending",
+      "paid": "Paid",
+      "cancelled": "Cancelled"
+    }
   },
   "invoice": {
     "title": "Invoice",
@@ -221,11 +287,21 @@
     "reviewMessage": "Your company profile has been sent for review. You will be notified via registered mail within 24 hours once your profile is approved.",
     "redirectMessage": "Redirecting to login page in {{countdown}} seconds...",
     "goToLogin": "Go to Login",
+    "security": "Security",
+    "companyLogo": "Company Logo",
+    "addressSearch": "Search Address",
+    "allowedFiles": "Allowed *.jpeg, *.jpg, *.png, *.gif",
+    "maxSizeOf": "Max size of",
     "validation": {
       "companyRequired": "Company name is required",
       "emailRequired": "Email is required",
       "emailInvalid": "Enter valid email",
       "phoneRequired": "Phone number is required",
+      "addressRequired": "Address is required",
+      "cityRequired": "City is required",
+      "stateRequired": "State is required",
+      "countryRequired": "Country is required",
+      "pincodeRequired": "Pincode is required",
       "onlyNumbers": "Only numbers allowed",
       "minDigits": "Minimum 10 digits",
       "maxDigits": "Maximum 15 digits",
@@ -263,6 +339,7 @@
       "all": "All"
     },
     "table": {
+      "companyId": "Company ID",
       "companyName": "Company Name",
       "adminName": "Admin Name",
       "phone": "Phone Number",
@@ -295,15 +372,14 @@
     "details": {
       "totalEarning": "Total Earning",
       "totalTask": "Total Task",
+      "totalSubTask": "Total Subtask",
       "totalEmployee": "Total Employee",
-      "totalProperty": "Total Property",
-      "numberOfUsers": "Number of Users",
-      "requestsSupport": "Number of requests & support cases",
-      "internalEffort": "Our internal effort",
-      "netProfitLoss": "Net profit or net loss",
+      "totalContract": "Total Contract",
+      "netProfit": "Net Profit",
       "viewDetails": "View Details",
       "companyDetails": "Company detail",
       "subscriptionTitle": "Subscription Details:",
+      "renewalDate": "Renewal Date",
       "tinNo": "TIN No. :",
       "documents": "Document",
       "docName": "Document Name",
@@ -311,7 +387,8 @@
       "uploadedOn": "Uploaded on",
       "allEmployees": "All Employees",
       "userName": "User Name",
-      "position": "Position"
+      "position": "Position",
+      "createdBy": "Created By"
     },
     "form": {
       "info": "Company Information",
@@ -334,6 +411,12 @@
       "password": "Password",
       "confirmPassword": "Confirm Password",
       "newPasswordOptional": "New Password (Optional)",
+      "security": "Security",
+      "companyLogo": "Company Logo",
+      "allowedFiles": "Allowed *.jpeg, *.jpg, *.png, *.gif",
+      "maxSizeOf": "max size of",
+      "addressSearch": "Search Address",
+      "addressDetails": "Address Details",
       "placeholder": {
         "password": "6+ characters"
       },
@@ -507,13 +590,15 @@
     "taskCompletion": "Task Completion",
     "qualityScore": "Quality Score",
     "onTimeDelivery": "On-Time Delivery",
-    "recentActivity": "Recent Activity",
     "monthlyIncome": "Monthly Income",
     "completionVsEarnings": "Task Completion vs Earnings",
-    "highPriority": "High Priority",
-    "mediumPriority": "Medium Priority",
-    "lowPriority": "Low Priority",
-    "due": "Due",
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "label": "{{priority}} Priority"
+    },
+    "due": "Due: {{due}}",
     "taskCompleted": "Task completed",
     "newTaskAssigned": "New task assigned",
     "deadlineReminder": "Deadline reminder",
@@ -701,7 +786,9 @@
       "describeAfter": "Description (After work)",
       "selectSubtask": "Select a subtask to view details",
       "successSaveDescription": "Description saved successfully",
-      "successUpload": "Image uploaded successfully"
+      "successUpload": "Image uploaded successfully",
+      "updatedAt": "Updated At",
+      "totalTimeSpent": "Total Time Spent"
     }
   },
   "client": {
@@ -709,6 +796,13 @@
     "dashboard": "Dashboard",
     "clients": "Clients",
     "list_of_clients": "list of clients",
+    "details": {
+      "info": "Client Information",
+      "properties": "Associated Properties",
+      "noProperties": "No properties associated.",
+      "id": "Client ID",
+      "registered": "Registered"
+    },
     "newClient": "New Client",
     "export": "Export",
     "dense": "Dense",
@@ -985,21 +1079,14 @@
       "propertyType": "Property Type",
       "commercial": "Commercial",
       "residential": "Residential",
-      "propertySize": "Size of property (m2)",
       "propertySize": "Property Size (sqm)",
       "noOfResidents": "No. of Residents",
       "specialFeatureEndDate": "Special Feature End Date",
       "propertyDescription": "Property Description",
       "propertyLocationSearch": "Search Property Location",
-      "locationAddress": "Location Address",
-      "latitude": "Latitude",
-      "longitude": "Longitude",
-      "additionalDocuments": "Additional Documents",
       "dropFiles": "Drop files here or click to browse",
       "uploadText": "Allowed *.jpeg, *.jpg, *.png, *.gif",
       "maxSize": "Max size of 3 Mb",
-      "taskManagement": "Task Management",
-      "addMultipleTasks": "(you can add multiple tasks)",
       "taskName": "Task Name",
       "category": "Category",
       "subCategory": "Sub Category",
@@ -1037,6 +1124,11 @@
       "totalTime": "Total Time",
       "totalCost": "Total Cost",
       "vatIncluded": "(VAT included if applicable)",
+      "vatExcluded": "(VAT excluded)",
+      "createContractSuccess": "Contract created successfully!",
+      "validationFailed": "Please check the form for errors and try again.",
+      "fillTaskFields": "Please fill all required task fields",
+      "fillSubTaskFields": "Please fill subtask name and duration",
       "validation": {
         "typeRequired": "Contract type is required",
         "startDateRequired": "Start date is required",
@@ -1083,6 +1175,13 @@
   "property": {
     "title": "Property",
     "listTitle": "Property List",
+    "details": {
+      "info": "Property Information",
+      "client": "Client Details",
+      "location": "Location",
+      "coordinates": "Coordinates",
+      "description": "Description"
+    },
     "export": "Export",
     "filter": "Filter",
     "search": "Search...",
@@ -1211,13 +1310,21 @@
       "beforeWork": "Before Work",
       "afterWork": "After Work",
       "comments": "Comments",
+      "approvedAt": "Approved At",
+      "approvedBy": "Approved By",
+      "reviewedAt": "Reviewed At",
+      "reviewedBy": "Reviewed By",
+      "noComments": "No comments provided.",
+      "noImages": "No images uploaded",
+      "reference": "Reference",
       "approveSuccess": "Report approved successfully",
       "approveError": "Failed to approve report",
       "reviewSuccess": "Report reviewed successfully",
       "reviewError": "Failed to review report",
       "saveSuccess": "Description updated successfully",
       "saveError": "Failed to update description",
-      "notFound": "Report not found"
+      "notFound": "Report not found",
+      "updatedAt": "Updated At"
     },
     "generate": "Generate Report",
     "select": "Select Report",
@@ -1242,7 +1349,10 @@
       "createdAt": "Created At",
       "status": "Status",
       "reviewStatus": "Review Status",
-      "action": "Action"
+      "action": "Action",
+      "approved": "Approved",
+      "pending": "Pending",
+      "rejected": "Rejected"
     }
   },
   "notification": {
@@ -1272,6 +1382,34 @@
     "list_title": "Support Tickets",
     "new_ticket": "New Ticket",
     "add_new": "Add New Support Ticket",
+    "search_placeholder": "Search for ticket",
+    "select_status": "Select status",
+    "date_filter": "Date Filter",
+    "this_week": "This Week",
+    "last_week": "Last Week",
+    "this_month": "This Month",
+    "loading": "Loading...",
+    "status": {
+      "all": "All Tickets",
+      "new": "New",
+      "on_going": "On-Going",
+      "resolved": "Resolved",
+      "accepted": "Accepted",
+      "closed": "Closed",
+      "pending": "Pending",
+      "created": "Created",
+      "open": "Open",
+      "in_progress": "In Progress"
+    },
+    "posted_at": "Posted at {{time}}",
+    "attachment": "attachment",
+    "attachments": "attachments",
+    "by": "By",
+    "assigned": "Assigned",
+    "open_chat": "Open Chat",
+    "open_ticket": "Open Ticket",
+    "status_updated": "Status updated to {{status}}",
+    "status_update_failed": "Failed to update status",
     "form": {
       "title": "Title",
       "category": "Category",
@@ -1283,6 +1421,11 @@
       "submit": "Submit",
       "createSuccess": "Ticket created successfully!",
       "fillFields": "Please fill all required fields",
+      "fill_details": "Fill Your Details",
+      "title_label": "Enter your Title",
+      "assigned_to": "Assign To",
+      "description_label": "Detailed description of the issue or request",
+      "upload_media": "Upload Media",
       "validation": {
         "titleRequired": "Title is required",
         "categoryRequired": "Category is required",
@@ -1290,6 +1433,127 @@
         "descriptionRequired": "Description is required",
         "assignedToRequired": "Please assign to someone"
       }
+    }
+  },
+  "invoice": {
+    "details": {
+      "title": "Invoice Details"
+    },
+    "title": "Invoice",
+    "list": "Invoice List",
+    "export": "Export",
+    "newInvoice": "New Invoice",
+    "filters": "Filters",
+    "sortBy": "Sort By: Featured",
+    "table": {
+      "invoiceName": "Invoice Name",
+      "clientName": "Client Name",
+      "amount": "Amount",
+      "dueDate": "Due Date",
+      "status": "Status",
+      "action": "Action"
+    },
+    "popover": {
+      "view": "View Details"
+    },
+    "not_found": "Invoice not found",
+    "total_amount": "Total Amount",
+    "paid_amount": "Paid Amount",
+    "remaining_balance": "Remaining Balance",
+    "bill_from": "Bill From",
+    "bill_to": "Bill To",
+    "contract_number": "Contract Number",
+    "billing_type": "Billing Type",
+    "issue_date": "Issue Date",
+    "due_date": "Due Date",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "timeline": "Timeline",
+    "created": "Invoice Created",
+    "sent": "Invoice Sent",
+    "payment_received": "Payment Received",
+    "awaiting_payment": "Awaiting Payment",
+    "recorded": "Recorded",
+    "pending": "Pending",
+    "send_invoice": "Send Invoice",
+    "send_success": "Invoice sent successfully!",
+    "send_error": "Failed to send invoice",
+    "note_text": "Please ensure payment is made by the due date to avoid any service interruptions. Thank you for your business!"
+  },
+  "chat": {
+    "title": "Chat",
+    "search": "Search contacts...",
+    "direct": "Direct",
+    "group": "Group",
+    "ticket": "Ticket",
+    "no_messages": "No messages yet"
+  },
+  "auth": {
+    "set_new_password": "Set new password",
+    "enter_new_password": "Please enter your new password below.",
+    "new_password": "New password",
+    "confirm_password": "Confirm new password",
+    "update_password": "Update password",
+    "updating": "Updating...",
+    "return_to_signin": "Return to sign in",
+    "signInTitle": "Sign in to your account",
+    "email": "Email address",
+    "forgotPassword": "Forgot password?",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signingIn": "Signing in...",
+    "signIn": "Sign in",
+    "noAccount": "Don't have an account?",
+    "getStarted": "Get started",
+    "emailRequired": "Email is required!",
+    "emailInvalid": "Email must be a valid email address!",
+    "passwordRequired": "Password is required!",
+    "passwordMin": "Password must be at least 6 characters!",
+    "loginError": "Login failed! Please check your credentials.",
+    "resetPassword": {
+      "title": "Forgot your password?",
+      "description": "Please enter the email address associated with your account and we will email you a link to reset your password.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "example@domain.com",
+      "sendRequest": "Send request",
+      "returnSignIn": "Return to sign in"
+    }
+  },
+  "signUp": {
+    "title": "Get started absolutely free",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email address",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "createAccount": "Create account",
+    "agreeTo": "By signing up, I agree to",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "failed": "Registration failed! Please try again.",
+    "validation": {
+      "firstNameRequired": "First name is required!",
+      "lastNameRequired": "Last name is required!",
+      "emailRequired": "Email is required!",
+      "emailInvalid": "Email must be a valid email address!",
+      "passwordRequired": "Password is required!",
+      "passwordMin": "Password must be at least 6 characters!"
+    }
+  },
+  "verify": {
+    "title": "Please check your email",
+    "description": "We’ve emailed a 6-digit confirmation code.",
+    "button": "Verify",
+    "verifying": "Verifying...",
+    "resendCode": "Resend code",
+    "resendIn": "Resend code in {{seconds}}s",
+    "returnSignIn": "Return to sign in",
+    "sessionExpired": "Session expired. Please request OTP again.",
+    "emailNotFound": "Email not found. Please restart forgot password.",
+    "validation": {
+      "codeRequired": "Code must be 6 digits!"
     }
   },
   "pagination": {

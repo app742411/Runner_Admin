@@ -3,15 +3,18 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar';
+import AvatarGroup from '@mui/material/AvatarGroup';
 import { alpha, useTheme } from '@mui/material/styles';
 
 import { useTranslation } from 'react-i18next';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { fCurrency } from 'src/utils/format-number';
 
-export default function TaskDetailsSidebar({ 
-  subTasks, 
-  activeSubTaskId, 
+export default function TaskDetailsSidebar({
+  subTasks,
+  activeSubTaskId,
   onSelectSubTask,
   t,
   formatDecimalTime
@@ -26,21 +29,21 @@ export default function TaskDetailsSidebar({
           {t('contract.form.taskManagement')} ({subTasks.length})
         </Typography>
       </Stack>
-      
+
       <Scrollbar sx={{ maxHeight: 700 }}>
         <Stack spacing={1} sx={{ p: 1.5 }}>
           {subTasks.map((subTask) => {
             const isSelected = (activeSubTaskId || subTasks[0]?._id) === subTask._id;
             const isCompleted = subTask.status === 'completed';
             const isInProgress = subTask.status === 'in_progress';
-            
+
             return (
-              <Box 
+              <Box
                 key={subTask._id}
                 onClick={() => onSelectSubTask(subTask._id)}
-                sx={{ 
-                  p: 2, 
-                  borderRadius: 1.5, 
+                sx={{
+                  p: 2,
+                  borderRadius: 1.5,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -50,31 +53,44 @@ export default function TaskDetailsSidebar({
                   border: '1px solid',
                   borderColor: isSelected ? alpha(theme.palette.primary.main, 0.2) : 'transparent',
                   boxShadow: isSelected ? theme.customShadows.z8 : 'none',
-                  '&:hover': { 
+                  '&:hover': {
                     bgcolor: isSelected ? 'background.paper' : alpha(theme.palette.primary.main, 0.04),
                     borderColor: isSelected ? alpha(theme.palette.primary.main, 0.3) : alpha(theme.palette.divider, 0.5)
                   }
                 }}
               >
                 <Box sx={{ minWidth: 0 }}>
-                   <Typography variant="subtitle2" sx={{ fontWeight: isSelected ? 'bold' : 'medium', color: isSelected ? 'primary.main' : 'text.primary', noWrap: true }}>
-                     {subTask.subTaskName}
-                   </Typography>
-                   <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
-                      <Typography variant="caption" sx={{ color: 'text.disabled', display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <Iconify icon="solar:clock-circle-linear" width={12} />
-                        {formatDecimalTime(subTask.estimatedDurationSeconds || 0)}
+                  <Typography variant="subtitle2" sx={{ fontWeight: isSelected ? 'bold' : 'medium', color: isSelected ? 'primary.main' : 'text.primary', noWrap: true }}>
+                    {subTask.subTaskName}
+                  </Typography>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
+                    <Typography variant="caption" sx={{ color: 'text.disabled', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <Iconify icon="solar:clock-circle-linear" width={12} />
+                      {formatDecimalTime(subTask.estimatedDurationSeconds || 0)}
+                    </Typography>
+                    <Box sx={{ width: 3, height: 3, borderRadius: '50%', bgcolor: 'text.disabled' }} />
+                    <Typography variant="caption" sx={{ color: 'success.main', fontWeight: 'bold' }}>
+                      {fCurrency(subTask.subtaskPrice || 0)}
+                    </Typography>
+                  </Stack>
+                  {subTask.assignedTo?.length > 0 && (
+                    <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+                      <AvatarGroup max={3} sx={{ '& .MuiAvatar-root': { width: 22, height: 22, fontSize: 10 } }}>
+                        {subTask.assignedTo.map((user) => (
+                          <Avatar key={user.userId} alt={user.name} src={user.avatarUrl} />
+                        ))}
+                      </AvatarGroup>
+                      <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'bold', noWrap: true }}>
+                        {subTask.assignedTo[0].name}
+                        {subTask.assignedTo.length > 1 && ` +${subTask.assignedTo.length - 1}`}
                       </Typography>
-                      <Box sx={{ width: 3, height: 3, borderRadius: '50%', bgcolor: 'text.disabled' }} />
-                      <Typography variant="caption" sx={{ color: 'success.main', fontWeight: 'bold' }}>
-                        CHF {subTask.subtaskPrice || 0}
-                      </Typography>
-                   </Stack>
+                    </Stack>
+                  )}
                 </Box>
 
-                <Box sx={{ 
-                  width: 24, height: 24, 
-                  borderRadius: '50%', 
+                <Box sx={{
+                  width: 24, height: 24,
+                  borderRadius: '50%',
                   border: (t) => `2px solid ${isCompleted ? theme.palette.success.main : isInProgress ? theme.palette.warning.main : theme.palette.divider}`,
                   bgcolor: isCompleted ? theme.palette.success.main : isInProgress ? alpha(theme.palette.warning.main, 0.1) : 'transparent',
                   display: 'flex', alignItems: 'center', justifyContent: 'center'

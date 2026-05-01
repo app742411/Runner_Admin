@@ -31,6 +31,7 @@ import { alpha, useTheme } from '@mui/material/styles';
 
 import { useTranslation } from 'react-i18next';
 import { paths } from 'src/routes/paths';
+import { fCurrency, CURRENCY } from 'src/utils/format-number';
 import { useRouter } from 'src/routes/hooks';
 import AddressAutocomplete from 'src/components/map/address-autocomplete';
 
@@ -263,6 +264,30 @@ export function ContractNewForm() {
     return addedSubTasks + currentTaskSubTasks + typingSubTask;
   }, [values.tasks, currentTask.subTasks, currentSubTask.subTaskName]);
 
+  const onError = (errors) => {
+    toast.error(t('contract.form.validationFailed') || 'Please check the form for errors and try again.');
+    
+    // Automatically scroll to the first error field
+    const getFirstErrorKey = (obj, path = '') => {
+      const key = Object.keys(obj)[0];
+      if (!key) return path;
+      if (obj[key].message) {
+        return path ? `${path}.${key}` : key;
+      }
+      return getFirstErrorKey(obj[key], path ? `${path}.${key}` : key);
+    };
+
+    const firstError = getFirstErrorKey(errors);
+    if (firstError) {
+      // Find the input element by name attribute
+      const el = document.querySelector(`[name="${firstError}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.focus();
+      }
+    }
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       const formData = new FormData();
@@ -365,7 +390,7 @@ export function ContractNewForm() {
       console.error(error);
       toast.error(error.message || 'Something went wrong');
     }
-  });
+  }, onError);
 
 
   const handleAddTask = useCallback(() => {
@@ -466,10 +491,18 @@ export function ContractNewForm() {
                 </Grid>
 
                 <Grid item xs={12} md={6}>
-                  <Field.DatePicker name="startDate" label={t('contract.form.startDate')} />
+                  <Field.DatePicker 
+                    name="startDate" 
+                    label={t('contract.form.startDate')} 
+                    minDate={dayjs()}
+                  />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <Field.DatePicker name="endDate" label={t('contract.form.endDate')} />
+                  <Field.DatePicker 
+                    name="endDate" 
+                    label={t('contract.form.endDate')} 
+                    minDate={values.startDate ? dayjs(values.startDate) : dayjs()}
+                  />
                 </Grid>
 
                 {values.billingType === 'hourly' && (
@@ -478,7 +511,7 @@ export function ContractNewForm() {
                       name="hourlyRate"
                       label={t('contract.form.hourlyRate') || 'Hourly Rate'}
                       type="number"
-                      InputProps={{ startAdornment: <Box sx={{ mr: 1, color: 'text.secondary' }}>CHF</Box> }}
+                      InputProps={{ startAdornment: <Box sx={{ mr: 1, color: 'text.secondary' }}>{CURRENCY}</Box> }}
                     />
                   </Grid>
                 )}
@@ -685,7 +718,7 @@ export function ContractNewForm() {
                             <TableCell>{item.dueDate ? dayjs(item.dueDate).format('DD MMM YYYY') : '-'}</TableCell>
                             <TableCell align="center">
                               <Typography variant="subtitle2">
-                                CHF {(Number(item.taskPrice) || 0).toFixed(2)}
+                                {fCurrency(item.taskPrice || 0)}
                               </Typography>
                             </TableCell>
                             <TableCell align="center">
@@ -961,7 +994,7 @@ export function ContractNewForm() {
                   <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.5 }}>
                     <Typography variant="subtitle2" color="error.main">{t('contract.form.totalCost')}</Typography>
                     <Typography variant="h4" color="error.main" sx={{ fontWeight: 800 }}>
-                      CHF {totalCost.toFixed(2)}
+                      {fCurrency(totalCost)}
                     </Typography>
                   </Stack>
                   <Typography variant="caption" color="text.disabled" sx={{ display: 'block', textAlign: 'right' }}>

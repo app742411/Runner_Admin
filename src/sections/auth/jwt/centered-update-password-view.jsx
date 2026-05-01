@@ -16,6 +16,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { SentIcon } from 'src/assets/icons';
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
+import { useTranslation } from 'react-i18next';
 import { useParams, Navigate } from 'react-router-dom';
 import { useResetPassword } from '../../../features/auth/useResetPassword';
 
@@ -36,6 +37,7 @@ export const UpdatePasswordSchema = zod
 // ----------------------------------------------------------------------
 
 export function CenteredUpdatePasswordView() {
+  const { t } = useTranslation();
   const { token } = useParams();
   const password = useBoolean();
 
@@ -97,10 +99,10 @@ export function CenteredUpdatePasswordView() {
           <SentIcon sx={{ mx: 'auto' }} />
 
           <Stack spacing={1} sx={{ mt: 3, mb: 5, textAlign: 'center' }}>
-            <Typography variant="h5">Set new password</Typography>
+            <Typography variant="h5">{t('auth.set_new_password')}</Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Please enter your new password below.
+              {t('auth.enter_new_password')}
             </Typography>
           </Stack>
 
@@ -109,7 +111,7 @@ export function CenteredUpdatePasswordView() {
             <Stack spacing={3}>
               <Field.Text
                 name="password"
-                label="New password"
+                label={t('auth.new_password')}
                 type={password.value ? 'text' : 'password'}
                 InputLabelProps={{ shrink: true }}
                 InputProps={{
@@ -127,7 +129,7 @@ export function CenteredUpdatePasswordView() {
 
               <Field.Text
                 name="confirmPassword"
-                label="Confirm new password"
+                label={t('auth.confirm_password')}
                 type={password.value ? 'text' : 'password'}
                 InputLabelProps={{ shrink: true }}
               />
@@ -138,9 +140,9 @@ export function CenteredUpdatePasswordView() {
                 type="submit"
                 variant="contained"
                 loading={isPending}
-                loadingIndicator="Updating..."
+                loadingIndicator={t('auth.updating')}
               >
-                Update password
+                {t('auth.update_password')}
               </LoadingButton>
 
               {/* Back to sign in */}
@@ -152,7 +154,7 @@ export function CenteredUpdatePasswordView() {
                 sx={{ mx: 'auto', display: 'inline-flex', alignItems: 'center' }}
               >
                 <Iconify icon="eva:arrow-ios-back-fill" width={16} sx={{ mr: 0.5 }} />
-                Return to sign in
+                {t('auth.return_to_signin')}
               </Link>
             </Stack>
           </Form>

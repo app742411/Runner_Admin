@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import Stack from '@mui/material/Stack';
@@ -42,6 +43,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export default function ChatNav({ chats, selectedChatId, onSelectChat, participantStatus, currentTab, onChangeTab }) {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
 
   const filteredChats = chats.filter((chat) =>
@@ -50,45 +52,45 @@ export default function ChatNav({ chats, selectedChatId, onSelectChat, participa
 
   return (
     <Box sx={{ width: 320, borderRight: (theme) => `solid 1px ${theme.palette.divider}`, display: 'flex', flexDirection: 'column' }}>
-      <Stack spacing={2} sx={{ p: 2.5 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6">Chat</Typography>
-          <Stack direction="row" spacing={1}>
-            <Iconify icon="solar:settings-bold" sx={{ color: 'text.secondary', cursor: 'pointer' }} />
-            <Iconify icon="solar:user-plus-bold" sx={{ color: 'text.secondary', cursor: 'pointer' }} />
+      <Scrollbar sx={{ flexGrow: 1 }}>
+        <Stack spacing={2} sx={{ p: 2.5 }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Typography variant="h6">{t('chat.title')}</Typography>
+            <Stack direction="row" spacing={1}>
+              <Iconify icon="solar:settings-bold" sx={{ color: 'text.secondary', cursor: 'pointer' }} />
+              <Iconify icon="solar:user-plus-bold" sx={{ color: 'text.secondary', cursor: 'pointer' }} />
+            </Stack>
           </Stack>
+
+          <TextField
+            fullWidth
+            size="small"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t('chat.search')}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Tabs
+            value={currentTab}
+            onChange={(event, newValue) => onChangeTab(newValue)}
+            variant="fullWidth"
+            sx={{
+              '& .MuiTab-root': { px: 1, minWidth: 0 },
+            }}
+          >
+            <Tab value="direct" label={t('chat.direct')} />
+            <Tab value="group" label={t('chat.group')} />
+            <Tab value="ticket" label={t('chat.ticket')} />
+          </Tabs>
         </Stack>
 
-        <TextField
-          fullWidth
-          size="small"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search contacts..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        <Tabs
-          value={currentTab}
-          onChange={(event, newValue) => onChangeTab(newValue)}
-          variant="fullWidth"
-          sx={{
-            '& .MuiTab-root': { px: 1, minWidth: 0 },
-          }}
-        >
-          <Tab value="direct" label="Direct" />
-          <Tab value="group" label="Group" />
-          <Tab value="ticket" label="Ticket" />
-        </Tabs>
-      </Stack>
-
-      <Scrollbar sx={{ flexGrow: 1 }}>
         <List disablePadding>
           {filteredChats.map((chat) => {
             const isSelected = selectedChatId === chat._id;
@@ -129,7 +131,7 @@ export default function ChatNav({ chats, selectedChatId, onSelectChat, participa
 
                   <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                      {chat.lastMessage?.text || 'No messages yet'}
+                      {chat.lastMessage?.text || t('chat.no_messages')}
                     </Typography>
                     {chat.unreadCount > 0 && (
                       <Box

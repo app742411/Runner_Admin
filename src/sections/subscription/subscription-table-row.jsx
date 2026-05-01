@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+import { fCurrency } from 'src/utils/format-number';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
@@ -65,8 +66,8 @@ export function SubscriptionTableRow({ row, selected, onSelectRow, onEditRow, on
            {employeeLimit}
         </TableCell>
 
-        <TableCell sx={{ color: 'text.secondary' }}>CHF{Number(monthlyFees).toFixed(2)}</TableCell>
-        <TableCell sx={{ color: 'text.secondary' }}>CHF{Number(annualFees).toFixed(2)}</TableCell>
+        <TableCell sx={{ color: 'text.secondary' }}>{fCurrency(monthlyFees)}</TableCell>
+        <TableCell sx={{ color: 'text.secondary' }}>{fCurrency(annualFees)}</TableCell>
 
         <TableCell>
           <Label

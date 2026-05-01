@@ -87,3 +87,10 @@ export function useUpdateEmployeeProfile() {
   });
 }
 
+export function useEmployeePayments(params) {
+  return useQuery({
+    queryKey: ['employee-payments', params],
+    queryFn: () => employeeApi.getEmployeePayments(params).then((res) => res.data),
+  });
+}
+

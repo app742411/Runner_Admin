@@ -30,9 +30,14 @@ const DATA = [
   { year: '3Q22', tasks: 40 },
 ];
 
-export function AdminTasksChart() {
+export function AdminTasksChart({ chartData }) {
   const { t } = useTranslation();
   const theme = useTheme();
+
+  const formattedData = chartData?.map(item => ({
+    year: item._id,
+    tasks: item.total
+  })) || [];
 
   return (
     <Card sx={{ p: 3, borderRadius: 2, height: 1 }}>
@@ -41,16 +46,14 @@ export function AdminTasksChart() {
           {t('dashboard.allTasks')}
         </Typography>
         <FormControl size="small" variant="outlined">
-          <Select defaultValue="2022" sx={{ fontSize: 14 }}>
-            <MenuItem value="2022">2022</MenuItem>
-            <MenuItem value="2023">2023</MenuItem>
-            <MenuItem value="2024">2024</MenuItem>
+          <Select defaultValue="2026" sx={{ fontSize: 14 }}>
+            <MenuItem value="2026">2026</MenuItem>
           </Select>
         </FormControl>
       </Stack>
 
       <ResponsiveContainer width="100%" height={220}>
-        <LineChart data={DATA} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+        <LineChart data={formattedData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} vertical={false} />
           <XAxis
             dataKey="year"
@@ -62,7 +65,6 @@ export function AdminTasksChart() {
             tick={{ fontSize: 11, fill: theme.palette.text.disabled }}
             axisLine={false}
             tickLine={false}
-            domain={[20, 60]}
           />
           <Tooltip
             contentStyle={{ borderRadius: 12, border: 'none', boxShadow: theme.customShadows?.z8 }}

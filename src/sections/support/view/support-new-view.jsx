@@ -110,20 +110,24 @@ export default function SupportNewView() {
           }
           sx={{ mb: 4 }}
         >
-          <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.root)} sx={{ cursor: 'pointer' }}>Dashboard</Link>
-          <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.support.list)} sx={{ cursor: 'pointer' }}>Support</Link>
-          <Typography color="text.primary">Add New Support Ticket</Typography>
+          <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.root)} sx={{ cursor: 'pointer' }}>
+            {t('common.dashboard')}
+          </Link>
+          <Link color="inherit" underline="hover" onClick={() => router.push(paths.dashboard.support.list)} sx={{ cursor: 'pointer' }}>
+            {t('nav.support')}
+          </Link>
+          <Typography color="text.primary">{t('support.add_new')}</Typography>
         </Breadcrumbs>
 
       <Form methods={methods} onSubmit={onSubmit}>
         <Card sx={{ p: 4, borderRadius: 3 }}>
-          <Typography variant="h6" sx={{ mb: 3 }}>Fill Your Details</Typography>
+          <Typography variant="h6" sx={{ mb: 3 }}>{t('support.form.fill_details')}</Typography>
           
           <Stack spacing={3}>
-            <Field.Text name="title" label="Enter your Title" placeholder="Enter your Title" />
+            <Field.Text name="title" label={t('support.form.title_label')} placeholder={t('support.form.title_label')} />
 
 
-            <Field.Select name="assignedTo" label="Assign To">
+            <Field.Select name="assignedTo" label={t('support.form.assigned_to')}>
               {assignableUsers.map((user) => (
                 <MenuItem key={user._id} value={user._id}>
                   <Stack direction="row" alignItems="center" spacing={2}>
@@ -141,10 +145,10 @@ export default function SupportNewView() {
               ))}
             </Field.Select>
 
-            <Field.Text name="description" label="Detailed description of the issue or request" multiline rows={4} />
+            <Field.Text name="description" label={t('support.form.description_label')} multiline rows={4} />
 
             <Box>
-              <Typography variant="subtitle2" sx={{ mb: 1.5 }}>upload Media</Typography>
+              <Typography variant="subtitle2" sx={{ mb: 1.5 }}>{t('support.form.upload_media')}</Typography>
               <Field.Upload
                 multiple
                 thumbnail
@@ -169,7 +173,7 @@ export default function SupportNewView() {
                 loading={isSubmitting}
                 sx={{ bgcolor: '#00334e', color: 'white', '&:hover': { bgcolor: '#002233' }, px: 4 }}
               >
-                Submit
+                {t('support.form.submit')}
               </LoadingButton>
             </Stack>
           </Stack>

@@ -14,7 +14,7 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export function PropertyTableRow({ row, selected, onSelectRow }) {
+export function PropertyTableRow({ row, selected, onSelectRow, onViewRow }) {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -36,13 +36,33 @@ export function PropertyTableRow({ row, selected, onSelectRow }) {
   const labelColor = isInactive ? 'warning' : 'success';
 
   return (
-    <TableRow hover selected={selected} sx={{ borderBottom: `1px dashed ${theme.palette.divider}` }}>
+    <TableRow 
+      hover 
+      selected={selected} 
+      onClick={onViewRow}
+      sx={{ 
+        borderBottom: `1px dashed ${theme.palette.divider}`,
+        cursor: 'pointer'
+      }}
+    >
       <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
+        <Checkbox 
+          checked={selected} 
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelectRow();
+          }} 
+        />
       </TableCell>
 
       <TableCell>
-        <Typography variant="subtitle2" noWrap sx={{ fontWeight: 'bold' }}>
+        <Typography 
+          variant="subtitle2" 
+          noWrap 
+          sx={{ 
+            fontWeight: 'bold',
+          }}
+        >
           {propertyName}
         </Typography>
       </TableCell>
@@ -58,7 +78,7 @@ export function PropertyTableRow({ row, selected, onSelectRow }) {
       <TableCell sx={{ color: 'text.secondary' }}>
         <Stack spacing={0.5}>
           <Typography variant="body2" sx={{ color: 'text.primary', fontWeight: 'medium' }}>
-            {client?.name || '-'}
+            {client?.clientName || client?.name || '-'}
           </Typography>
           <Typography variant="caption" sx={{ color: 'text.disabled' }}>
             {client?.email || '-'}
@@ -102,7 +122,12 @@ export function PropertyTableRow({ row, selected, onSelectRow }) {
       </TableCell>
 
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        <IconButton color="default">
+        <IconButton 
+          color="default"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <Iconify icon="eva:more-vertical-fill" width={20} />
         </IconButton>
       </TableCell>

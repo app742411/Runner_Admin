@@ -2,7 +2,8 @@ import { formatNumberLocale } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
-const DEFAULT_LOCALE = { code: 'en-US', currency: 'USD' };
+const DEFAULT_LOCALE = { code: 'en-US', currency: 'CHF' };
+export const CURRENCY = 'CHF'; // Global currency setting
 
 function processInput(inputValue) {
   if (inputValue == null || Number.isNaN(inputValue)) return null;
@@ -36,7 +37,7 @@ export function fCurrency(inputValue, options) {
 
   const fm = new Intl.NumberFormat(locale.code, {
     style: 'currency',
-    currency: locale.currency,
+    currency: CURRENCY,
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
     ...options,
