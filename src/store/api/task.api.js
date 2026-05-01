@@ -17,4 +17,5 @@ export const taskApi = {
 
   uploadBeforeImage: (subTaskId, formData) => api.patch(`/api/employee/uploadBeforeWorkImage/${subTaskId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
   uploadAfterImage: (subTaskId, formData) => api.patch(`/api/employee/uploadAfterWorkImage/${subTaskId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  getGroupMembersForAssign: (groupId) => api.get(`/api/group/getGroupMembersForAssign/${groupId}`),
 };

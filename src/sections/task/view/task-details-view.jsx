@@ -32,6 +32,8 @@ import {
   useUploadAfterImage
 } from 'src/features/task/useTasks';
 
+import { ROLES } from 'src/config/roles';
+
 // Local Components
 import TaskDetailsToolbar from '../task-details-toolbar';
 import TaskDetailsSidebar from '../task-details-sidebar';
@@ -44,7 +46,7 @@ export function TaskDetailsView({ id }) {
   const { t } = useTranslation();
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
-  const isEmployeeRole = user?.role === 'employee';
+  const isEmployeeRole = user?.role === ROLES.EMPLOYEE;
 
   const { data: response, isLoading: isTaskLoading } = useTask(id);
   const task = response?.data;
@@ -58,8 +60,10 @@ export function TaskDetailsView({ id }) {
   const status = task?.status || taskDetail?.status;
 
   const companyId = company?.companyId;
+  const isGroupAdmin = user?.role === ROLES.GROUP_ADMIN;
+  const assignTargetId = isGroupAdmin ? task?.group?.groupId || task?.group?._id || task?.groupId : companyId;
 
-  const { data: employees = [], isLoading: isEmployeesLoading } = useEmployeeForAssign(companyId);
+  const { data: employees = [], isLoading: isEmployeesLoading } = useEmployeeForAssign(assignTargetId);
   const assignUser = useAssignUsers();
   const removeUser = useRemoveUsers();
   const startTimer = useStartTimer();
@@ -179,7 +183,11 @@ export function TaskDetailsView({ id }) {
       await assignUser.mutateAsync({
         taskId: id,
         subTaskId: selectedSubTask,
-        data: { userIds: [employeeId], removeUserIds: [] }
+        data: {
+          userIds: [employeeId],
+          removeUserIds: [],
+          ...(isGroupAdmin && { groupId: assignTargetId })
+        }
       });
       toast.success(t('task.details.successAssign'));
       popover.onClose();
@@ -187,7 +195,7 @@ export function TaskDetailsView({ id }) {
       const errorMessage = error.response?.data?.message || error.message;
       toast.error(errorMessage);
     }
-  }, [assignUser, id, selectedSubTask, popover, t]);
+  }, [assignUser, id, selectedSubTask, popover, t, isGroupAdmin, assignTargetId]);
 
   const handleSaveAfterDescription = async (subTaskId, description) => {
     const formData = new FormData();

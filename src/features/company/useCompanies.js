@@ -8,9 +8,9 @@ export function useUpdateCompanyStatus() {
   return useMutation({
     mutationFn: ({ id, isApproved }) => companyApi.updateStatus(id, isApproved),
     onSuccess: () => {
-      queryClient.invalidateQueries(['companies']);
-      queryClient.invalidateQueries(['active-companies']);
-      queryClient.invalidateQueries(['pending-companies']);
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
+      queryClient.invalidateQueries({ queryKey: ['active-companies'] });
+      queryClient.invalidateQueries({ queryKey: ['pending-companies'] });
     },
   });
 }
@@ -43,7 +43,7 @@ export function useUpdateCompany() {
   return useMutation({
     mutationFn: ({ id, data }) => companyApi.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['companies']);
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
     },
   });
 }

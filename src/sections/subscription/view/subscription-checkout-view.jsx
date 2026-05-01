@@ -62,7 +62,7 @@ export function SubscriptionCheckoutView() {
 
   const handlePay = async () => {
     if (!selectedPlan) {
-      toast.error(t('subscription.noPlanSelected') || 'No plan selected!');
+      toast.error(t('subscription.noPlanSelected'));
       return;
     }
 
@@ -73,7 +73,7 @@ export function SubscriptionCheckoutView() {
       });
 
       if (response.data.success) {
-        toast.success(t('subscription.checkout.success') || 'Payment successful!');
+        toast.success(t('subscription.checkout.success'));
         
         // Update local user state so SubscriptionGuard allows access
         const updatedUser = {
@@ -88,7 +88,7 @@ export function SubscriptionCheckoutView() {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error?.response?.data?.message || t('subscription.checkout.error') || 'Payment failed!');
+      toast.error(error?.response?.data?.message || t('subscription.checkout.error'));
     }
   };
 
@@ -133,7 +133,7 @@ export function SubscriptionCheckoutView() {
                     <Stack>
                         <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{item}</Typography>
                         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                           {t('subscription.checkout.featureDesc') || 'Enjoy all the professional features included in this plan.'}
+                           {t('subscription.checkout.featureDesc')}
                         </Typography>
                     </Stack>
                  </Stack>
@@ -154,7 +154,7 @@ export function SubscriptionCheckoutView() {
                  </Typography>
 
                  <Stack direction="row" justifyContent="space-between" sx={{ mt: 3, opacity: 0.8 }}>
-                    <Typography variant="body2">{t('subscription.checkout.tax') || 'Tax'}</Typography>
+                    <Typography variant="body2">{t('subscription.checkout.tax')}</Typography>
                     <Typography variant="body2">{fCurrency(0)}</Typography>
                  </Stack>
                  <Stack direction="row" justifyContent="space-between" sx={{ mt: 1, fontWeight: 700 }}>
@@ -179,10 +179,10 @@ export function SubscriptionCheckoutView() {
 
               <Stack direction="row" sx={{ bgcolor: 'white', borderRadius: 2, border: `1px solid ${theme.palette.divider}`, overflow: 'hidden' }}>
                  {[
-                   { label: t('subscription.checkout.methodCard') || 'Card', icon: 'solar:card-bold' },
+                   { label: t('subscription.checkout.methodCard'), icon: 'solar:card-bold' },
                    { label: 'Paypal', icon: 'logos:paypal' },
                    { label: 'UPI', icon: 'logos:google-pay' },
-                   { label: t('subscription.checkout.methodBank') || 'E banking', icon: 'solar:bank-bold' }
+                   { label: t('subscription.checkout.methodBank'), icon: 'solar:bank-bold' }
                  ].map((method, index) => (
                    <Box 
                       key={method.label} 
@@ -208,7 +208,7 @@ export function SubscriptionCheckoutView() {
               <Stack spacing={2} sx={{ bgcolor: 'white', p: 0, borderRadius: 2 }}>
                  <TextField 
                     fullWidth 
-                    label={t('subscription.checkout.cardNumber') || "Card number"} 
+                    label={t('subscription.checkout.cardNumber')} 
                     defaultValue="4242 4242 4242 4242"
                     variant="outlined"
                     InputProps={{
@@ -222,10 +222,10 @@ export function SubscriptionCheckoutView() {
                     }}
                  />
                  <Stack direction="row" spacing={2}>
-                    <TextField fullWidth label={t('subscription.checkout.expiration') || "Expiration"} defaultValue="12/26" />
+                    <TextField fullWidth label={t('subscription.checkout.expiration')} defaultValue="12/26" />
                     <TextField fullWidth label="CVC" defaultValue="123" InputProps={{ endAdornment: <Iconify icon="solar:info-circle-bold" sx={{ color: 'text.disabled' }} /> }} />
                  </Stack>
-                 <TextField fullWidth select label={t('subscription.checkout.country') || "Country"} defaultValue="IN" SelectProps={{ sx: { py: 1 } }}>
+                 <TextField fullWidth select label={t('subscription.checkout.country')} defaultValue="IN" SelectProps={{ sx: { py: 1 } }}>
                     <MenuItem value="HK">Hong Kong SAR China</MenuItem>
                     <MenuItem value="CH">Switzerland</MenuItem>
                     <MenuItem value="DE">Germany</MenuItem>

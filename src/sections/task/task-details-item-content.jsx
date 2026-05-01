@@ -160,7 +160,7 @@ export default function TaskDetailsItemContent({
                 }}
               >
                 <Iconify icon={uploadBefore.isPending ? "solar:refresh-bold-duotone" : "solar:camera-add-bold"} width={32} sx={{ color: 'primary.main', mb: 1, animation: uploadBefore.isPending ? 'spin 2s linear infinite' : 'none' }} />
-                <Typography variant="caption" sx={{ fontWeight: 'bold', color: 'primary.main' }}>{t('common.upload') || 'Upload'}</Typography>
+                <Typography variant="caption" sx={{ fontWeight: 'bold', color: 'primary.main' }}>{t('common.upload')}</Typography>
                 <input type="file" hidden accept="image/*" onChange={(e) => onUploadImage(e, currentSubTask._id, 'before')} />
               </Box>
             </Box>
@@ -190,7 +190,7 @@ export default function TaskDetailsItemContent({
                 }}
               >
                 <Iconify icon={uploadAfter.isPending ? "solar:refresh-bold-duotone" : "solar:camera-add-bold"} width={32} sx={{ color: 'success.main', mb: 1, animation: uploadAfter.isPending ? 'spin 2s linear infinite' : 'none' }} />
-                <Typography variant="caption" sx={{ fontWeight: 'bold', color: 'success.main' }}>{t('common.upload') || 'Upload'}</Typography>
+                <Typography variant="caption" sx={{ fontWeight: 'bold', color: 'success.main' }}>{t('common.upload')}</Typography>
                 <input type="file" hidden accept="image/*" onChange={(e) => onUploadImage(e, currentSubTask._id, 'after')} />
               </Box>
             </Box>
@@ -209,7 +209,7 @@ export default function TaskDetailsItemContent({
                   loading={uploadAfter.isPending}
                   sx={{ borderRadius: 1, fontWeight: 'bold' }}
                 >
-                  {t('common.save') || 'Save'}
+                  {t('common.save')}
                 </LoadingButton>
               </Stack>
               <TextField

@@ -237,7 +237,7 @@ export function AddCompanyForm() {
                 <Grid container spacing={2.5}>
                   <Grid item xs={12}>
                     <AddressAutocomplete
-                      label={t('addCompany.addressSearch') || 'Search Address'}
+                      label={t('addCompany.addressSearch')}
                       onAddressSelect={(addressData) => {
                         setValue('addressLine1', addressData.addressLine1);
                         setValue('city', addressData.city);
@@ -272,7 +272,7 @@ export function AddCompanyForm() {
 
               {/* Security */}
               <Card sx={cardStyle}>
-                {renderSectionHeader(t('addCompany.security') || 'Security', 'solar:lock-password-bold')}
+                {renderSectionHeader(t('addCompany.security'), 'solar:lock-password-bold')}
                 <Grid container spacing={2.5}>
                   <Grid item xs={12} md={6}>
                     <Field.Text
@@ -315,7 +315,7 @@ export function AddCompanyForm() {
             <Stack spacing={3}>
               {/* Logo Upload */}
               <Card sx={{ ...cardStyle, textAlign: 'center' }}>
-                {renderSectionHeader(t('addCompany.companyLogo') || 'Company Logo', 'solar:camera-add-bold')}
+                {renderSectionHeader(t('addCompany.companyLogo'), 'solar:camera-add-bold')}
                 <Field.UploadAvatar
                   name="companyLogo"
                   maxSize={3145728}
@@ -327,8 +327,8 @@ export function AddCompanyForm() {
                   }}
                   helperText={
                     <Typography variant="caption" sx={{ mt: 3, mx: 'auto', display: 'block', color: 'text.disabled' }}>
-                      {t('addCompany.allowedFiles') || 'Allowed *.jpeg, *.jpg, *.png, *.gif'}
-                      <br /> {t('addCompany.maxSizeOf') || 'Max size of'} {fData(3145728)}
+                      {t('addCompany.allowedFiles')}
+                      <br /> {t('addCompany.maxSizeOf')} {fData(3145728)}
                     </Typography>
                   }
                 />

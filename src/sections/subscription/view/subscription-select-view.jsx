@@ -95,7 +95,7 @@ export function SubscriptionSelectView() {
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
-                {plan.description || t('subscription.defaultDesc') || 'Enjoy our professional services with this plan.'}
+                {plan.description || t('subscription.defaultDesc')}
               </Typography>
 
               <Stack direction="row" alignItems="baseline" sx={{ mb: 5 }}>

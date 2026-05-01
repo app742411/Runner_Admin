@@ -22,7 +22,8 @@
       "hrs": "Std.",
       "seconds": "Sekunden",
       "hr": "Std."
-    }
+    },
+    "upload": "Hochladen"
   },
   "header": {
     "help": "Hilfe benötigt?",
@@ -187,6 +188,11 @@
       "pending": "Ausstehend",
       "paid": "Bezahlt",
       "cancelled": "Storniert"
+    },
+    "types": {
+      "fixed": "Fest",
+      "per_service": "Pro Service",
+      "hourly": "Stündlich"
     }
   },
   "invoice": {
@@ -1225,7 +1231,21 @@
     "choosePlan": "Wählen Sie den perfekten Plan für Ihre geschäftlichen Anforderungen",
     "tryNow": "Jetzt testen",
     "month": "Monat",
-    "checkout": "Kasse",
+    "defaultDesc": "Genießen Sie unsere professionellen Dienstleistungen mit diesem Plan.",
+    "noPlanSelected": "Kein Plan ausgewählt!",
+    "checkout": {
+      "title": "Kasse",
+      "success": "Zahlung erfolgreich!",
+      "error": "Zahlung fehlgeschlagen!",
+      "featureDesc": "Genießen Sie alle professionellen Funktionen dieses Plans.",
+      "subscribeTo": "Abonnieren von",
+      "tax": "Steuer",
+      "methodCard": "Karte",
+      "methodBank": "E-Banking",
+      "cardNumber": "Kartennummer",
+      "expiration": "Ablaufdatum",
+      "country": "Land"
+    },
     "totalPayable": "Heute fälliger Gesamtbetrag",
     "discount": "Rabattcode",
     "apply": "Anwenden",

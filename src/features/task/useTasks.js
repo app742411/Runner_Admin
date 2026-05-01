@@ -34,11 +34,27 @@ export function useTask(id) {
   });
 }
 
-export function useEmployeeForAssign(companyId) {
+export function useEmployeeForAssign(id) {
+  const user = useSelector((state) => state.auth.user);
+  const isGroupAdmin = user?.role === ROLES.GROUP_ADMIN;
+
   return useQuery({
-    queryKey: ['employee-assign', companyId],
-    queryFn: () => taskApi.getEmployeeForAssign(companyId).then((res) => res.data.data),
-    enabled: !!companyId,
+    queryKey: ['employee-assign', id, user?.role],
+    queryFn: async () => {
+      const res = isGroupAdmin
+        ? await taskApi.getGroupMembersForAssign(id)
+        : await taskApi.getEmployeeForAssign(id);
+
+      const rawData = res.data.data || res.data || [];
+      const employeesArray = Array.isArray(rawData) ? rawData : (rawData.members || rawData.employees || []);
+
+      return employeesArray.map(emp => ({
+        employeeId: emp.employeeId || emp._id,
+        name: emp.name || (emp.firstName && emp.lastName ? `${emp.firstName} ${emp.lastName}` : emp.firstName || emp.lastName || 'Unknown'),
+        avatarUrl: emp.avatarUrl || emp.profilePicture || emp.employeeProfile?.profileImage?.fileUrl
+      }));
+    },
+    enabled: !!id,
   });
 }
 
@@ -48,8 +64,8 @@ export function useAssignUsers() {
   return useMutation({
     mutationFn: ({ subTaskId, data }) => taskApi.assignUsers(subTaskId, data),
     onSuccess: (_, { taskId }) => {
-      queryClient.invalidateQueries(['task', taskId]);
-      queryClient.invalidateQueries(['contract']);
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['contract'] });
     },
   });
 }
@@ -60,8 +76,8 @@ export function useRemoveUsers() {
   return useMutation({
     mutationFn: ({ subTaskId, userIds }) => taskApi.removeUsers(subTaskId, userIds),
     onSuccess: (_, { taskId }) => {
-      queryClient.invalidateQueries(['task', taskId]);
-      queryClient.invalidateQueries(['contract']);
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['contract'] });
     },
   });
 }
@@ -72,7 +88,7 @@ export function useDeleteTask() {
   return useMutation({
     mutationFn: (id) => taskApi.deleteTaskAdmin(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(['tasks']);
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
@@ -82,9 +98,9 @@ export function useStartTimer() {
 
   return useMutation({
     mutationFn: (subTaskId) => taskApi.startTimer(subTaskId),
-    onSuccess: (_, subTaskId) => {
-      queryClient.invalidateQueries(['task']);
-      queryClient.invalidateQueries(['tasks']);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['task'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
@@ -95,8 +111,8 @@ export function useStopTimer() {
   return useMutation({
     mutationFn: (subTaskId) => taskApi.stopTimer(subTaskId),
     onSuccess: () => {
-      queryClient.invalidateQueries(['task']);
-      queryClient.invalidateQueries(['tasks']);
+      queryClient.invalidateQueries({ queryKey: ['task'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 }
@@ -107,7 +123,7 @@ export function useUploadBeforeImage() {
   return useMutation({
     mutationFn: ({ subTaskId, formData }) => taskApi.uploadBeforeImage(subTaskId, formData),
     onSuccess: () => {
-      queryClient.invalidateQueries(['task']);
+      queryClient.invalidateQueries({ queryKey: ['task'] });
     },
   });
 }
@@ -118,7 +134,7 @@ export function useUploadAfterImage() {
   return useMutation({
     mutationFn: ({ subTaskId, formData }) => taskApi.uploadAfterImage(subTaskId, formData),
     onSuccess: () => {
-      queryClient.invalidateQueries(['task']);
+      queryClient.invalidateQueries({ queryKey: ['task'] });
     },
   });
 }

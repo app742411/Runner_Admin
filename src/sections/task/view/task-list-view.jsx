@@ -83,7 +83,7 @@ export function TaskListView() {
   });
 
   const tableData = data?.data || [];
-  const totalRows = data?.pagination?.total || tableData.length;
+  const totalRows = data?.pagination?.total || data?.total || tableData.length || 0;
 
   const handleFilters = useCallback((name, value) => {
     setFilters((prevState) => ({

@@ -72,7 +72,7 @@ export function InvoiceListView() {
   });
 
   const tableData = data?.data || [];
-  const totalRows = data?.pagination?.total || 0;
+  const totalRows = data?.pagination?.total || data?.total || tableData.length || 0;
 
   const handleViewRow = useCallback(
     (id) => {

@@ -22,7 +22,8 @@
       "hrs": "hrs",
       "seconds": "seconds",
       "hr": "hr"
-    }
+    },
+    "upload": "Upload"
   },
   "header": {
     "help": "Need help?",
@@ -187,6 +188,11 @@
       "pending": "Pending",
       "paid": "Paid",
       "cancelled": "Cancelled"
+    },
+    "types": {
+      "fixed": "Fixed",
+      "per_service": "Per Service",
+      "hourly": "Hourly"
     }
   },
   "invoice": {
@@ -1241,7 +1247,21 @@
     "choosePlan": "Choose the perfect plan for your business needs",
     "tryNow": "Try now",
     "month": "month",
-    "checkout": "Checkout",
+    "defaultDesc": "Enjoy our professional services with this plan.",
+    "noPlanSelected": "No plan selected!",
+    "checkout": {
+      "title": "Checkout",
+      "success": "Payment successful!",
+      "error": "Payment failed!",
+      "featureDesc": "Enjoy all the professional features included in this plan.",
+      "subscribeTo": "Subscribe to",
+      "tax": "Tax",
+      "methodCard": "Card",
+      "methodBank": "E-banking",
+      "cardNumber": "Card number",
+      "expiration": "Expiration",
+      "country": "Country"
+    },
     "totalPayable": "Total payable today",
     "discount": "Discount Code",
     "apply": "Apply",

@@ -174,7 +174,7 @@ export function WorkReportDetailsView() {
             {report.isBilled ? t('report.details.billed') : t('report.details.unbilled')}
           </Label>
 
-          {(report.reviewStatus === 'pending' || report.status === 'pending') && (
+          {(report.reviewStatus === 'pending' || report.status === 'pending' || report.status === 'draft') && (
             <Stack direction="row" spacing={1.5}>
               {isGroupAdmin && report.reviewStatus === 'pending' && (
                 <LoadingButton
@@ -188,7 +188,7 @@ export function WorkReportDetailsView() {
                   {t('report.details.review')}
                 </LoadingButton>
               )}
-              {report.status === 'pending' && (
+              {(report.status === 'pending' || report.status === 'draft') && !isGroupAdmin && (
                 <LoadingButton
                   variant="contained"
                   color="success"

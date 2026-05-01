@@ -315,7 +315,7 @@ function PaymentTableRow({ row, onView }) {
       
       <TableCell>
         <Label variant="soft" color="default">
-          {paymentType?.replace('_', ' ')}
+          {t(`employee_payment.types.${paymentType?.toLowerCase()}`)}
         </Label>
       </TableCell>
 
@@ -373,7 +373,9 @@ function PaymentDetailsDialog({ open, onClose, row }) {
           <Divider />
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="subtitle2">{t('employee_payment.details.paymentType')}</Typography>
-            <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>{row.paymentType?.replace('_', ' ')}</Typography>
+            <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
+              {t(`employee_payment.types.${row.paymentType?.toLowerCase()}`)}
+            </Typography>
           </Stack>
           <Divider />
           <Stack direction="row" justifyContent="space-between">
