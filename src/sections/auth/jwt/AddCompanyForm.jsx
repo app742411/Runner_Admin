@@ -49,7 +49,7 @@ export const SubscriptionSchema = zod
     pincode: zod.string().min(1, 'addCompany.validation.pincodeRequired'),
     password: zod.string().min(1, 'addCompany.validation.passwordRequired').min(6, 'addCompany.validation.passwordMin'),
     confirmPassword: zod.string().min(1, 'addCompany.validation.passwordRequired'),
-    logo: zod.any().optional(),
+    companyLogo: zod.any().optional(),
     licenseDocuments: zod.any().optional(),
     latitude: zod.number().optional(),
     longitude: zod.number().optional(),
@@ -101,7 +101,7 @@ export function AddCompanyForm() {
       licenseExpiryDate: today(),
       password: '',
       confirmPassword: '',
-      logo: null,
+      companyLogo: null,
       licenseDocuments: null,
       latitude: 0,
       longitude: 0,
@@ -156,8 +156,8 @@ export function AddCompanyForm() {
       }
     }
 
-    if (data.logo instanceof File) {
-      formData.append('logo', data.logo);
+    if (data.companyLogo instanceof File) {
+      formData.append('companyLogo', data.companyLogo);
     }
 
     const token = localStorage.getItem('token');
@@ -317,12 +317,12 @@ export function AddCompanyForm() {
               <Card sx={{ ...cardStyle, textAlign: 'center' }}>
                 {renderSectionHeader(t('addCompany.companyLogo') || 'Company Logo', 'solar:camera-add-bold')}
                 <Field.UploadAvatar
-                  name="logo"
+                  name="companyLogo"
                   maxSize={3145728}
                   onDrop={(acceptedFiles) => {
                     const file = acceptedFiles[0];
                     if (file) {
-                      setValue('logo', Object.assign(file, { preview: URL.createObjectURL(file) }), { shouldValidate: true });
+                      setValue('companyLogo', Object.assign(file, { preview: URL.createObjectURL(file) }), { shouldValidate: true });
                     }
                   }}
                   helperText={

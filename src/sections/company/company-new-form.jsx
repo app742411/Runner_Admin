@@ -54,7 +54,7 @@ export const NewCompanySchema = zod.object({
   pincode: zod.string().min(1, 'company.validation.pincode'),
   // Upload
   licenseDocuments: zod.any().optional(),
-  logo: zod.any().optional(),
+  companyLogo: zod.any().optional(),
   latitude: zod.number().optional(),
   longitude: zod.number().optional(),
 }).refine((data) => {
@@ -106,7 +106,7 @@ export function CompanyNewForm({ currentCompany }) {
       latitude: currentCompany?.address?.location?.coordinates[1] || 0,
       longitude: currentCompany?.address?.location?.coordinates[0] || 0,
       licenseDocuments: null,
-      logo: currentCompany?.logo || null,
+      companyLogo: currentCompany?.companyLogo || currentCompany?.logo || null,
     }),
     [currentCompany]
   );
@@ -168,8 +168,8 @@ export function CompanyNewForm({ currentCompany }) {
         }
       }
 
-      if (data.logo instanceof File) {
-        formData.append('logo', data.logo);
+      if (data.companyLogo instanceof File) {
+        formData.append('companyLogo', data.companyLogo);
       }
 
       if (isEdit) {
@@ -352,12 +352,12 @@ export function CompanyNewForm({ currentCompany }) {
               </Typography>
 
               <Field.UploadAvatar
-                name="logo"
+                name="companyLogo"
                 maxSize={3145728}
                 onDrop={(acceptedFiles) => {
                   const file = acceptedFiles[0];
                   if (file) {
-                    setValue('logo', Object.assign(file, { preview: URL.createObjectURL(file) }), { shouldValidate: true });
+                    setValue('companyLogo', Object.assign(file, { preview: URL.createObjectURL(file) }), { shouldValidate: true });
                   }
                 }}
                 helperText={
