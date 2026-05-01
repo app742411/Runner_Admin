@@ -1,0 +1,1 @@
+import{e as s}from"./axios-ClMc2tez.js";import{a4 as e}from"./index-BF579s4g.js";const a={getDashboard:()=>e.get(s.superAdmin.dashboard),getAllDocuments:o=>e.get(s.superAdmin.documents,{params:o})};export{a as s};

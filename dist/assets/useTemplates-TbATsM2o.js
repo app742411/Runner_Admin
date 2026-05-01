@@ -1,0 +1,1 @@
+import{x as t}from"./index-BF579s4g.js";import{c as r}from"./company-admin.api-CkmenN_I.js";function p(){return t({queryKey:["templates"],queryFn:()=>r.getTemplates().then(e=>e.data)})}export{p as u};

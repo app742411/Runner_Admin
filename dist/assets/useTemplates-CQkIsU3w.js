@@ -1,1 +1,0 @@
-import{x as t}from"./index-DMIthA8j.js";import{c as r}from"./company-admin.api-CIKNAlRH.js";function p(){return t({queryKey:["templates"],queryFn:()=>r.getTemplates().then(e=>e.data)})}export{p as u};
