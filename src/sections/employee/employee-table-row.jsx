@@ -166,16 +166,6 @@ export function EmployeeTableRow({ row, selected, onSelectRow, onDeleteRow }) {
         <MenuItem
           onClick={() => {
             popover.onClose();
-            router.push(paths.dashboard.employee.details(_id));
-          }}
-        >
-          <Iconify icon="solar:eye-bold" />
-          {t('employee.popover.view')}
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
             router.push(paths.dashboard.employee.edit(_id));
           }}
         >

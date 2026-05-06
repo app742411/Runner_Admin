@@ -17,12 +17,16 @@ import { Iconify } from 'src/components/iconify';
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import MenuItem from '@mui/material/MenuItem';
+
 // ----------------------------------------------------------------------
 
-export function TaskTableRow({ row, selected, onSelectRow }) {
+export function TaskTableRow({ row, selected, onSelectRow, onEditRow }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const router = useRouter();
+  const popover = usePopover();
 
   const user = useSelector((state) => state.auth.user);
   const isEmployee = user?.role === 'employee';
@@ -61,96 +65,121 @@ export function TaskTableRow({ row, selected, onSelectRow }) {
   else if (status === 'in_progress') labelColor = 'info';
 
   return (
-    <TableRow
-      hover
-      selected={selected}
-      onClick={() => router.push(paths.dashboard.task.details(navigationId))}
-      sx={{ cursor: 'pointer', borderBottom: `1px dashed ${theme.palette.divider}` }}
-    >
-      <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
+    <>
+      <TableRow
+        hover
+        selected={selected}
+        onClick={() => router.push(paths.dashboard.task.details(navigationId))}
+        sx={{ cursor: 'pointer', borderBottom: `1px dashed ${theme.palette.divider}` }}
+      >
+        <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
+          <Checkbox checked={selected} onClick={onSelectRow} />
+        </TableCell>
 
-      <TableCell>
-        <Typography variant="subtitle2" noWrap sx={{ fontWeight: 'bold' }}>
-          {displayName}
-        </Typography>
-      </TableCell>
-
-      {isEmployee && (
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {subTaskName}
+        <TableCell>
+          <Typography variant="subtitle2" noWrap sx={{ fontWeight: 'bold' }}>
+            {displayName}
           </Typography>
         </TableCell>
-      )}
 
-      <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
-        {displayCategory}
-      </TableCell>
+        {isEmployee && (
+          <TableCell sx={{ whiteSpace: 'nowrap' }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {subTaskName}
+            </Typography>
+          </TableCell>
+        )}
 
-      <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
-        {displaySubCategory}
-      </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
+          {displayCategory}
+        </TableCell>
 
-      <TableCell onClick={(e) => e.stopPropagation()}>
-        <Tooltip
-          title={
-            <Stack spacing={0.5} sx={{ p: 0.5 }}>
-              {subTasks?.length > 0 ? (
-                subTasks.map((st, idx) => (
-                  <Typography key={idx} variant="caption">• {st.subTaskName}</Typography>
-                ))
-              ) : (
-                <Typography variant="caption">{t('task.noSubtasks') || 'No subtasks'}</Typography>
-              )}
-            </Stack>
-          }
-          placement="top"
-          arrow
-        >
-          <Box sx={{ p: 1, borderRadius: 1, border: `1px solid ${theme.palette.divider}`, display: 'inline-block', typography: 'caption', color: 'text.secondary', cursor: 'pointer' }}>
-            {subTasks?.length || 0}
-          </Box>
-        </Tooltip>
-      </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
+          {displaySubCategory}
+        </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
-        {fCurrency(displayPrice)}
-      </TableCell>
+        <TableCell onClick={(e) => e.stopPropagation()}>
+          <Tooltip
+            title={
+              <Stack spacing={0.5} sx={{ p: 0.5 }}>
+                {subTasks?.length > 0 ? (
+                  subTasks.map((st, idx) => (
+                    <Typography key={idx} variant="caption">• {st.subTaskName}</Typography>
+                  ))
+                ) : (
+                  <Typography variant="caption">{t('task.noSubtasks') || 'No subtasks'}</Typography>
+                )}
+              </Stack>
+            }
+            placement="top"
+            arrow
+          >
+            <Box sx={{ p: 1, borderRadius: 1, border: `1px solid ${theme.palette.divider}`, display: 'inline-block', typography: 'caption', color: 'text.secondary', cursor: 'pointer' }}>
+              {subTasks?.length || 0}
+            </Box>
+          </Tooltip>
+        </TableCell>
 
-      <TableCell>
-        <Label
-          variant="soft"
-          color={labelColor}
-          sx={{ textTransform: 'capitalize' }}
-        >
-          {t(`task.status.${status}`) || status}
-        </Label>
-      </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
+          {fCurrency(displayPrice)}
+        </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
-        {typeof displayCompany === 'string' ? displayCompany : (displayCompany?.companyName || '-')}
-      </TableCell>
+        <TableCell>
+          <Label
+            variant="soft"
+            color={labelColor}
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {t(`task.status.${status}`) || status}
+          </Label>
+        </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
-        {displayAssignedBy}
-      </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
+          {typeof displayCompany === 'string' ? displayCompany : (displayCompany?.companyName || '-')}
+        </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
-        {fDate(createdAt)}
-      </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
+          {displayAssignedBy}
+        </TableCell>
 
-      <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
-        <Stack direction="row" alignItems="center" spacing={0.5} justifyContent="flex-end">
-          <IconButton color="default">
-            <Iconify icon="solar:pen-bold" width={20} />
-          </IconButton>
-          <IconButton color="default">
+        <TableCell sx={{ whiteSpace: 'nowrap', color: 'text.secondary' }}>
+          {fDate(createdAt)}
+        </TableCell>
+
+        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
+          <IconButton color={popover.open ? 'primary' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" width={20} />
           </IconButton>
-        </Stack>
-      </TableCell>
-    </TableRow>
+        </TableCell>
+      </TableRow>
+
+      <CustomPopover
+        open={popover.open}
+        onClose={popover.onClose}
+        anchorEl={popover.anchorEl}
+        arrow="right-top"
+        sx={{ width: 140 }}
+      >
+        <MenuItem
+          onClick={() => {
+            popover.onClose();
+            onEditRow();
+          }}
+        >
+          <Iconify icon="solar:pen-bold" />
+          {t('common.edit')}
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            popover.onClose();
+            router.push(paths.dashboard.task.details(navigationId));
+          }}
+        >
+          <Iconify icon="solar:document-bold" />
+          {t('common.view')}
+        </MenuItem>
+      </CustomPopover>
+    </>
   );
 }

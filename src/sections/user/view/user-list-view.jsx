@@ -263,9 +263,9 @@ export function UserListView() {
 
                 {notFound && (
                   <TableRow>
-                     <TableCell colSpan={7}>
-                        <SearchNotFound query={filters.search} />
-                     </TableCell>
+                    <TableCell colSpan={7}>
+                      <SearchNotFound query={filters.search} />
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>

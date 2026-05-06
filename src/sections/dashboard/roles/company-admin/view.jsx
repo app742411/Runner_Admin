@@ -13,6 +13,7 @@ import { CompanyEmployeeTable } from 'src/sections/company-admin/company-employe
 import { CompanyTaskTable } from 'src/sections/company-admin/company-task-table';
 
 import { useCompanyAdminDashboard } from 'src/features/company-admin/useCompanyAdmin';
+import { fCurrency } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +36,6 @@ export default function CompanyAdminView() {
   if (error) return <Box sx={{ p: 5 }}><Typography color="error">Error loading dashboard</Typography></Box>;
 
   const subTaskStats = data?.subTaskStats || {};
-  const taskStats = data?.taskStats || {};
   const cards = data?.cards || {};
   const yearlySales = data?.yearlySales || {};
   const recentActivity = data?.recentActivity || [];
@@ -51,9 +51,9 @@ export default function CompanyAdminView() {
           </Typography>
         </Stack>
 
-        {/* ─── MAIN CARDS ─── */}
-        <Grid container spacing={3}>
-          <Grid xs={12} md={4}>
+        {/* ─── MAIN CARDS (6 IN 1 ROW) ─── */}
+        <Grid container spacing={2}>
+          <Grid xs={12} sm={4} md={2}>
             <StatCard
               title={t('dashboard.totalContract')}
               total={cards.totalContracts || 0}
@@ -63,7 +63,7 @@ export default function CompanyAdminView() {
               sparkData={SPARK_CONTRACT}
             />
           </Grid>
-          <Grid xs={12} md={4}>
+          <Grid xs={12} sm={4} md={2}>
             <StatCard
               title={t('dashboard.totalEmployee')}
               total={cards.totalEmployees || 0}
@@ -73,7 +73,7 @@ export default function CompanyAdminView() {
               sparkData={SPARK_EMPLOYEE}
             />
           </Grid>
-          <Grid xs={12} md={4}>
+          <Grid xs={12} sm={4} md={2}>
             <StatCard
               title={t('dashboard.totalTask')}
               total={cards.totalTasks || 0}
@@ -83,50 +83,61 @@ export default function CompanyAdminView() {
               sparkData={SPARK_TASK}
             />
           </Grid>
+          <Grid xs={12} sm={4} md={2}>
+            <StatCard
+              title={t('dashboard.sales.totalIncome')}
+              total={fCurrency(cards.totalIncome || 0)}
+              percent={8.5}
+              color="#22C55E"
+              icon="solar:cash-out-bold-duotone"
+              sparkData={[{ v: 10 }, { v: 15 }, { v: 25 }, { v: 35 }, { v: 45 }, { v: 60 }]}
+            />
+          </Grid>
+          <Grid xs={12} sm={4} md={2}>
+            <StatCard
+              title={t('dashboard.sales.totalExpenses')}
+              total={fCurrency(cards.totalExpense || 0)}
+              percent={-4.2}
+              color="#FF5630"
+              icon="solar:wallet-bold-duotone"
+              sparkData={[{ v: 50 }, { v: 45 }, { v: 38 }, { v: 42 }, { v: 35 }, { v: 25 }]}
+            />
+          </Grid>
+          <Grid xs={12} sm={4} md={2}>
+            <StatCard
+              title={t('dashboard.netProfitLoss')}
+              total={fCurrency(cards.profit || 0)}
+              percent={cards.profit >= 0 ? 15.4 : -12.5}
+              color={cards.profit >= 0 ? "#22C55E" : "#FF5630"}
+              icon="solar:graph-bold-duotone"
+              sparkData={[{ v: 5 }, { v: 12 }, { v: 18 }, { v: 24 }, { v: 30 }, { v: 45 }]}
+            />
+          </Grid>
         </Grid>
 
-        {/* ─── TASKS & SUBTASKS OVERVIEW ─── */}
+        {/* ─── SUBTASK INSIGHTS OVERVIEW ─── */}
         <Grid container spacing={3}>
-          <Grid xs={12} md={6}>
-            <Card sx={{ p: 3, borderRadius: 2 }}>
-              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 3 }}>
-                <Iconify icon="solar:chart-square-bold-duotone" width={24} color="primary.main" />
-                <Typography variant="h6">{t('dashboard.taskOverview')}</Typography>
-              </Stack>
-              <Grid container spacing={2}>
-                <Grid xs={6} sm={3}>
-                  <SummaryItem label={t('task.status.pending')} value={taskStats.pending} color="warning" />
-                </Grid>
-                <Grid xs={6} sm={3}>
-                  <SummaryItem label={t('task.status.inProgress')} value={taskStats.inProgress} color="info" />
-                </Grid>
-                <Grid xs={6} sm={3}>
-                  <SummaryItem label={t('task.status.completed')} value={taskStats.completed} color="success" />
-                </Grid>
-                <Grid xs={6} sm={3}>
-                  <SummaryItem label={t('task.status.doneRate')} value={`${taskStats.completionRate}%`} color="secondary" />
-                </Grid>
-              </Grid>
-            </Card>
-          </Grid>
-          <Grid xs={12} md={6}>
+          <Grid xs={12}>
             <Card sx={{ p: 3, borderRadius: 2 }}>
               <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 3 }}>
                 <Iconify icon="solar:tuning-bold-duotone" width={24} color="info.main" />
                 <Typography variant="h6">{t('dashboard.subTaskInsights')}</Typography>
               </Stack>
               <Grid container spacing={2}>
-                <Grid xs={6} sm={3}>
-                  <SummaryItem label={t('task.status.pending')} value={subTaskStats.pending} color="warning" />
+                <Grid xs={6} sm={2.4}>
+                  <SummaryItem label={t('common.total') || 'Total'} value={subTaskStats.total || 0} color="primary" />
                 </Grid>
-                <Grid xs={6} sm={3}>
-                  <SummaryItem label={t('task.status.inProgress')} value={subTaskStats.inProgress} color="info" />
+                <Grid xs={6} sm={2.4}>
+                  <SummaryItem label={t('task.status.pending')} value={subTaskStats.pending || 0} color="warning" />
                 </Grid>
-                <Grid xs={6} sm={3}>
-                  <SummaryItem label={t('task.status.completed')} value={subTaskStats.completed} color="success" />
+                <Grid xs={6} sm={2.4}>
+                  <SummaryItem label={t('task.status.inProgress')} value={subTaskStats.inProgress || 0} color="info" />
                 </Grid>
-                <Grid xs={6} sm={3}>
-                  <SummaryItem label={t('task.status.success')} value={`${subTaskStats.completionRate}%`} color="secondary" />
+                <Grid xs={6} sm={2.4}>
+                  <SummaryItem label={t('task.status.completed')} value={subTaskStats.completed || 0} color="success" />
+                </Grid>
+                <Grid xs={12} sm={2.4}>
+                  <SummaryItem label={t('task.status.success')} value={`${subTaskStats.completionRate || 0}%`} color="secondary" />
                 </Grid>
               </Grid>
             </Card>

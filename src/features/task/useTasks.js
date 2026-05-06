@@ -138,3 +138,28 @@ export function useUploadAfterImage() {
     },
   });
 }
+
+export function useAddComment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ subTaskId, text }) => taskApi.addComment(subTaskId, text),
+    onSuccess: (_, { taskId }) => {
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['task'] });
+    },
+  });
+}
+
+export function useAddReply() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ subTaskId, commentId, text }) => taskApi.addReply(subTaskId, commentId, text),
+    onSuccess: (_, { taskId }) => {
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['task'] });
+    },
+  });
+}
+

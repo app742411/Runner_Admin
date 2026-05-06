@@ -23,7 +23,9 @@
       "seconds": "seconds",
       "hr": "hr"
     },
-    "upload": "Upload"
+    "upload": "Upload",
+    "submit": "Submit",
+    "reply": "Reply"
   },
   "header": {
     "help": "Need help?",
@@ -794,7 +796,12 @@
       "successSaveDescription": "Description saved successfully",
       "successUpload": "Image uploaded successfully",
       "updatedAt": "Updated At",
-      "totalTimeSpent": "Total Time Spent"
+      "totalTimeSpent": "Total Time Spent",
+      "comments": "Comments & Feedback",
+      "addCommentPlaceholder": "Write a comment...",
+      "noCommentsYet": "No comments yet",
+      "beTheFirst": "Be the first to share an update or ask a question.",
+      "replyPlaceholder": "Write a reply..."
     }
   },
   "client": {

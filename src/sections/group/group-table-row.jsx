@@ -129,10 +129,6 @@ export function GroupTableRow({ row, selected, onSelectRow, onDeleteRow, onEditR
             <Iconify icon="solar:users-group-two-rounded-bold" />
           </IconButton>
 
-          <IconButton onClick={onEditRow} color="default">
-            <Iconify icon="solar:pen-bold" />
-          </IconButton>
-
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>

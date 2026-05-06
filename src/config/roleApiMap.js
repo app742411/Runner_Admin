@@ -95,6 +95,7 @@ export const ROLE_API_MAP = {
       '/api/admin/removeUsers/',
       '/api/company-admin/',
       '/api/ticket/',
+      '/api/employee/',
     ],
     allowAll: false,
   },

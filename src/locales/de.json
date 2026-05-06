@@ -23,7 +23,9 @@
       "seconds": "Sekunden",
       "hr": "Std."
     },
-    "upload": "Hochladen"
+    "upload": "Hochladen",
+    "submit": "Absenden",
+    "reply": "Antworten"
   },
   "header": {
     "help": "Hilfe benötigt?",
@@ -778,7 +780,12 @@
       "successSaveDescription": "Beschreibung erfolgreich gespeichert",
       "successUpload": "Bild erfolgreich hochgeladen",
       "updatedAt": "Aktualisiert am",
-      "totalTimeSpent": "Gesamtarbeitszeit"
+      "totalTimeSpent": "Gesamtarbeitszeit",
+      "comments": "Kommentare & Feedback",
+      "addCommentPlaceholder": "Schreiben Sie einen Kommentar...",
+      "noCommentsYet": "Noch keine Kommentare",
+      "beTheFirst": "Schreiben Sie den ersten Kommentar oder stellen Sie eine Frage.",
+      "replyPlaceholder": "Schreiben Sie eine Antwort..."
     }
   },
   "client": {

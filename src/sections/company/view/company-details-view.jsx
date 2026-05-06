@@ -22,6 +22,7 @@ import { fCurrency } from 'src/utils/format-number';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
+import { Image } from 'src/components/image';
 import { useCompanyDetails } from 'src/features/company/useCompanies';
 
 // ----------------------------------------------------------------------
@@ -93,8 +94,42 @@ export function CompanyDetailsView({ id }) {
       <Card sx={{ p: 4, mb: 5 }}>
         <Stack direction="row" justifyContent="center" sx={{ mb: 4 }}>
           <Box sx={{ textAlign: 'center' }}>
-            <Iconify icon="company-logo" width={60} />
-            <Typography variant="overline" sx={{ display: 'block' }}>{t('nav.company')}</Typography>
+            {companyData.companyLogo || companyData.logo ? (
+              <Box sx={{ 
+                width: 120, 
+                height: 120, 
+                mx: 'auto', 
+                mb: 2,
+                p: 1,
+                borderRadius: '50%',
+                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.05),
+                border: (theme) => `dashed 1px ${alpha(theme.palette.primary.main, 0.2)}`
+              }}>
+                <Image
+                  src={companyData.companyLogo || companyData.logo}
+                  alt={companyName}
+                  visibleByDefault
+                  sx={{ width: 1, height: 1, borderRadius: '50%', objectFit: 'contain' }}
+                />
+              </Box>
+            ) : (
+              <Box sx={{ 
+                width: 120, 
+                height: 120, 
+                borderRadius: '50%', 
+                mx: 'auto', 
+                mb: 2, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
+                border: (theme) => `dashed 1px ${alpha(theme.palette.grey[500], 0.2)}`
+              }}>
+                <Iconify icon="solar:camera-add-bold" width={48} sx={{ color: 'text.disabled' }} />
+              </Box>
+            )}
+            <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'primary.main' }}>{companyName}</Typography>
+            <Typography variant="overline" sx={{ display: 'block', color: 'text.secondary', letterSpacing: 1 }}>{t('nav.company')}</Typography>
           </Box>
         </Stack>
 

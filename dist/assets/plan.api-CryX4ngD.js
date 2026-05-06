@@ -1,1 +1,0 @@
-import{a4 as l}from"./index-oSPPmbWA.js";const e={getAllPlans:a=>l.get("/api/plan/getAllPlans",{params:a}),createPlan:a=>l.post("/api/plan/create",a),togglePlanStatus:a=>l.patch(`/api/plan/toggle-status/${a}`),deletePlan:a=>l.delete(`/api/plan/delete/${a}`),purchasePlan:a=>l.post("/api/plan/purchase-plan",a)};export{e as p};

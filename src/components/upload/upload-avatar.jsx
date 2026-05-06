@@ -35,7 +35,7 @@ export function UploadAvatar({ sx, error, value, disabled, helperText, ...other 
   }, [value]);
 
   const renderPreview = hasFile && (
-    <Image alt="avatar" src={preview} sx={{ width: 1, height: 1, borderRadius: '50%' }} />
+    <Image alt="avatar" src={preview} visibleByDefault sx={{ width: 1, height: 1, borderRadius: '50%', objectFit: 'contain' }} />
   );
 
   const renderPlaceholder = (

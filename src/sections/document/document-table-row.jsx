@@ -133,7 +133,7 @@ export function DocumentTableRow({ row, selected, onSelectRow }) {
       sx={{ width: 140 }}
     >
       <MenuItem onClick={handleOpenDetails}>
-        <Iconify icon="solar:eye-bold" />
+        <Iconify icon="solar:document-bold" />
         {t('employee.popover.view')}
       </MenuItem>
     </CustomPopover>

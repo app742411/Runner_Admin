@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
+
 // ----------------------------------------------------------------------
 
 export function ClientTableRow({ row, selected, onSelectRow, onViewRow }) {
@@ -42,7 +44,10 @@ export function ClientTableRow({ row, selected, onSelectRow, onViewRow }) {
     Rejected: t('client.status.rejected'),
   };
 
+  const popover = usePopover();
+
   return (
+    <>
     <TableRow 
       hover 
       selected={selected} 
@@ -115,15 +120,35 @@ export function ClientTableRow({ row, selected, onSelectRow, onViewRow }) {
 
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <IconButton 
-          color="default"
+          color={popover.open ? 'primary' : 'default'}
           onClick={(e) => {
             e.stopPropagation();
+            popover.onOpen(e);
           }}
         >
           <Iconify icon="eva:more-vertical-fill" width={20} />
         </IconButton>
       </TableCell>
     </TableRow>
+
+    <CustomPopover
+      open={popover.open}
+      onClose={popover.onClose}
+      anchorEl={popover.anchorEl}
+      arrow="right-top"
+      sx={{ width: 140 }}
+    >
+      <MenuItem
+        onClick={() => {
+          popover.onClose();
+          onViewRow();
+        }}
+      >
+        <Iconify icon="solar:pen-bold" />
+        {t('common.edit')}
+      </MenuItem>
+    </CustomPopover>
+    </>
   );
 }
 

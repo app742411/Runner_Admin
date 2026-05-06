@@ -382,16 +382,6 @@ function InvoiceTableRow({ row, selected, onSelectRow, onViewRow }) {
         sx={{ width: 160 }}
       >
         <MenuItem
-          onClick={() => {
-            onViewRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:eye-bold" />
-          {t('invoice.popover.view')}
-        </MenuItem>
-
-        <MenuItem
           onClick={handleSendInvoice}
           disabled={sendInvoice.isPending}
         >

@@ -1,1 +1,0 @@
-import{x as t}from"./index-oSPPmbWA.js";import{c as r}from"./company-admin.api-cyXNdD-3.js";function p(){return t({queryKey:["templates"],queryFn:()=>r.getTemplates().then(e=>e.data)})}export{p as u};

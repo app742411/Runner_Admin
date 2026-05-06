@@ -316,6 +316,8 @@ export function TaskDetailsView({ id }) {
                     uploadAfter={uploadAfter}
                     t={t}
                     formatDecimalTime={formatDecimalTime}
+                    taskId={id}
+                    task={task}
                   />
                 </Grid>
               </Grid>
