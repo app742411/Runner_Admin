@@ -14,7 +14,7 @@ i18n
       en: { translation: en },
       de: { translation: de },
     },
-    lng: 'de',
+    lng: (typeof window !== 'undefined' && localStorage.getItem('i18nextLng')) || 'de',
     fallbackLng: 'de',
     interpolation: {
       escapeValue: false, // react already escapes

@@ -136,8 +136,13 @@ export function isApiAllowedForRole(role, url) {
   const normalizedUrl = url.startsWith('/') ? url : `/${url}`;
   
   // ─── GLOBAL PUBLIC ROUTES ───
-  // Authentication endpoints should always be accessible to all roles.
-  if (normalizedUrl.startsWith('/api/auth/')) {
+  // Authentication, Chat, Kanban, and Calendar endpoints should always be accessible to all roles.
+  if (
+    normalizedUrl.startsWith('/api/auth/') ||
+    normalizedUrl.startsWith('/api/chat/') ||
+    normalizedUrl.startsWith('/api/kanban') ||
+    normalizedUrl.startsWith('/api/calendar')
+  ) {
     return true;
   }
   

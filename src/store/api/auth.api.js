@@ -1,4 +1,4 @@
-import api from './axios';
+import api from 'src/utils/axios';
 
 export const authApi = {
   login: async (payload) => {
@@ -70,5 +70,7 @@ export const authApi = {
 
     return res.data;
   },
+  signIn: (data) => api.post('/api/auth/sign-in', data),
+  signUp: (data) => api.post('/api/auth/sign-up', data),
 };
 

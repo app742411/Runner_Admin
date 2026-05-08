@@ -16,6 +16,15 @@ import Paper from '@mui/material/Paper';
 import Collapse from '@mui/material/Collapse';
 import { alpha, useTheme } from '@mui/material/styles';
 
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import axiosInstance from 'src/utils/axios';
+import { employeeApi } from 'src/store/api/employee.api';
+import { companyAdminApi } from 'src/store/api/company-admin.api';
+import { toast } from 'react-hot-toast';
+
 import { useAddComment, useAddReply } from 'src/features/task/useTasks';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -49,6 +58,106 @@ export default function TaskDetailsItemContent({
 
   const addCommentMutation = useAddComment();
   const addReplyMutation = useAddReply();
+
+  const [openExpenseDialog, setOpenExpenseDialog] = useState(false);
+  const [expenseTitle, setExpenseTitle] = useState('');
+  const [expenseDescription, setExpenseDescription] = useState('');
+  const [expenseAmount, setExpenseAmount] = useState('');
+  const [expenseImageFile, setExpenseImageFile] = useState(null);
+  const [isSubmittingExpense, setIsSubmittingExpense] = useState(false);
+
+  const handleExpenseImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setExpenseImageFile(file);
+    }
+  };
+
+  const handleAddExpense = async () => {
+    if (!expenseTitle.trim()) {
+      toast.error('Please enter an expense title');
+      return;
+    }
+    if (!expenseAmount) {
+      toast.error('Please enter an expense amount');
+      return;
+    }
+
+    setIsSubmittingExpense(true);
+    const formData = new FormData();
+    formData.append('subTaskId', currentSubTask._id);
+    formData.append('title', expenseTitle);
+    formData.append('description', expenseDescription);
+    formData.append('amount', expenseAmount);
+    if (expenseImageFile) {
+      formData.append('expenseImage', expenseImageFile);
+    }
+
+    try {
+      await employeeApi.addExpense(formData);
+      toast.success('Expense added successfully!');
+      setOpenExpenseDialog(false);
+      setExpenseTitle('');
+      setExpenseDescription('');
+      setExpenseAmount('');
+      setExpenseImageFile(null);
+    } catch (error) {
+      const errMsg = error.response?.data?.message || error.message || 'Failed to add expense';
+      toast.error(errMsg);
+    } finally {
+      setIsSubmittingExpense(false);
+    }
+  };
+
+  const [openRejectDialog, setOpenRejectDialog] = useState(false);
+  const [rejectingExpenseId, setRejectingExpenseId] = useState('');
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [isSubmittingRejection, setIsSubmittingRejection] = useState(false);
+
+  const handleOpenReject = (expenseId) => {
+    setRejectingExpenseId(expenseId);
+    setRejectionReason('');
+    setOpenRejectDialog(true);
+  };
+
+  const handleApproveExpense = async (expenseId) => {
+    try {
+      await companyAdminApi.updateExpenseStatus(currentSubTask._id, expenseId, {
+        status: 'approved'
+      });
+      toast.success('Expense approved successfully!');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      const errMsg = error.response?.data?.message || error.message || 'Failed to approve expense';
+      toast.error(errMsg);
+    }
+  };
+
+  const handleRejectExpense = async () => {
+    if (!rejectionReason.trim()) {
+      toast.error('Please enter a rejection reason');
+      return;
+    }
+    setIsSubmittingRejection(true);
+    try {
+      await companyAdminApi.updateExpenseStatus(currentSubTask._id, rejectingExpenseId, {
+        status: 'rejected',
+        rejectionReason: rejectionReason
+      });
+      toast.success('Expense rejected successfully!');
+      setOpenRejectDialog(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      const errMsg = error.response?.data?.message || error.message || 'Failed to reject expense';
+      toast.error(errMsg);
+    } finally {
+      setIsSubmittingRejection(false);
+    }
+  };
 
   const getCommenterDetails = (createdBy) => {
     // 1. Check logged-in user
@@ -194,6 +303,18 @@ export default function TaskDetailsItemContent({
         </Box>
 
         <Stack direction="row" spacing={1.5}>
+          {isEmployeeRole && (
+            <Button
+              variant="outlined"
+              size="large"
+              color="primary"
+              onClick={() => setOpenExpenseDialog(true)}
+              startIcon={<Iconify icon="solar:bill-list-bold" />}
+              sx={{ borderRadius: 1.5, px: 3, fontWeight: 'bold', height: 48 }}
+            >
+              Add Expense
+            </Button>
+          )}
           {isEmployeeRole && currentSubTask.status !== 'completed' && (
             <Button
               variant="contained"
@@ -313,6 +434,124 @@ export default function TaskDetailsItemContent({
                 }}
               />
             </Stack>
+          </Box>
+
+          {/* Extra Expenses Section */}
+          <Box sx={{ p: 3, borderRadius: 2, bgcolor: alpha(theme.palette.warning.main, 0.04), border: `1px dashed ${alpha(theme.palette.warning.main, 0.3)}` }}>
+            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Iconify icon="solar:bill-list-bold" width={22} color="warning.main" />
+              Extra Expenses
+              {(currentSubTask?.extraExpenses || []).length > 0 && (
+                <Label color="warning" variant="filled" sx={{ borderRadius: '50%', width: 22, height: 22, p: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {(currentSubTask?.extraExpenses || []).length}
+                </Label>
+              )}
+            </Typography>
+
+            {(!currentSubTask?.extraExpenses || currentSubTask.extraExpenses.length === 0) ? (
+              <Box sx={{ py: 3, textAlign: 'center', borderRadius: 1.5, bgcolor: 'background.paper', border: `1px dashed ${theme.palette.divider}` }}>
+                <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                  No extra expenses added yet
+                </Typography>
+              </Box>
+            ) : (
+              <Stack spacing={2}>
+                {currentSubTask.extraExpenses.map((expense) => (
+                  <Paper
+                    key={expense._id}
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      borderRadius: 1.5,
+                      bgcolor: 'background.paper',
+                      border: `1px solid ${theme.palette.divider}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: 2,
+                    }}
+                  >
+                    <Stack direction="row" spacing={2} alignItems="center">
+                      {expense.receiptImage && (
+                        <Box
+                          component="img"
+                          src={getImageUrl(expense.receiptImage)}
+                          sx={{
+                            width: 60,
+                            height: 60,
+                            borderRadius: 1,
+                            objectFit: 'cover',
+                            border: `1px solid ${theme.palette.divider}`,
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => window.open(getImageUrl(expense.receiptImage), '_blank')}
+                        />
+                      )}
+                      <Box>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                          {expense.title}
+                        </Typography>
+                        {expense.description && (
+                          <Typography variant="body2" color="text.secondary">
+                            {expense.description}
+                          </Typography>
+                        )}
+                        <Typography variant="caption" color="text.disabled" sx={{ display: 'block', mt: 0.5 }}>
+                          Added on: {fDateTime(expense.createdAt)}
+                        </Typography>
+                      </Box>
+                    </Stack>
+
+                    <Stack alignItems="flex-end" spacing={1}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'error.main' }}>
+                        {fCurrency(expense.amount)}
+                      </Typography>
+                      <Label
+                        variant="soft"
+                        color={
+                          expense.status === 'approved'
+                            ? 'success'
+                            : expense.status === 'rejected'
+                              ? 'error'
+                              : 'warning'
+                        }
+                        sx={{ textTransform: 'capitalize' }}
+                      >
+                        {expense.status}
+                      </Label>
+                      {(user?.role === 'company_admin' || user?.role === 'superAdmin' || user?.role === 'group_admin') && expense.status === 'pending' && (
+                        <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            color="success"
+                            onClick={() => handleApproveExpense(expense._id)}
+                            sx={{ py: 0.5, px: 1.5, fontSize: '0.75rem', fontWeight: 'bold' }}
+                          >
+                            Approve
+                          </Button>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            color="error"
+                            onClick={() => handleOpenReject(expense._id)}
+                            sx={{ py: 0.5, px: 1.5, fontSize: '0.75rem', fontWeight: 'bold' }}
+                          >
+                            Reject
+                          </Button>
+                        </Stack>
+                      )}
+                      {expense.rejectionReason && (
+                        <Typography variant="caption" color="error.main" sx={{ maxWidth: 200, textAlign: 'right' }}>
+                          Reason: {expense.rejectionReason}
+                        </Typography>
+                      )}
+                    </Stack>
+                  </Paper>
+                ))}
+              </Stack>
+            )}
           </Box>
 
           {/* Comments Section */}
@@ -529,6 +768,83 @@ export default function TaskDetailsItemContent({
           </Box>
         </Stack>
       </Scrollbar>
+
+      <Dialog open={openExpenseDialog} onClose={() => setOpenExpenseDialog(false)} fullWidth maxWidth="xs">
+        <DialogTitle sx={{ fontWeight: 'bold' }}>Add Subtask Expense</DialogTitle>
+        <DialogContent sx={{ pt: 1 }}>
+          <Stack spacing={2.5} sx={{ mt: 1 }}>
+            <TextField
+              fullWidth
+              label="Expense Title"
+              placeholder="e.g., Fuel Expense"
+              value={expenseTitle}
+              onChange={(e) => setExpenseTitle(e.target.value)}
+            />
+            <TextField
+              fullWidth
+              label="Amount"
+              placeholder="e.g., 50"
+              type="number"
+              value={expenseAmount}
+              onChange={(e) => setExpenseAmount(e.target.value)}
+            />
+            <TextField
+              fullWidth
+              multiline
+              rows={3}
+              label="Description"
+              placeholder="Travel expense for client visit"
+              value={expenseDescription}
+              onChange={(e) => setExpenseDescription(e.target.value)}
+            />
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>Expense Receipt/Image</Typography>
+              <Button
+                variant="outlined"
+                component="label"
+                fullWidth
+                startIcon={<Iconify icon="solar:camera-add-bold" />}
+                sx={{ py: 1.5, borderStyle: 'dashed' }}
+              >
+                {expenseImageFile ? expenseImageFile.name : 'Select Image'}
+                <input type="file" hidden accept="image/*" onChange={handleExpenseImageChange} />
+              </Button>
+            </Box>
+          </Stack>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button variant="outlined" color="inherit" onClick={() => setOpenExpenseDialog(false)}>
+            Cancel
+          </Button>
+          <LoadingButton variant="contained" color="primary" loading={isSubmittingExpense} onClick={handleAddExpense}>
+            Add Expense
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openRejectDialog} onClose={() => setOpenRejectDialog(false)} fullWidth maxWidth="xs">
+        <DialogTitle sx={{ fontWeight: 'bold' }}>Reject Expense</DialogTitle>
+        <DialogContent sx={{ pt: 1 }}>
+          <TextField
+            fullWidth
+            multiline
+            rows={3}
+            label="Rejection Reason"
+            placeholder="e.g., Receipt image is unclear"
+            value={rejectionReason}
+            onChange={(e) => setRejectionReason(e.target.value)}
+            sx={{ mt: 1 }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button variant="outlined" color="inherit" onClick={() => setOpenRejectDialog(false)}>
+            Cancel
+          </Button>
+          <LoadingButton variant="contained" color="error" loading={isSubmittingRejection} onClick={handleRejectExpense}>
+            Reject
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

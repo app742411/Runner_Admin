@@ -16,9 +16,9 @@ export default function ChatMessageInput({ onSendMessage, onTyping, onStopTyping
 
   const handleSend = () => {
     if (!text.trim() && attachments.length === 0) return;
-    
+
     onSendMessage(text, attachments);
-    
+
     setText('');
     setAttachments([]);
     if (typingTimeoutRef.current) {

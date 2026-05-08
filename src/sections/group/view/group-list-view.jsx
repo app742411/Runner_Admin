@@ -32,6 +32,9 @@ import { SearchNotFound } from 'src/components/search-not-found';
 import { DashboardContent } from 'src/layouts/dashboard/main';
 
 import { toast } from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { ROLES } from 'src/config/roles';
+import { useAllCompanies } from 'src/features/company/useCompanies';
 import { useGroups, useDeleteGroup } from 'src/features/group/useGroups';
 import { GroupTableRow } from '../group-table-row';
 import { GroupTableToolbar } from '../group-table-toolbar';
@@ -44,11 +47,21 @@ export function GroupListView() {
   const theme = useTheme();
   const router = useRouter();
 
+
+  const user = useSelector((state) => state.auth.user);
+  const isSuperAdmin = user?.role === ROLES.SUPER_ADMIN;
+
+  const { data: companiesResponse } = useAllCompanies();
+  const companyOptions = companiesResponse?.data || [];
+
   const [openForm, setOpenForm] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
 
+
+
   const TABLE_HEAD = [
     { id: 'name', label: t('group.table.groupName') },
+    { id: 'company', label: t('group.table.company') || 'Company' },
     { id: 'task', label: t('group.table.taskName') },
     { id: 'leader', label: t('group.table.groupAdminName') },
     { id: 'totalMembers', label: t('group.table.members') },
@@ -62,10 +75,13 @@ export function GroupListView() {
   const [dense, setDense] = useState(false);
   const [filters, setFilters] = useState({
     search: '',
+    companyId: 'all',
   });
 
   const { data, isLoading, refetch } = useGroups({
     search: filters.search,
+    companyId: filters.companyId === 'all' ? undefined : filters.companyId,
+    company: filters.companyId === 'all' ? undefined : filters.companyId,
     page: page + 1,
     limit: rowsPerPage,
   });
@@ -181,7 +197,7 @@ export function GroupListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
             sx={{ bgcolor: '#003b51', '&:hover': { bgcolor: '#002636' } }}
-            onClick={() => handleOpenForm()}
+            onClick={() => router.push(paths.dashboard.group.new)}
           >
             {t('group.list.addGroup')}
           </Button>
@@ -200,6 +216,8 @@ export function GroupListView() {
         <GroupTableToolbar
           filters={filters}
           onFilters={handleFilters}
+          isSuperAdmin={isSuperAdmin}
+          companyOptions={companyOptions}
         />
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset', px: 2 }}>
@@ -283,7 +301,7 @@ export function GroupListView() {
         sx={{
           '& .MuiDialog-paper': {
             borderRadius: 2,
-            bgcolor: 'background.neutral'
+            bgcolor: 'background.paper'
           }
         }}
       >

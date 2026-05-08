@@ -1,4 +1,4 @@
-import api from './axios';
+import api from 'src/utils/axios';
 
 export const employeeApi = {
   // Super Admin
@@ -31,5 +31,8 @@ export const employeeApi = {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
   getEmployeePayments: (params) => api.get('/api/admin/getEmployeePayments', { params }),
+  addExpense: (formData) => api.put('/api/employee/addExpense', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
 };
 

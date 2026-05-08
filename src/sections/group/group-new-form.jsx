@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSelector } from 'react-redux';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -14,10 +15,12 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { ROLES } from 'src/config/roles';
 
 import { Form, Field } from 'src/components/hook-form';
 import { groupApi } from 'src/store/api/group.api';
 import { useEligibleUsers, useAvailableContracts, useUpdateGroup, useAvailableTasks, useSuggestMembers } from 'src/features/group/useGroups';
+import { useAllCompanies } from 'src/features/company/useCompanies';
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +31,7 @@ export const NewGroupSchema = zod.object({
   taskIds: zod.array(zod.string()).optional(),
   memberIds: zod.array(zod.string()).optional(),
   description: zod.string().optional(),
+  companyId: zod.string().optional(),
 });
 
 // ----------------------------------------------------------------------
@@ -36,8 +40,12 @@ export function GroupNewForm({ currentGroup, onSuccess }) {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const { data: eligibleUsers } = useEligibleUsers();
-  const { data: availableContracts } = useAvailableContracts();
+  const user = useSelector((state) => state.auth.user);
+  const isSuperAdmin = user?.role === ROLES.SUPER_ADMIN;
+
+  const { data: companiesResponse } = useAllCompanies();
+  const companyOptions = companiesResponse?.data || [];
+
   const { mutateAsync: updateGroup } = useUpdateGroup();
 
   const defaultValues = useMemo(
@@ -48,6 +56,7 @@ export function GroupNewForm({ currentGroup, onSuccess }) {
       taskIds: currentGroup?.tasks?.map((t) => t.taskId || t._id) || [],
       memberIds: currentGroup?.members?.map((m) => m._id || m.id) || [],
       description: currentGroup?.description || '',
+      companyId: currentGroup?.companyId || currentGroup?.company?._id || currentGroup?.company || '',
     }),
     [currentGroup]
   );
@@ -64,9 +73,13 @@ export function GroupNewForm({ currentGroup, onSuccess }) {
     formState: { isSubmitting },
   } = methods;
 
+  const selectedCompanyId = watch('companyId');
+  const { data: eligibleUsers } = useEligibleUsers(selectedCompanyId);
+  const { data: availableContracts } = useAvailableContracts(selectedCompanyId);
+
   const selectedContracts = watch('contractList');
-  const { data: availableTasks } = useAvailableTasks(selectedContracts);
-  const { data: suggestMembers } = useSuggestMembers(selectedContracts);
+  const { data: availableTasks } = useAvailableTasks(selectedContracts, selectedCompanyId);
+  const { data: suggestMembers } = useSuggestMembers(selectedContracts, selectedCompanyId);
 
   useEffect(() => {
     if (currentGroup) {
@@ -83,13 +96,18 @@ export function GroupNewForm({ currentGroup, onSuccess }) {
         taskIds: data.taskIds || [],
         memberIds: data.memberIds || [],
         description: data.description,
+        companyId: data.companyId || undefined,
       };
 
       if (currentGroup) {
         await updateGroup({ id: currentGroup._id, data: payload });
         toast.success(t('group.messages.successUpdate') || 'Group updated successfully!');
       } else {
-        await groupApi.createGroup(payload);
+        if (isSuperAdmin) {
+          await groupApi.createGroupSuperAdmin(payload);
+        } else {
+          await groupApi.createGroup(payload);
+        }
         toast.success(t('group.messages.successCreate') || 'Group created successfully!');
       }
 
@@ -110,6 +128,17 @@ export function GroupNewForm({ currentGroup, onSuccess }) {
         {/* <Typography variant="h6" sx={{ mb: 1 }}>
           {t('group.form.info')}
         </Typography> */}
+
+        {isSuperAdmin && (
+          <Field.Select name="companyId" label={t('group.form.company') || 'Company'}>
+            <MenuItem value="">{t('common.select') || 'Select Company'}</MenuItem>
+            {companyOptions.map((option) => (
+              <MenuItem key={option.companyId || option._id || option.id} value={option.companyId || option._id || option.id}>
+                {option.companyName || option.name}
+              </MenuItem>
+            ))}
+          </Field.Select>
+        )}
 
         <Field.Text name="groupName" label={t('group.form.groupName')} />
 

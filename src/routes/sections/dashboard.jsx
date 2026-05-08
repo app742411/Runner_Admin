@@ -21,7 +21,10 @@ const PageFour = lazy(() => import('src/pages/dashboard/four'));
 const PageFive = lazy(() => import('src/pages/dashboard/five'));
 const PageSix = lazy(() => import('src/pages/dashboard/six'));
 const CompanyListPage = lazy(() => import('src/pages/dashboard/company/list'));
+const CompanyOverviewPage = lazy(() => import('src/pages/dashboard/company/overview'));
 const GroupListPage = lazy(() => import('src/pages/dashboard/group/list'));
+const GroupOverviewPage = lazy(() => import('src/pages/dashboard/group/overview'));
+const GroupNewPage = lazy(() => import('src/pages/dashboard/group/new'));
 const GroupDetailsPage = lazy(() => import('src/pages/dashboard/group/details'));
 const CompanyActivePage = lazy(() => import('src/pages/dashboard/company/active'));
 const CompanyPendingPage = lazy(() => import('src/pages/dashboard/company/pending'));
@@ -30,6 +33,7 @@ const CompanyDetailsPage = lazy(() => import('src/pages/dashboard/company/detail
 const CompanyEditPage = lazy(() => import('src/pages/dashboard/company/edit'));
 const UserListPage = lazy(() => import('src/pages/dashboard/user/list'));
 const ContractListPage = lazy(() => import('src/pages/dashboard/contract/list'));
+const ContractOverviewPage = lazy(() => import('src/pages/dashboard/contract/overview'));
 const ContractNewPage = lazy(() => import('src/pages/dashboard/contract/new'));
 const TaskListPage = lazy(() => import('src/pages/dashboard/task/list'));
 const TaskDetailsPage = lazy(() => import('src/pages/dashboard/task/details'));
@@ -54,6 +58,11 @@ const SettingsPage = lazy(() => import('src/pages/dashboard/settings'));
 const CompanyAdminPage = lazy(() => import('src/pages/dashboard/company-admin'));
 const EmployeeFinancePage = lazy(() => import('src/pages/dashboard/employee/finance'));
 const EmployeeProfilePage = lazy(() => import('src/pages/dashboard/employee/profile'));
+const SystemReportsPage = lazy(() => import('src/pages/dashboard/system-analytics/reports'));
+const SystemExpensesPage = lazy(() => import('src/pages/dashboard/system-analytics/expenses'));
+const UserActivityPage = lazy(() => import('src/pages/dashboard/system-analytics/activity'));
+const SystemLogsPage = lazy(() => import('src/pages/dashboard/system-analytics/logs'));
+const CustomReportsPage = lazy(() => import('src/pages/dashboard/system-analytics/custom'));
 const EmployeeEditProfilePage = lazy(() => import('src/pages/dashboard/employee/edit-profile'));
 const TemplateListPage = lazy(() => import('src/pages/dashboard/template/list'));
 const InvoiceListPage = lazy(() => import('src/pages/dashboard/invoice/list'));
@@ -112,7 +121,8 @@ export const dashboardRoutes = [
       {
         path: 'company',
         children: [
-          { index: true, element: <CompanyListPage /> },
+          { index: true, element: <CompanyOverviewPage /> },
+          { path: 'overview', element: <CompanyOverviewPage /> },
           { path: 'list', element: <CompanyListPage /> },
           { path: 'active', element: <CompanyActivePage /> },
           { path: 'pending', element: <CompanyPendingPage /> },
@@ -128,7 +138,8 @@ export const dashboardRoutes = [
       {
         path: 'contract',
         children: [
-          { index: true, element: <ContractListPage /> },
+          { index: true, element: <ContractOverviewPage /> },
+          { path: 'overview', element: <ContractOverviewPage /> },
           { path: 'list', element: <ContractListPage /> },
           { path: 'new', element: <ContractNewPage /> },
           { path: 'details/:id', element: <ContractDetailsPage /> },
@@ -137,8 +148,10 @@ export const dashboardRoutes = [
       {
         path: 'group',
         children: [
-          { index: true, element: <GroupListPage /> },
+          { index: true, element: <GroupOverviewPage /> },
+          { path: 'overview', element: <GroupOverviewPage /> },
           { path: 'list', element: <GroupListPage /> },
+          { path: 'new', element: <GroupNewPage /> },
           { path: 'details/:id', element: <GroupDetailsPage /> },
         ],
       },
@@ -254,6 +267,17 @@ export const dashboardRoutes = [
           { index: true, element: <SupportListPage /> },
           { path: 'list', element: <SupportListPage /> },
           { path: 'new', element: <SupportNewPage /> },
+        ],
+      },
+      {
+        path: 'system-analytics',
+        children: [
+          { index: true, element: <SystemReportsPage /> },
+          { path: 'reports', element: <SystemReportsPage /> },
+          { path: 'expenses', element: <SystemExpensesPage /> },
+          { path: 'activity', element: <UserActivityPage /> },
+          { path: 'logs', element: <SystemLogsPage /> },
+          { path: 'custom', element: <CustomReportsPage /> },
         ],
       },
     ],

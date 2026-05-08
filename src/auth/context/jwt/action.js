@@ -1,4 +1,4 @@
-import axios, { endpoints } from 'src/utils/axios';
+import { authApi } from 'src/store/api/auth.api';
 
 import { setSession } from './utils';
 import { STORAGE_KEY } from './constant';
@@ -10,7 +10,7 @@ export const signInWithPassword = async ({ email, password }) => {
   try {
     const params = { email, password };
 
-    const res = await axios.post(endpoints.auth.signIn, params);
+    const res = await authApi.signIn(params);
 
     const { accessToken } = res.data;
 
@@ -37,7 +37,7 @@ export const signUp = async ({ email, password, firstName, lastName }) => {
   };
 
   try {
-    const res = await axios.post(endpoints.auth.signUp, params);
+    const res = await authApi.signUp(params);
 
     const { accessToken } = res.data;
 

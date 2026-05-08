@@ -172,14 +172,6 @@ export function UserListView() {
 
         <Stack direction="row" spacing={1}>
           <Button
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            sx={{ bgcolor: '#003b51', '&:hover': { bgcolor: '#002636' } }}
-            onClick={handleNewUser}
-          >
-            {t('user.newUser')}
-          </Button>
-          <Button
             variant="outlined"
             startIcon={<Iconify icon="solar:export-bold" />}
             sx={{ borderColor: 'divider', color: 'text.primary', '&:hover': { bgcolor: alpha(theme.palette.grey[500], 0.08) } }}

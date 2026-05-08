@@ -49,6 +49,7 @@ export default function GroupAdminView() {
 
   const TABLE_HEAD = useMemo(() => [
     { id: 'name', label: t('group.table.groupName') },
+    { id: 'company', label: t('group.table.company') || 'Company' },
     { id: 'description', label: t('group.table.description') },
     { id: 'totalMembers', label: t('group.table.members'), align: 'center' },
     { id: 'contractNumber', label: t('group.table.contractNumber') },

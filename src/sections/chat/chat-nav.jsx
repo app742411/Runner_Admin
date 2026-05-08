@@ -110,13 +110,13 @@ export default function ChatNav({ chats, selectedChatId, onSelectChat, participa
                 }}
               >
                 <Box sx={{ position: 'relative' }}>
-                   {isOnline ? (
-                     <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">
-                       <Avatar src={chat.chatImage} alt={chat.chatName} />
-                     </StyledBadge>
-                   ) : (
-                     <Avatar src={chat.chatImage} alt={chat.chatName} />
-                   )}
+                  {isOnline ? (
+                    <StyledBadge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant="dot">
+                      <Avatar src={chat.chatImage} alt={chat.chatName} />
+                    </StyledBadge>
+                  ) : (
+                    <Avatar src={chat.chatImage} alt={chat.chatName} />
+                  )}
                 </Box>
 
                 <Stack spacing={0.5} sx={{ ml: 2, flexGrow: 1, minWidth: 0 }}>

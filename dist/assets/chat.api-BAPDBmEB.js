@@ -1,0 +1,1 @@
+import{a3 as a}from"./index-BNVWeRR5.js";const p={getChatList:t=>a.get(`/api/chat/getChatList?type=${t}`),getMessages:(t,e=1,s=20)=>a.get(`/api/chat/getMessages/${t}?page=${e}&limit=${s}`),sendMessage:t=>a.post("/api/chat/sendMessage",t,{headers:{"Content-Type":"multipart/form-data"}}),initChat:t=>a.post("/api/chat/initChat",t)};export{p as c};

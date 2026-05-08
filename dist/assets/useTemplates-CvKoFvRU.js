@@ -1,0 +1,1 @@
+import{w as t}from"./index-BNVWeRR5.js";import{c as r}from"./company-admin.api-CT9fxfwV.js";function p(){return t({queryKey:["templates"],queryFn:()=>r.getTemplates().then(e=>e.data)})}export{p as u};

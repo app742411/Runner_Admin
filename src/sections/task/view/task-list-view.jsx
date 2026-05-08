@@ -23,7 +23,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 import { useTranslation } from 'react-i18next';
-import { useRouter } from 'src/routes/hooks';
+import { useRouter, useSearchParams } from 'src/routes/hooks';
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
 import { Iconify } from 'src/components/iconify';
@@ -59,25 +59,28 @@ export function TaskListView() {
   ];
 
   const TABS = [
-    { value: 'all', label: t('task.list.all'), color: 'default' },
-    { value: 'active', label: t('task.list.active'), color: 'success' },
-    { value: 'pending', label: t('task.list.pending'), color: 'warning' },
-    { value: 'banner', label: t('task.list.banner'), color: 'error' },
-    { value: 'rejected', label: t('task.list.rejected'), color: 'default' },
+    { value: 'all', label: t('task.list.all') || 'All', color: 'default' },
+    { value: 'pending', label: t('task.list.pending') || 'Pending', color: 'warning' },
+    { value: 'in_progress', label: t('task.list.active') || 'In Progress', color: 'info' },
+    { value: 'completed', label: t('task.list.completed') || 'Completed', color: 'success' },
+    { value: 'cancelled', label: t('task.list.rejected') || 'Cancelled', color: 'error' },
+    { value: 'hold', label: t('task.list.hold') || 'Hold', color: 'default' },
   ];
+
+  const searchParams = useSearchParams();
+  const statusParam = searchParams.get('status') || 'all';
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selected, setSelected] = useState([]);
   const [dense, setDense] = useState(false);
-  const [currentTab, setCurrentTab] = useState('all');
   const [filters, setFilters] = useState({
     name: '',
-    status: '',
   });
 
   const { data, isLoading } = useTasks({
     ...filters,
+    status: statusParam === 'all' ? '' : statusParam,
     page: page + 1,
     limit: rowsPerPage,
   });
@@ -95,10 +98,9 @@ export function TaskListView() {
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
-      handleFilters('status', newValue);
-      setCurrentTab(newValue);
+      router.push(`${paths.dashboard.task.list}?status=${newValue}`);
     },
-    [handleFilters]
+    [router]
   );
 
   const handleSelectAllRows = (checked) => {
@@ -161,13 +163,6 @@ export function TaskListView() {
 
         <Stack direction="row" spacing={1}>
           <Button
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            sx={{ bgcolor: '#003b51', '&:hover': { bgcolor: '#002636' } }}
-          >
-            {t('task.newTask')}
-          </Button>
-          <Button
             variant="outlined"
             startIcon={<Iconify icon="solar:export-bold" />}
             sx={{ borderColor: 'divider' }}
@@ -179,7 +174,7 @@ export function TaskListView() {
 
       <Card>
         <Tabs
-          value={currentTab}
+          value={statusParam}
           onChange={handleFilterStatus}
           sx={{
             px: 2.5,
@@ -196,7 +191,7 @@ export function TaskListView() {
               disabled={isLoading}
               label={
                 <Stack direction="row" alignItems="center" spacing={1}>
-                  <Box component="span" sx={{ typography: 'subtitle2', color: currentTab === tab.value ? 'text.primary' : 'text.secondary' }}>
+                  <Box component="span" sx={{ typography: 'subtitle2', color: statusParam === tab.value ? 'text.primary' : 'text.secondary' }}>
                     {tab.label}
                   </Box>
                   <Label
@@ -205,15 +200,16 @@ export function TaskListView() {
                     sx={{
                       borderRadius: 1,
                       height: 20,
-                      bgcolor: tab.value === 'all' && currentTab === 'all' ? theme.palette.grey[800] : undefined,
-                      color: tab.value === 'all' && currentTab === 'all' ? 'common.white' : undefined
+                      bgcolor: tab.value === 'all' && statusParam === 'all' ? theme.palette.grey[800] : undefined,
+                      color: tab.value === 'all' && statusParam === 'all' ? 'common.white' : undefined
                     }}
                   >
                     {/* Mock counts based on design */}
                     {tab.value === 'all' ? '80' :
-                      tab.value === 'active' ? '18' :
-                        tab.value === 'pending' ? '22' :
-                          tab.value === 'banner' ? '11' : '32'}
+                      tab.value === 'pending' ? '22' :
+                        tab.value === 'in_progress' ? '18' :
+                          tab.value === 'completed' ? '25' :
+                            tab.value === 'cancelled' ? '11' : '4'}
                   </Label>
                 </Stack>
               }

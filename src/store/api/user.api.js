@@ -1,4 +1,4 @@
-import api from './axios';
+import api from 'src/utils/axios';
 
 export const userApi = {
   create: (data) => api.post('/users', data),
