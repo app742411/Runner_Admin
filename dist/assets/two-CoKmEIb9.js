@@ -1,0 +1,1 @@
+import{j as t,H as e,C as a}from"./index-BNVWeRR5.js";import{B as s}from"./view-DYmmZ83U.js";const i={title:`Page two | Dashboard - ${a.site.name}`};function o(){return t.jsxs(t.Fragment,{children:[t.jsx(e,{children:t.jsxs("title",{children:[" ",i.title]})}),t.jsx(s,{title:"Page two"})]})}export{o as default};

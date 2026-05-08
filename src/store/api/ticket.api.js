@@ -1,4 +1,4 @@
-import axios from './axios';
+import axios from 'src/utils/axios';
 
 export const ticketApi = {
   createTicket: (data) => axios.post('/api/ticket/createTicket', data),

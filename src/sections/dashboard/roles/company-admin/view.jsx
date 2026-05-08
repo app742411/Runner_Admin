@@ -53,7 +53,7 @@ export default function CompanyAdminView() {
 
         {/* ─── MAIN CARDS (6 IN 1 ROW) ─── */}
         <Grid container spacing={2}>
-          <Grid xs={12} sm={4} md={2}>
+          <Grid xs={6} sm={4} md={2}>
             <StatCard
               title={t('dashboard.totalContract')}
               total={cards.totalContracts || 0}
@@ -63,7 +63,7 @@ export default function CompanyAdminView() {
               sparkData={SPARK_CONTRACT}
             />
           </Grid>
-          <Grid xs={12} sm={4} md={2}>
+          <Grid xs={6} sm={4} md={2}>
             <StatCard
               title={t('dashboard.totalEmployee')}
               total={cards.totalEmployees || 0}
@@ -73,7 +73,7 @@ export default function CompanyAdminView() {
               sparkData={SPARK_EMPLOYEE}
             />
           </Grid>
-          <Grid xs={12} sm={4} md={2}>
+          <Grid xs={6} sm={4} md={2}>
             <StatCard
               title={t('dashboard.totalTask')}
               total={cards.totalTasks || 0}
@@ -83,7 +83,7 @@ export default function CompanyAdminView() {
               sparkData={SPARK_TASK}
             />
           </Grid>
-          <Grid xs={12} sm={4} md={2}>
+          <Grid xs={6} sm={4} md={2}>
             <StatCard
               title={t('dashboard.sales.totalIncome')}
               total={fCurrency(cards.totalIncome || 0)}
@@ -93,7 +93,7 @@ export default function CompanyAdminView() {
               sparkData={[{ v: 10 }, { v: 15 }, { v: 25 }, { v: 35 }, { v: 45 }, { v: 60 }]}
             />
           </Grid>
-          <Grid xs={12} sm={4} md={2}>
+          <Grid xs={6} sm={4} md={2}>
             <StatCard
               title={t('dashboard.sales.totalExpenses')}
               total={fCurrency(cards.totalExpense || 0)}
@@ -103,7 +103,7 @@ export default function CompanyAdminView() {
               sparkData={[{ v: 50 }, { v: 45 }, { v: 38 }, { v: 42 }, { v: 35 }, { v: 25 }]}
             />
           </Grid>
-          <Grid xs={12} sm={4} md={2}>
+          <Grid xs={6} sm={4} md={2}>
             <StatCard
               title={t('dashboard.netProfitLoss')}
               total={fCurrency(cards.profit || 0)}

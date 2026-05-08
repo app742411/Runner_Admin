@@ -23,10 +23,11 @@ const navData = [
       {
         id: 'Company',
         title: 'nav.company',
-        path: paths.dashboard.company.root,
+        path: paths.dashboard.company.overview,
         icon: APP_ICONS.company,
         permission: 'company.view',
         children: [
+          { id: 'company_overview', title: 'nav.company_overview', path: paths.dashboard.company.overview },
           { id: 'create_company', title: 'nav.company_create', path: paths.dashboard.company.new },
           { id: 'company_list', title: 'nav.company_list', path: paths.dashboard.company.list },
           { id: 'active_company', title: 'nav.company_active', path: paths.dashboard.company.active },
@@ -43,16 +44,29 @@ const navData = [
       {
         id: 'Contract',
         title: 'nav.contract',
-        path: paths.dashboard.contract.list,
+        path: paths.dashboard.contract.root,
         icon: APP_ICONS.contract,
         permission: 'contract.view',
+        children: [
+          { id: 'contract_overview', title: 'nav.contract_overview', path: paths.dashboard.contract.overview },
+          { id: 'create_contract', title: 'nav.contract_create', path: paths.dashboard.contract.new },
+          { id: 'all_contract', title: 'nav.contract_all', path: paths.dashboard.contract.all },
+          { id: 'pending_contract', title: 'nav.contract_pending', path: paths.dashboard.contract.pending },
+          { id: 'in_progress_contract', title: 'nav.contract_in_progress', path: paths.dashboard.contract.inProgress },
+          { id: 'completed_contract', title: 'nav.contract_completed', path: paths.dashboard.contract.completed },
+          { id: 'rejected_cancelled_contract', title: 'nav.contract_rejected_cancelled', path: paths.dashboard.contract.rejected },
+        ],
       },
       {
         id: 'Subscription',
         title: 'nav.subscription',
-        path: paths.dashboard.subscription.list,
+        path: paths.dashboard.subscription.root,
         icon: APP_ICONS.subscription,
         permission: 'subscription.view',
+        children: [
+          { id: 'add_subscription', title: 'nav.subscription_add', path: paths.dashboard.subscription.new },
+          { id: 'subscription_list', title: 'nav.subscription_list', path: paths.dashboard.subscription.list },
+        ],
       },
     ],
   },
@@ -71,9 +85,14 @@ const navData = [
       {
         id: 'Employee',
         title: 'nav.employee',
-        path: paths.dashboard.employee.list,
+        path: paths.dashboard.employee.root,
         icon: APP_ICONS.employee,
         permission: 'user.view',
+        children: [
+          { id: 'employee_overview', title: 'nav.employee_overview', path: paths.dashboard.employee.root },
+          { id: 'create_employee', title: 'nav.employee_create', path: paths.dashboard.employee.new },
+          { id: 'employee_list', title: 'nav.employee_list', path: paths.dashboard.employee.list },
+        ],
       },
       {
         id: 'Runner’s User',
@@ -91,10 +110,15 @@ const navData = [
       },
       {
         id: 'Group',
-        title: 'nav.group',
-        path: paths.dashboard.group.root,
+        title: 'nav.group_manage',
+        path: paths.dashboard.group.overview,
         icon: APP_ICONS.roles,
         permission: 'group.view',
+        children: [
+          { id: 'group_overview', title: 'nav.group_overview', path: paths.dashboard.group.overview },
+          { id: 'create_group', title: 'nav.group_create', path: paths.dashboard.group.new },
+          { id: 'all_group', title: 'nav.group_all', path: paths.dashboard.group.list },
+        ],
       },
     ],
   },
@@ -105,10 +129,19 @@ const navData = [
     items: [
       {
         id: 'Task',
-        title: 'nav.task',
-        path: paths.dashboard.task.list,
+        title: 'nav.task_manage',
+        path: paths.dashboard.task.root,
         icon: APP_ICONS.task,
         permission: 'task.view',
+        children: [
+          { id: 'task_overview', title: 'nav.task_overview', path: paths.dashboard.task.overview },
+          { id: 'all_task', title: 'nav.task_all', path: paths.dashboard.task.all },
+          { id: 'pending_task', title: 'nav.task_pending', path: paths.dashboard.task.pending },
+          { id: 'in_progress_task', title: 'nav.task_in_progress', path: paths.dashboard.task.inProgress },
+          { id: 'completed_task', title: 'nav.task_completed', path: paths.dashboard.task.completed },
+          { id: 'cancelled_task', title: 'nav.task_cancelled', path: paths.dashboard.task.cancelled },
+          { id: 'hold_task', title: 'nav.task_hold', path: paths.dashboard.task.hold },
+        ],
       },
       {
         id: 'Generate Reports',
@@ -282,6 +315,20 @@ const navData = [
         path: paths.dashboard.template.root,
         icon: APP_ICONS.template,
         permission: 'template.view',
+      },
+      {
+        id: 'System & Analytics',
+        title: 'nav.system_analytics',
+        path: paths.dashboard.systemAnalytics.root,
+        icon: APP_ICONS.report,
+        permission: 'settings.view',
+        children: [
+          { id: 'system_reports', title: 'nav.system_reports', path: paths.dashboard.systemAnalytics.reports },
+          { id: 'add_expenses', title: 'nav.add_expenses', path: paths.dashboard.systemAnalytics.expenses },
+          { id: 'user_activity_reports', title: 'nav.user_activity_reports', path: paths.dashboard.systemAnalytics.activity },
+          { id: 'system_logs', title: 'nav.system_logs', path: paths.dashboard.systemAnalytics.logs },
+          { id: 'custom_reports', title: 'nav.custom_reports', path: paths.dashboard.systemAnalytics.custom },
+        ],
       },
       {
         id: 'Settings',

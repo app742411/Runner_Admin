@@ -4,6 +4,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'src/routes/hooks';
 import { DashboardContent } from 'src/layouts/dashboard/main';
 
@@ -12,12 +13,13 @@ import { ContractNewForm } from '../contract-new-form';
 // ----------------------------------------------------------------------
 
 export function ContractNewView() {
+  const { t } = useTranslation();
   const router = useRouter();
 
   return (
     <DashboardContent maxWidth="xl">
       <Stack spacing={1} sx={{ mb: 5 }}>
-        <Typography variant="h4">Create a new contract</Typography>
+        <Typography variant="h4">{t('contract.create')}</Typography>
         <Breadcrumbs
           separator={
             <Box
@@ -27,12 +29,12 @@ export function ContractNewView() {
           }
         >
           <Link color="inherit" underline="hover" onClick={() => router.push('/dashboard')} sx={{ cursor: 'pointer' }}>
-            Dashboard
+            {t('common.dashboard')}
           </Link>
           <Link color="inherit" underline="hover" onClick={() => router.push('/dashboard/contract/list')} sx={{ cursor: 'pointer' }}>
-            Contract List
+            {t('contract.list')}
           </Link>
-          <Typography color="text.primary">New contract</Typography>
+          <Typography color="text.primary">{t('contract.new')}</Typography>
         </Breadcrumbs>
       </Stack>
 

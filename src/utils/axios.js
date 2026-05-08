@@ -1,14 +1,55 @@
 import axios from 'axios';
 
 import { CONFIG } from 'src/config-global';
+import { ROLES } from 'src/config/roles';
+import { isApiAllowedForRole } from 'src/config/roleApiMap';
+import store from 'src/store';
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: CONFIG.site.apiUrl || CONFIG.site.serverUrl });
+const axiosInstance = axios.create({
+  baseURL: CONFIG.site.apiUrl || CONFIG.site.serverUrl,
+  headers: {
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true',
+  },
+});
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('jwt_access_token') || localStorage.getItem('accessToken');
+    if (config.skipAuth) {
+      delete config.headers?.Authorization;
+      return config;
+    }
+
+    let token = null;
+    let userRole = ROLES.SUPER_ADMIN;
+
+    try {
+      const state = store.getState();
+      token = state?.auth?.accessToken;
+      userRole = state?.auth?.user?.role || ROLES.SUPER_ADMIN;
+    } catch (e) {
+      // fallback if store is not fully initialized
+    }
+
+    if (!token) {
+      token = sessionStorage.getItem('jwt_access_token') || localStorage.getItem('accessToken');
+    }
+
+    const url = config.url || '';
+    console.log(`[RBAC] User Role: "${userRole}" Target URL: "${url}"`);
+
+    if (!isApiAllowedForRole(userRole, url)) {
+      console.error(`[RBAC] Blocked: Role "${userRole}" is not allowed to call "${url}"`);
+      return Promise.reject(
+        Object.assign(new Error(`[RBAC] 403 Forbidden — "${userRole}" cannot access ${url}`), {
+          status: 403,
+          isRbacBlocked: true,
+        })
+      );
+    }
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -37,76 +78,4 @@ export const fetcher = async (args) => {
     console.error('Failed to fetch:', error);
     throw error;
   }
-};
-
-// ----------------------------------------------------------------------
-
-export const endpoints = {
-  chat: {
-    list: '/api/chat/getChatList',
-    messages: (chatId) => `/api/chat/getMessages/${chatId}`,
-    send: '/api/chat/sendMessage',
-    init: '/api/chat/initChat',
-  },
-  workReport: {
-    list: '/api/company-admin/getAllWorkReports',
-    details: (id) => `/api/company-admin/getWorkReportDetails/${id}`,
-    approve: (id) => `/api/company-admin/approveWorkReport/${id}`,
-    update: (id) => `/api/company-admin/updateWorkReport/${id}`,
-  },
-  companyAdmin: {
-    dashboard: '/api/company-admin/getCompanyAdminDashboard',
-    templates: '/api/company-admin/getTemplates',
-    invoices: '/api/company-admin/getAllInvoices',
-    invoiceDetails: (id) => `/api/company-admin/getInvoiceById/${id}`,
-    sendInvoice: (id) => `/api/company-admin/sendInvoice/${id}`,
-  },
-  group: {
-    eligibleUsers: '/api/group/eligible-users',
-    availableContracts: '/api/group/getAvailableContracts',
-    availableTasks: (contractId) => `/api/group/getAvailableTasks?contractId=${contractId}`,
-    suggestMembers: (contractId) => `/api/group/suggestMembers?contractId=${contractId}`,
-    list: '/api/group/getAllGroups',
-    details: (id) => `/api/group/getGroupDetails/${id}`,
-    create: '/api/group/createGroup',
-    update: (id) => `/api/group/updateGroup/${id}`,
-    delete: (id) => `/api/group/deleteGroup/${id}`,
-    addMember: (id) => `/api/group/addGroupMember/${id}`,
-    removeMember: (id) => `/api/group/removeGroupMember/${id}`,
-    changeAdmin: (id) => `/api/group/changeGroupAdmin/${id}`,
-    myGroups: '/api/group/getMyGroups',
-    fullDetails: (id) => `/api/group/getGroupFullDetails/${id}`,
-    dashboard: '/api/group/getGroupAdminDashboard',
-    membersForAssign: (id) => `/api/group/getGroupMembersForAssign/${id}`,
-    reviewWorkReport: (id) => `/api/group/reviewWorkReport/${id}`,
-  },
-  superAdmin: {
-    dashboard: '/api/admin/getSuperAdminDashboard',
-    employeePayments: '/api/admin/getEmployeePayments',
-    documents: '/api/admin/getAllDocuments',
-  },
-  kanban: '/api/kanban',
-  calendar: '/api/calendar',
-  auth: {
-    me: '/api/auth/me',
-    signIn: '/api/auth/sign-in',
-    signUp: '/api/auth/sign-up',
-    getRole: '/api/auth/getRole',
-  },
-  mail: {
-    list: '/api/mail/list',
-    details: '/api/mail/details',
-    labels: '/api/mail/labels',
-  },
-  post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
-    latest: '/api/post/latest',
-    search: '/api/post/search',
-  },
-  product: {
-    list: '/api/product/list',
-    details: '/api/product/details',
-    search: '/api/product/search',
-  },
 };

@@ -15,7 +15,7 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { fDate } from 'src/utils/format-time';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
-import axios, { endpoints } from 'src/utils/axios';
+import { chatApi } from 'src/store/api/chat.api';
 import toast from 'react-hot-toast';
 
 // ----------------------------------------------------------------------
@@ -66,7 +66,7 @@ export function EmployeeTableRow({ row, selected, onSelectRow, onDeleteRow }) {
   const handleOpenChat = async (e) => {
     e.stopPropagation();
     try {
-      const res = await axios.post(endpoints.chat.init, {
+      const res = await chatApi.initChat({
         type: 'direct',
         receiverId: _id,
       });

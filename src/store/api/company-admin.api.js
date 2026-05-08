@@ -1,14 +1,14 @@
-import { endpoints } from 'src/utils/axios';
-import api from './axios';
+import api from 'src/utils/axios';
 
 export const companyAdminApi = {
-  getDashboard: () => api.get(endpoints.companyAdmin.dashboard),
-  getTemplates: () => api.get(endpoints.companyAdmin.templates),
-  getAllWorkReports: (params) => api.get(endpoints.workReport.list, { params }),
-  getWorkReportDetails: (id) => api.get(endpoints.workReport.details(id)),
-  approveWorkReport: (id) => api.patch(endpoints.workReport.approve(id)),
-  getAllInvoices: (params) => api.get(endpoints.companyAdmin.invoices, { params }),
-  sendInvoice: (id) => api.patch(endpoints.companyAdmin.sendInvoice(id)),
-  getInvoiceById: (id) => api.get(endpoints.companyAdmin.invoiceDetails(id)),
-  updateWorkReport: (id, data) => api.put(endpoints.workReport.update(id), data),
+  getDashboard: () => api.get('/api/company-admin/getCompanyAdminDashboard'),
+  getTemplates: () => api.get('/api/company-admin/getTemplates'),
+  getAllWorkReports: (params) => api.get('/api/company-admin/getAllWorkReports', { params }),
+  getWorkReportDetails: (id) => api.get(`/api/company-admin/getWorkReportDetails/${id}`),
+  approveWorkReport: (id) => api.patch(`/api/company-admin/approveWorkReport/${id}`),
+  getAllInvoices: (params) => api.get('/api/company-admin/getAllInvoices', { params }),
+  sendInvoice: (id) => api.patch(`/api/company-admin/sendInvoice/${id}`),
+  getInvoiceById: (id) => api.get(`/api/company-admin/getInvoiceById/${id}`),
+  updateWorkReport: (id, data) => api.put(`/api/company-admin/updateWorkReport/${id}`, data),
+  updateExpenseStatus: (subTaskId, expenseId, data) => api.patch(`/api/company-admin/updateExpenseStatus/${subTaskId}/${expenseId}`, data),
 };

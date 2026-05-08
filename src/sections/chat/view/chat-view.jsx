@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
-import axios, { endpoints } from 'src/utils/axios';
+import { chatApi } from 'src/store/api/chat.api';
 import { useSocketContext } from 'src/auth/context/socket-context';
 import { useSearchParams, useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
@@ -57,7 +57,7 @@ export default function ChatView() {
   // 1. Fetch Chat List
   const fetchChats = useCallback(async () => {
     try {
-      const res = await axios.get(`${endpoints.chat.list}?type=${chatType}`);
+      const res = await chatApi.getChatList(chatType);
       setChats(res.data.data);
     } catch (error) {
       console.error('Error fetching chats:', error);
@@ -69,7 +69,7 @@ export default function ChatView() {
   // 2. Fetch Messages
   const fetchMessages = useCallback(async (chatId, page = 1, limit = 20) => {
     try {
-      const res = await axios.get(`${endpoints.chat.messages(chatId)}?page=${page}&limit=${limit}`);
+      const res = await chatApi.getMessages(chatId, page, limit);
       setMessages(res.data.data); // Assuming backend sorts ascending or we reverse it
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -235,9 +235,7 @@ export default function ChatView() {
 
       // Optimistic update could go here if we had full message structure, 
       // but we'll wait for API response to be safe.
-      const res = await axios.post(endpoints.chat.send, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const res = await chatApi.sendMessage(formData);
 
       const newMessage = res.data.data;
 

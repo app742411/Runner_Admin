@@ -1,64 +1,140 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
 
+import { ROLES } from 'src/config/roles';
 import { groupApi } from 'src/store/api/group.api';
 
 // ----------------------------------------------------------------------
 
-export function useEligibleUsers() {
+export function useEligibleUsers(arg) {
+  const user = useSelector((state) => state.auth.user);
+  const isSuperAdmin = user?.role === ROLES.SUPER_ADMIN;
+
+  const companyId = typeof arg === 'string' ? arg : arg?.companyId;
+  const options = typeof arg === 'object' && arg !== null ? arg : {};
+
   return useQuery({
-    queryKey: ['eligible-users'],
-    queryFn: () => groupApi.getEligibleUsers().then((res) => {
-      const data = res.data?.data || res.data;
-      return Array.isArray(data) ? data : [];
-    }),
+    queryKey: ['eligible-users', companyId],
+    queryFn: () => {
+      if (isSuperAdmin) {
+        if (!companyId) return [];
+        return groupApi.getEligibleUsersByCompany(companyId).then((res) => {
+          const data = res.data?.data || res.data;
+          return Array.isArray(data) ? data : [];
+        });
+      }
+      return groupApi.getEligibleUsers().then((res) => {
+        const data = res.data?.data || res.data;
+        return Array.isArray(data) ? data : [];
+      });
+    },
+    enabled: isSuperAdmin ? !!companyId : true,
+    ...options,
   });
 }
 
-export function useAvailableContracts() {
+export function useAvailableContracts(arg) {
+  const user = useSelector((state) => state.auth.user);
+  const isSuperAdmin = user?.role === ROLES.SUPER_ADMIN;
+
+  const companyId = typeof arg === 'string' ? arg : arg?.companyId;
+  const options = typeof arg === 'object' && arg !== null ? arg : {};
+
   return useQuery({
-    queryKey: ['available-contracts'],
-    queryFn: () => groupApi.getAvailableContracts().then((res) => {
-      const data = res.data?.data || res.data;
-      return Array.isArray(data) ? data : (data?.contracts || []);
-    }),
+    queryKey: ['available-contracts', companyId],
+    queryFn: () => {
+      if (isSuperAdmin) {
+        if (!companyId) return [];
+        return groupApi.getAvailableContractsByCompany(companyId).then((res) => {
+          const data = res.data?.data || res.data;
+          return Array.isArray(data) ? data : (data?.contracts || []);
+        });
+      }
+      return groupApi.getAvailableContracts().then((res) => {
+        const data = res.data?.data || res.data;
+        return Array.isArray(data) ? data : (data?.contracts || []);
+      });
+    },
+    enabled: isSuperAdmin ? !!companyId : true,
+    ...options,
   });
 }
 
-export function useAvailableTasks(contractIds) {
+export function useAvailableTasks(contractIds, companyId) {
+  const user = useSelector((state) => state.auth.user);
+  const isSuperAdmin = user?.role === ROLES.SUPER_ADMIN;
+
   const ids = Array.isArray(contractIds) ? contractIds.join(',') : contractIds;
   return useQuery({
-    queryKey: ['available-tasks', ids],
-    queryFn: () => groupApi.getAvailableTasks(ids).then((res) => {
-      const data = res.data?.data || res.data;
-      return Array.isArray(data) ? data : [];
-    }),
-    enabled: !!ids && ids.length > 0,
+    queryKey: ['available-tasks', ids, companyId],
+    queryFn: () => {
+      if (isSuperAdmin) {
+        if (!companyId || !ids || ids.length === 0) return [];
+        return groupApi.getAvailableTasksByCompany(companyId, ids).then((res) => {
+          const data = res.data?.data || res.data;
+          return Array.isArray(data) ? data : [];
+        });
+      }
+      return groupApi.getAvailableTasks(ids).then((res) => {
+        const data = res.data?.data || res.data;
+        return Array.isArray(data) ? data : [];
+      });
+    },
+    enabled: isSuperAdmin ? (!!ids && ids.length > 0 && !!companyId) : (!!ids && ids.length > 0),
   });
 }
 
-export function useSuggestMembers(contractIds) {
+export function useSuggestMembers(contractIds, companyId) {
+  const user = useSelector((state) => state.auth.user);
+  const isSuperAdmin = user?.role === ROLES.SUPER_ADMIN;
+
   const ids = Array.isArray(contractIds) ? contractIds.join(',') : contractIds;
   return useQuery({
-    queryKey: ['suggest-members', ids],
-    queryFn: () => groupApi.suggestMembers(ids).then((res) => {
-      const data = res.data?.data || res.data;
-      return Array.isArray(data) ? data : [];
-    }),
-    enabled: !!ids && ids.length > 0,
+    queryKey: ['suggest-members', ids, companyId],
+    queryFn: () => {
+      if (isSuperAdmin) {
+        if (!companyId || !ids || ids.length === 0) return [];
+        return groupApi.suggestMembersByCompany(companyId, ids).then((res) => {
+          const data = res.data?.data || res.data;
+          return Array.isArray(data) ? data : [];
+        });
+      }
+      return groupApi.suggestMembers(ids).then((res) => {
+        const data = res.data?.data || res.data;
+        return Array.isArray(data) ? data : [];
+      });
+    },
+    enabled: isSuperAdmin ? (!!ids && ids.length > 0 && !!companyId) : (!!ids && ids.length > 0),
   });
 }
 
 export function useGroups(params) {
+  const user = useSelector((state) => state.auth.user);
+  const isSuperAdmin = user?.role === ROLES.SUPER_ADMIN;
+
   return useQuery({
     queryKey: ['groups', params],
-    queryFn: () => groupApi.getAllGroups(params).then((res) => res.data),
+    queryFn: () => {
+      if (isSuperAdmin) {
+        return groupApi.getAllGroupsSuperAdmin(params).then((res) => res.data);
+      }
+      return groupApi.getAllGroups(params).then((res) => res.data);
+    },
   });
 }
 
 export function useGroup(id, options = {}) {
+  const user = useSelector((state) => state.auth.user);
+  const isSuperAdmin = user?.role === ROLES.SUPER_ADMIN;
+
   return useQuery({
     queryKey: ['group', id],
-    queryFn: () => groupApi.getGroupById(id).then((res) => res.data.data),
+    queryFn: () => {
+      if (isSuperAdmin) {
+        return groupApi.getGroupByIdSuperAdmin(id).then((res) => res.data.data);
+      }
+      return groupApi.getGroupById(id).then((res) => res.data.data);
+    },
     enabled: !!id,
     ...options,
   });

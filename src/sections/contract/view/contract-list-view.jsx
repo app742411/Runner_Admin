@@ -21,7 +21,7 @@ import Box from '@mui/material/Box';
 
 import { useTranslation } from 'react-i18next';
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { useRouter, useSearchParams } from 'src/routes/hooks';
 import { Scrollbar } from 'src/components/scrollbar';
 import { Iconify } from 'src/components/iconify';
 import { SearchNotFound } from 'src/components/search-not-found';
@@ -34,15 +34,23 @@ import { useCompanies, useAllCompanies } from 'src/features/company/useCompanies
 import { ContractTableRow } from '../contract-table-row';
 import { ContractTableToolbar } from '../contract-table-toolbar';
 
+import { ContractNewView } from './contract-new-view';
+
 // ----------------------------------------------------------------------
 
 export function ContractListView() {
   const { t } = useTranslation();
   const theme = useTheme();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const statusParam = searchParams.get('status') || '';
 
   const user = useSelector((state) => state.auth.user);
   const isCompanyAdmin = user?.role === ROLES.COMPANY_ADMIN;
+
+  if (isCompanyAdmin) {
+    return <ContractNewView />;
+  }
 
   const TABLE_HEAD = [
     { id: 'client', label: t('contract.table.client') },
@@ -78,6 +86,7 @@ export function ContractListView() {
     startDate: filters.startDate,
     endDate: filters.endDate,
     company: filters.company === 'all' ? '' : filters.company,
+    status: statusParam,
   });
 
   const { data: companiesData } = useAllCompanies();

@@ -53,16 +53,31 @@
     "user": "👤 Benutzer",
     "dashboard": "Armaturenbrett",
     "company": "Firma",
+    "company_overview": "Firmenübersicht",
     "runners": "Fahrer",
     "task": "Aufgabe",
+    "task_manage": "Aufgabenverwaltung",
+    "task_overview": "Aufgabenübersicht",
+    "task_all": "Alle Aufgaben",
+    "task_pending": "Ausstehende Aufgaben",
+    "task_in_progress": "Laufende Aufgaben",
+    "task_completed": "Abgeschlossene Aufgaben",
+    "task_cancelled": "Abgebrochene Aufgaben",
+    "task_hold": "Zurückgestellte Aufgaben",
     "employee": "Mitarbeiter",
+    "employee_overview": "Mitarbeiterübersicht",
+    "employee_create": "Mitarbeiter anlegen",
+    "employee_list": "Mitarbeiterliste",
     "finance": "Finanzen",
     "documents": "Dokumentenverwaltung",
     "reports": "Berichte",
     "properties": "Objekte",
     "support": "Unterstützung",
     "contract": "Vertrag",
+    "contract_overview": "Vertragsübersicht",
     "subscription": "Abonnement",
+    "subscription_add": "Abonnement hinzufügen",
+    "subscription_list": "Abonnementliste",
     "roles": "Rollenverwaltung",
     "mail": "Postfach",
     "settings": "Einstellungen",
@@ -73,12 +88,22 @@
     "invoice": "Rechnung",
     "employee_payment": "Mitarbeiterzahlungen",
     "group": "Gruppe",
+    "group_manage": "Gruppenverwaltung",
+    "group_overview": "Übersicht",
+    "group_all": "Alle Gruppen",
     "profile": "Profil",
     "calendar": "Kalender",
     "notification": "Benachrichtigung",
     "financial_management": "Finanzmanagement",
     "company_create": "Firma erstellen",
     "company_list": "Firmenliste",
+    "contract_create": "Vertrag erstellen",
+    "contract_all": "Alle Verträge",
+    "contract_pending": "Ausstehende Verträge",
+    "contract_in_progress": "Laufende Verträge",
+    "contract_completed": "Abgeschlossene Verträge",
+    "contract_rejected_cancelled": "Abgelehnte/Stornierte Verträge",
+    "contract_list": "Vertragsliste",
     "company_active": "Aktive Firmen",
     "company_pending": "Ausstehende Firmen",
     "company_status": "Firmenstatus",
@@ -103,7 +128,13 @@
     "invoice": "Rechnung",
     "work_reports": "Arbeitsberichte",
     "employee_payment": "Mitarbeiterzahlung",
-    "employee_payments": "Mitarbeiterzahlungen"
+    "employee_payments": "Mitarbeiterzahlungen",
+    "system_analytics": "📊 System & Analyse",
+    "system_reports": "📈 Systemberichte",
+    "add_expenses": "💸 Ausgaben hinzufügen",
+    "user_activity_reports": "👥 Benutzeraktivitätsberichte",
+    "system_logs": "📋 Systemprotokolle",
+    "custom_reports": "⚙️ Benutzerdefinierte Berichte"
   },
   "finance_dashboard": {
     "title": "Finanzübersicht",
@@ -998,6 +1029,7 @@
     "title": "Vertrag",
     "list": "Vertragsliste",
     "new": "Neuer Vertrag",
+    "create": "Neuen Vertrag erstellen",
     "export": "Exportieren",
     "searchIdOrCompany": "Vertrags-ID oder Firma suchen...",
     "dense": "Kompakt",
@@ -1514,8 +1546,8 @@
     "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
     "signingIn": "Anmeldung...",
     "signIn": "Anmelden",
-    "noAccount": "Sie haben noch kein Konto?",
-    "getStarted": "Jetzt loslegen",
+    "noAccount": "Firma werden?",
+    "getStarted": "Jetzt registrieren",
     "emailRequired": "E-Mail ist erforderlich!",
     "emailInvalid": "E-Mail muss eine gültige E-Mail-Adresse sein!",
     "passwordRequired": "Passwort ist erforderlich!",
@@ -1567,8 +1599,176 @@
       "codeRequired": "Der Code muss 6-stellig sein!"
     }
   },
+  "company": {
+    "stats": {
+      "totalCompanies": "Unternehmen Gesamt",
+      "activeCompanies": "Aktive Unternehmen",
+      "pendingCompanies": "Ausstehende Unternehmen",
+      "premiumSubs": "Abonnierte Unternehmen"
+    },
+    "analytics": {
+      "trends": "Unternehmensregistrierungen",
+      "distribution": "Statusverteilung"
+    },
+    "table": {
+      "recentCompanies": "Aktuelle Unternehmen",
+      "companyName": "Unternehmensname",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "status": "Status",
+      "action": "Aktion",
+      "noData": "Keine Unternehmen gefunden"
+    }
+  },
+  "contract": {
+    "table": {
+      "totalContracts": "Verträge Gesamt",
+      "active": "Aktive Verträge",
+      "pending": "Entwurf / Ausstehend",
+      "completed": "Abgeschlossen",
+      "cancelled": "Abgebrochen",
+      "recentContracts": "Aktuelle Verträge",
+      "contractName": "Vertragsname",
+      "category": "Kategorie",
+      "company": "Unternehmen",
+      "status": "Status",
+      "action": "Aktion",
+      "noData": "Keine Verträge gefunden"
+    },
+    "analytics": {
+      "trends": "Vertragstrends",
+      "distribution": "Vertragsverteilung"
+    }
+  },
+  "group": {
+    "title": "Gruppenliste",
+    "stats": {
+      "totalGroups": "Gruppen Gesamt",
+      "activeGroups": "Aktive Gruppen",
+      "totalMembers": "Mitglieder Gesamt",
+      "groupsWithAdmin": "Admin zugewiesen"
+    },
+    "analytics": {
+      "trends": "Gruppenmitglieder-Trends",
+      "distribution": "Mitgliederverteilung"
+    },
+    "view": {
+      "group": "Gruppe",
+      "dashboard": "Dashboard",
+      "list": "Liste"
+    },
+    "list": {
+      "addGroup": "Gruppe hinzufügen",
+      "export": "Exportieren",
+      "filters": "Filter",
+      "sortBy": "Sortieren nach",
+      "featured": "Hervorgehoben",
+      "newest": "Neueste",
+      "oldest": "Älteste",
+      "search": "Gruppe suchen...",
+      "allCompanies": "Alle Unternehmen"
+    },
+    "table": {
+      "groupName": "Gruppenname",
+      "recentGroups": "Aktuelle Gruppen",
+      "admin": "Gruppenadmin",
+      "membersCount": "Mitgliederanzahl",
+      "contractsCount": "Vertragsanzahl",
+      "noData": "Keine Gruppen gefunden",
+      "company": "Unternehmen",
+      "taskName": "Aufgabenname",
+      "groupAdminName": "Gruppenadministrator",
+      "members": "Mitglieder",
+      "registerDate": "Registrierungsdatum",
+      "action": "Aktion",
+      "actions": "Aktionen",
+      "description": "Beschreibung",
+      "contractNumber": "Vertragsnummer",
+      "totalCost": "Gesamtkosten",
+      "contractStatus": "Vertragsstatus"
+    },
+    "form": {
+      "info": "Gruppeninformationen",
+      "company": "Unternehmen",
+      "editGroup": "Gruppe bearbeiten",
+      "addNewGroup": "Neue Gruppe hinzufügen",
+      "groupName": "Gruppenname",
+      "groupLeader": "Gruppenleiter",
+      "contractName": "Aktueller Vertragsname",
+      "contractList": "Vertragsliste",
+      "taskIds": "Aufgaben",
+      "memberIds": "Mitglieder",
+      "contracts": "Verträge",
+      "tasks": "Aufgaben",
+      "members": "Mitglieder",
+      "description": "Beschreibung",
+      "update": "Aktualisieren",
+      "submit": "Einreichen"
+    },
+    "details": {
+      "errorLoad": "Gruppendetails konnten nicht geladen werden",
+      "title": "Gruppendetails",
+      "details": "Details",
+      "openChat": "Chat öffnen",
+      "noDescription": "Keine Beschreibung",
+      "leader": "Leiter",
+      "totalMembers": "Mitglieder gesamt",
+      "contractInfo": "Vertragsinfo",
+      "taskInfo": "Aufgabeninfo",
+      "members": "Mitglieder",
+      "addMember": "Mitglied hinzufügen",
+      "subTasks": "Teilaufgaben",
+      "none": "Keine",
+      "noTasks": "Noch keine Teilaufgaben zugewiesen",
+      "selectMemberDesc": "Wählen Sie einen Benutzer aus der vorgeschlagenen Liste basierend auf dem Vertrag aus.",
+      "changeLeader": "Gruppenleiter ändern",
+      "changeLeaderDesc": "Wählen Sie einen neuen Leiter für diese Gruppe aus. Diese Person muss ein berechtigter Mitarbeiter sein.",
+      "na": "N/A"
+    },
+    "messages": {
+      "successUpdate": "Gruppe erfolgreich aktualisiert!",
+      "successCreate": "Gruppe erfolgreich erstellt!",
+      "membersAdded": "Mitglieder erfolgreich hinzugefügt",
+      "confirmRemoveMembers": "Sind Sie sicher, dass Sie Mitglieder entfernen möchten?",
+      "confirmRemoveMember": "Sind Sie sicher, dass Sie dieses Mitglied entfernen möchten?",
+      "adminChanged": "Gruppenadministrator erfolgreich geändert"
+    }
+  },
+  "errors": {
+    "onlySuperAdminAllowed": "Nur der Super-Admin kann auf diese Route zugreifen",
+    "noAvailableContracts": "Keine verfügbaren Verträge gefunden",
+    "failedToFetchContracts": "Fehler beim Laden der Verträge",
+    "failedToFetchTasks": "Fehler beim Laden der Aufgaben",
+    "noAvailableTasks": "Keine verfügbaren Aufgaben gefunden",
+    "onlyCompanyAdminAllowed": "Nur der Unternehmens-Admin kann auf diese Route zugreifen",
+    "failedToFetchUsers": "Fehler beim Laden der Benutzer",
+    "failedToCreateGroup": "Fehler beim Erstellen der Gruppe",
+    "tasksAlreadyAssigned": "Aufgaben sind bereits einer anderen Gruppe zugewiesen",
+    "invalidTasksForContracts": "Ungültige Aufgaben für die ausgewählten Verträge ausgewählt",
+    "invalidMembers": "Ungültige Mitglieder ausgewählt",
+    "groupAdminNotFound": "Gruppenadministrator nicht gefunden",
+    "contractOrTaskRequired": "Mindestens ein Vertrag oder eine Aufgabe ist erforderlich",
+    "nameAndGroupAdminRequired": "Gruppenname und Gruppenadministrator sind erforderlich"
+  },
   "pagination": {
     "rowsPerPage": "Zeilen pro Seite:",
     "of": "von"
+  },
+  "system": {
+    "reports": {
+      "title": "Systemberichte"
+    },
+    "expenses": {
+      "title": "Ausgaben-Tracker"
+    },
+    "activity": {
+      "title": "Benutzeraktivitätsberichte"
+    },
+    "logs": {
+      "title": "Systemprotokolle"
+    },
+    "custom_reports": {
+      "title": "Benutzerdefinierter Bericht-Builder"
+    }
   }
 }

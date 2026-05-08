@@ -1,0 +1,1 @@
+import{j as r,P as e,T as t,B as i,_ as n}from"./index-BNVWeRR5.js";function d({title:s="Blank"}){return r.jsxs(e,{maxWidth:"xl",children:[r.jsxs(t,{variant:"h4",children:[" ",s," "]}),r.jsx(i,{sx:{mt:5,width:1,height:320,borderRadius:2,bgcolor:a=>n(a.vars.palette.grey["500Channel"],.04),border:a=>`dashed 1px ${a.vars.palette.divider}`}})]})}export{d as B};

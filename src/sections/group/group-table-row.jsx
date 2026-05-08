@@ -15,7 +15,7 @@ import { Iconify } from 'src/components/iconify';
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 import { CustomPopover, usePopover } from 'src/components/custom-popover';
-import axios, { endpoints } from 'src/utils/axios';
+import { chatApi } from 'src/store/api/chat.api';
 import toast from 'react-hot-toast';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
@@ -41,7 +41,7 @@ export function GroupTableRow({ row, selected, onSelectRow, onDeleteRow, onEditR
   const handleOpenChat = async (e) => {
     e.stopPropagation();
     try {
-      const res = await axios.post(endpoints.chat.init, {
+      const res = await chatApi.initChat({
         type: 'group',
         groupId: _id,
       });
@@ -73,6 +73,10 @@ export function GroupTableRow({ row, selected, onSelectRow, onDeleteRow, onEditR
 
         {isGroupAdminView ? (
           <>
+            <TableCell sx={{ whiteSpace: 'nowrap' }}>
+              {row.company?.companyName || row.companyName || row.company?.name || row.companyId?.companyName || '-'}
+            </TableCell>
+
             <TableCell sx={{ minWidth: 240 }}>
               <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
                 {description || '-'}
@@ -106,6 +110,10 @@ export function GroupTableRow({ row, selected, onSelectRow, onDeleteRow, onEditR
           </>
         ) : (
           <>
+            <TableCell sx={{ whiteSpace: 'nowrap' }}>
+              {row.company?.companyName || row.companyName || row.company?.name || row.companyId?.companyName || '-'}
+            </TableCell>
+
             <TableCell sx={{ whiteSpace: 'nowrap' }}>
               {task?.taskName || '-'}
             </TableCell>

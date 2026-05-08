@@ -1,4 +1,4 @@
-import api from './axios';
+import api from 'src/utils/axios';
 
 export const taskApi = {
   getAllTasksAdmin: (params) => api.get('/api/admin/getAllTask', { params }),

@@ -27,6 +27,7 @@ export const paths = {
     three: `${ROOTS.DASHBOARD}/three`,
     company: {
       root: `${ROOTS.DASHBOARD}/company`,
+      overview: `${ROOTS.DASHBOARD}/company/overview`,
       new: `${ROOTS.DASHBOARD}/company/new`,
       list: `${ROOTS.DASHBOARD}/company/list`,
       edit: (id) => `${ROOTS.DASHBOARD}/company/${id}/edit`,
@@ -36,6 +37,7 @@ export const paths = {
     },
     group: {
       root: `${ROOTS.DASHBOARD}/group`,
+      overview: `${ROOTS.DASHBOARD}/group/overview`,
       new: `${ROOTS.DASHBOARD}/group/new`,
       edit: (id) => `${ROOTS.DASHBOARD}/group/${id}/edit`,
       list: `${ROOTS.DASHBOARD}/group/list`,
@@ -47,12 +49,25 @@ export const paths = {
     contract: {
       root: `${ROOTS.DASHBOARD}/contract`,
       list: `${ROOTS.DASHBOARD}/contract/list`,
+      overview: `${ROOTS.DASHBOARD}/contract/overview`,
       new: `${ROOTS.DASHBOARD}/contract/new`,
+      all: `${ROOTS.DASHBOARD}/contract/list`,
+      pending: `${ROOTS.DASHBOARD}/contract/list?status=draft`,
+      inProgress: `${ROOTS.DASHBOARD}/contract/list?status=active`,
+      completed: `${ROOTS.DASHBOARD}/contract/list?status=completed`,
+      rejected: `${ROOTS.DASHBOARD}/contract/list?status=cancelled`,
       details: (id) => `${ROOTS.DASHBOARD}/contract/details/${id}`,
     },
     task: {
       root: `${ROOTS.DASHBOARD}/task`,
       list: `${ROOTS.DASHBOARD}/task/list`,
+      overview: `${ROOTS.DASHBOARD}/task/list`,
+      all: `${ROOTS.DASHBOARD}/task/list?status=all`,
+      pending: `${ROOTS.DASHBOARD}/task/list?status=pending`,
+      inProgress: `${ROOTS.DASHBOARD}/task/list?status=in_progress`,
+      completed: `${ROOTS.DASHBOARD}/task/list?status=completed`,
+      cancelled: `${ROOTS.DASHBOARD}/task/list?status=cancelled`,
+      hold: `${ROOTS.DASHBOARD}/task/list?status=hold`,
       details: (id) => `${ROOTS.DASHBOARD}/task/details/${id}`,
     },
     employee: {
@@ -132,6 +147,14 @@ export const paths = {
       list: `${ROOTS.DASHBOARD}/support/list`,
       new: `${ROOTS.DASHBOARD}/support/new`,
       details: (id) => `${ROOTS.DASHBOARD}/support/details/${id}`,
+    },
+    systemAnalytics: {
+      root: `${ROOTS.DASHBOARD}/system-analytics`,
+      reports: `${ROOTS.DASHBOARD}/system-analytics/reports`,
+      expenses: `${ROOTS.DASHBOARD}/system-analytics/expenses`,
+      activity: `${ROOTS.DASHBOARD}/system-analytics/activity`,
+      logs: `${ROOTS.DASHBOARD}/system-analytics/logs`,
+      custom: `${ROOTS.DASHBOARD}/system-analytics/custom`,
     },
   },
 };

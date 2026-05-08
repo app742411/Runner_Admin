@@ -44,8 +44,8 @@ export default function SuperAdminView() {
           </Typography>
 
           {/* ─── ROW 1: Stat Cards ─── */}
-          <Grid container spacing={2.5}>
-            <Grid xs={12} md={2}>
+          <Grid container spacing={2}>
+            <Grid xs={6} sm={4} md={2}>
               <StatCard
                 title={t('dashboard.totalContract')}
                 total={fNumber(cards.totalContracts || 0)}
@@ -55,7 +55,7 @@ export default function SuperAdminView() {
                 sparkData={SPARK_DATA}
               />
             </Grid>
-            <Grid xs={12} md={2}>
+            <Grid xs={6} sm={4} md={2}>
               <StatCard
                 title={t('dashboard.totalCompanies')}
                 total={fNumber(cards.totalCompanies || 0)}
@@ -65,7 +65,7 @@ export default function SuperAdminView() {
                 sparkData={SPARK_DATA}
               />
             </Grid>
-            <Grid xs={12} md={2}>
+            <Grid xs={6} sm={4} md={2}>
               <StatCard
                 title={t('dashboard.expenditure')}
                 total={fCurrency(cards.totalExpense || 0)}
@@ -75,7 +75,7 @@ export default function SuperAdminView() {
                 sparkData={SPARK_DATA}
               />
             </Grid>
-            <Grid xs={12} md={2}>
+            <Grid xs={6} sm={4} md={2}>
               <StatCard
                 title={t('dashboard.netProfitLoss')}
                 total={fCurrency(cards.netProfit || 0)}
@@ -85,7 +85,7 @@ export default function SuperAdminView() {
                 sparkData={SPARK_DATA}
               />
             </Grid>
-            <Grid xs={12} md={2}>
+            <Grid xs={6} sm={4} md={2}>
               <StatCard
                 title={t('dashboard.totalEmployee')}
                 total={fNumber(cards.totalEmployees || 0)}
@@ -95,7 +95,7 @@ export default function SuperAdminView() {
                 sparkData={SPARK_DATA}
               />
             </Grid>
-            <Grid xs={12} md={2}>
+            <Grid xs={6} sm={4} md={2}>
               <StatCard
                 title={t('dashboard.totalTask')}
                 total={fNumber(cards.totalTasks || 0)}

@@ -53,9 +53,21 @@
     "user": "👤 User",
     "dashboard": "Dashboard",
     "company": "Company",
+    "company_overview": "Company Overview",
     "runners": "Runner’s User",
     "task": "Task",
+    "task_manage": "Task Management",
+    "task_overview": "Task Overview",
+    "task_all": "All Task",
+    "task_pending": "Pending Task",
+    "task_in_progress": "In Progress Task",
+    "task_completed": "Completed Task",
+    "task_cancelled": "Cancelled Task",
+    "task_hold": "Hold Task",
     "employee": "Employee",
+    "employee_overview": "Employee Overview",
+    "employee_create": "Create Employee",
+    "employee_list": "Employee List",
     "finance": "Financial",
     "financial_management": "Financial Management",
     "documents": "Document Management",
@@ -63,7 +75,10 @@
     "properties": "Property List",
     "support": "Support",
     "contract": "Contract",
+    "contract_overview": "Contract Overview",
     "subscription": "Subscription",
+    "subscription_add": "Add Subscription",
+    "subscription_list": "Subscription List",
     "roles": "Roles Management",
     "mail": "Mail",
     "settings": "Settings",
@@ -74,11 +89,21 @@
     "invoice": "Invoice",
     "employee_payment": "Employee Payments",
     "group": "Group",
+    "group_manage": "Group Management",
+    "group_overview": "Overview",
+    "group_all": "All Group",
     "profile": "Profile",
     "calendar": "Calendar",
     "notification": "Notification",
     "company_create": "Create Company",
     "company_list": "Company List",
+    "contract_create": "Create Contract",
+    "contract_all": "All Contract",
+    "contract_pending": "Pending Contract",
+    "contract_in_progress": "In Progress Contract",
+    "contract_completed": "Completed Contract",
+    "contract_rejected_cancelled": "Reject/Cancelled Contract",
+    "contract_list": "Contract List",
     "company_active": "Active Company",
     "company_pending": "Pending Company",
     "company_status": "Company Status",
@@ -103,7 +128,13 @@
     "invoice": "Invoice",
     "work_reports": "Work Reports",
     "employee_payment": "Employee Payment",
-    "employee_payments": "Employee Payments"
+    "employee_payments": "Employee Payments",
+    "system_analytics": "📊 System & Analytics",
+    "system_reports": "📈 System Reports",
+    "add_expenses": "💸 Add Expenses",
+    "user_activity_reports": "👥 User Activity Reports",
+    "system_logs": "📋 System Logs",
+    "custom_reports": "⚙️ Custom Reports"
   },
   "finance_dashboard": {
     "title": "Finance Overview",
@@ -1014,6 +1045,7 @@
     "title": "Contract",
     "list": "Contract List",
     "new": "New Contract",
+    "create": "Create a new contract",
     "export": "Export",
     "searchIdOrCompany": "Search contract ID or company...",
     "dense": "Dense",
@@ -1530,7 +1562,7 @@
     "passwordPlaceholder": "Enter your password",
     "signingIn": "Signing in...",
     "signIn": "Sign in",
-    "noAccount": "Don't have an account?",
+    "noAccount": "Become a Company?",
     "getStarted": "Get started",
     "emailRequired": "Email is required!",
     "emailInvalid": "Email must be a valid email address!",
@@ -1583,8 +1615,176 @@
       "codeRequired": "Code must be 6 digits!"
     }
   },
+  "company": {
+    "stats": {
+      "totalCompanies": "Total Companies",
+      "activeCompanies": "Active Companies",
+      "pendingCompanies": "Pending Companies",
+      "premiumSubs": "Subscribed Companies"
+    },
+    "analytics": {
+      "trends": "Company Registrations",
+      "distribution": "Status Share"
+    },
+    "table": {
+      "recentCompanies": "Recent Companies",
+      "companyName": "Company Name",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "action": "Action",
+      "noData": "No companies found"
+    }
+  },
+  "contract": {
+    "table": {
+      "totalContracts": "Total Contracts",
+      "active": "Active Contracts",
+      "pending": "Draft / Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "recentContracts": "Recent Contracts",
+      "contractName": "Contract Name",
+      "category": "Category",
+      "company": "Company",
+      "status": "Status",
+      "action": "Action",
+      "noData": "No contracts found"
+    },
+    "analytics": {
+      "trends": "Contract Trends",
+      "distribution": "Contract Distribution"
+    }
+  },
+  "group": {
+    "title": "Group List",
+    "stats": {
+      "totalGroups": "Total Groups",
+      "activeGroups": "Active Groups",
+      "totalMembers": "Total Members",
+      "groupsWithAdmin": "Admin Assigned"
+    },
+    "analytics": {
+      "trends": "Group Member Trends",
+      "distribution": "Member Distribution"
+    },
+    "view": {
+      "group": "Group",
+      "dashboard": "Dashboard",
+      "list": "List"
+    },
+    "list": {
+      "addGroup": "Add Group",
+      "export": "Export",
+      "filters": "Filters",
+      "sortBy": "Sort by",
+      "featured": "Featured",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "search": "Search group...",
+      "allCompanies": "All Companies"
+    },
+    "table": {
+      "groupName": "Group Name",
+      "recentGroups": "Recent Groups",
+      "admin": "Group Admin",
+      "membersCount": "Members Count",
+      "contractsCount": "Contracts Count",
+      "noData": "No groups found",
+      "company": "Company",
+      "taskName": "Task Name",
+      "groupAdminName": "Group Admin",
+      "members": "Members",
+      "registerDate": "Registration Date",
+      "action": "Action",
+      "actions": "Actions",
+      "description": "Description",
+      "contractNumber": "Contract Number",
+      "totalCost": "Total Cost",
+      "contractStatus": "Contract Status"
+    },
+    "form": {
+      "info": "Group Information",
+      "company": "Company",
+      "editGroup": "Edit Group",
+      "addNewGroup": "Add New Group",
+      "groupName": "Group Name",
+      "groupLeader": "Group Leader",
+      "contractName": "Current Contract Name",
+      "contractList": "Contract List",
+      "taskIds": "Tasks",
+      "memberIds": "Members",
+      "contracts": "Contracts",
+      "tasks": "Tasks",
+      "members": "Members",
+      "description": "Description",
+      "update": "Update",
+      "submit": "Submit"
+    },
+    "details": {
+      "errorLoad": "Failed to load group details",
+      "title": "Group Details",
+      "details": "Details",
+      "openChat": "Open Chat",
+      "noDescription": "No description",
+      "leader": "Leader",
+      "totalMembers": "Total Members",
+      "contractInfo": "Contract Info",
+      "taskInfo": "Task Info",
+      "members": "Members",
+      "addMember": "Add Member",
+      "subTasks": "Subtasks",
+      "none": "None",
+      "noTasks": "No subtasks assigned yet",
+      "selectMemberDesc": "Select a user from the suggested list based on the contract.",
+      "changeLeader": "Change Group Leader",
+      "changeLeaderDesc": "Select a new leader for this group. This person must be an eligible employee.",
+      "na": "N/A"
+    },
+    "messages": {
+      "successUpdate": "Group updated successfully!",
+      "successCreate": "Group created successfully!",
+      "membersAdded": "Members added successfully",
+      "confirmRemoveMembers": "Are you sure you want to remove members?",
+      "confirmRemoveMember": "Are you sure you want to remove this member?",
+      "adminChanged": "Group admin changed successfully"
+    }
+  },
+  "errors": {
+    "onlySuperAdminAllowed": "Only super admin can access this route",
+    "noAvailableContracts": "No available contracts found",
+    "failedToFetchContracts": "Failed to fetch contracts",
+    "failedToFetchTasks": "Failed to fetch tasks",
+    "noAvailableTasks": "No available tasks found",
+    "onlyCompanyAdminAllowed": "Only company admin can access this route",
+    "failedToFetchUsers": "Failed to fetch users",
+    "failedToCreateGroup": "Failed to create group",
+    "tasksAlreadyAssigned": "Tasks are already assigned to another group",
+    "invalidTasksForContracts": "Invalid tasks selected for the chosen contracts",
+    "invalidMembers": "Invalid members selected",
+    "groupAdminNotFound": "Group administrator not found",
+    "contractOrTaskRequired": "At least one contract or task is required",
+    "nameAndGroupAdminRequired": "Group name and group administrator are required"
+  },
   "pagination": {
     "rowsPerPage": "Rows per page:",
     "of": "of"
+  },
+  "system": {
+    "reports": {
+      "title": "System Reports"
+    },
+    "expenses": {
+      "title": "Expenses Tracker"
+    },
+    "activity": {
+      "title": "User Activity Reports"
+    },
+    "logs": {
+      "title": "System Logs"
+    },
+    "custom_reports": {
+      "title": "Custom Reports Builder"
+    }
   }
 }

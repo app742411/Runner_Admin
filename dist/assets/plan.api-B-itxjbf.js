@@ -1,0 +1,1 @@
+import{a3 as e}from"./index-BNVWeRR5.js";const p={getAllPlans:a=>e.get("/api/plan/getAllPlans",{params:a}),createPlan:a=>e.post("/api/plan/create",a),togglePlanStatus:a=>e.patch(`/api/plan/toggle-status/${a}`),deletePlan:a=>e.delete(`/api/plan/delete/${a}`),purchasePlan:a=>e.post("/api/plan/purchase-plan",a)};export{p};

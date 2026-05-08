@@ -1,4 +1,4 @@
-import api from './axios';
+import api from 'src/utils/axios';
 
 export const companyApi = {
   list: (params) => api.get('/api/admin/list-company', { params }),

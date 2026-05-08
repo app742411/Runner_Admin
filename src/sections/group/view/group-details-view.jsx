@@ -51,6 +51,7 @@ import {
 import { useAssignUsers, useRemoveUsers } from 'src/features/task/useTasks';
 import { fCurrency } from 'src/utils/format-number';
 import { fDateTime } from 'src/utils/format-time';
+import { chatApi } from 'src/store/api/chat.api';
 
 // ----------------------------------------------------------------------
 
@@ -73,14 +74,19 @@ export function GroupDetailsView({ id }) {
 
   const { mutateAsync: addMember } = useAddGroupMember();
   const { mutateAsync: removeMember } = useRemoveGroupMember();
+  const groupCompanyId = groupData?.companyId || groupData?.company?._id || groupData?.company;
+
   const { data: suggestedMembers } = useSuggestMembers(
     (isCompanyAdmin && (groupData?.contract?._id || groupData?.contract?.id)) ? (groupData?.contract?._id || groupData?.contract?.id) : null,
-    { enabled: isCompanyAdmin && !!(groupData?.contract?._id || groupData?.contract?.id) }
+    groupCompanyId
   );
 
   const [openChangeAdmin, setOpenChangeAdmin] = useState(false);
   const [selectedNewAdmin, setSelectedNewAdmin] = useState(null);
-  const { data: eligibleUsers } = useEligibleUsers({ enabled: isCompanyAdmin });
+  const { data: eligibleUsers } = useEligibleUsers({
+    companyId: groupCompanyId,
+    enabled: isCompanyAdmin,
+  });
   const { mutateAsync: changeAdmin } = useChangeGroupAdmin();
 
   // Subtask Assignment
@@ -173,7 +179,7 @@ export function GroupDetailsView({ id }) {
 
   const handleOpenChat = async () => {
     try {
-      const res = await axios.post(endpoints.chat.init, {
+      const res = await chatApi.initChat({
         type: 'group',
         groupId: id,
       });

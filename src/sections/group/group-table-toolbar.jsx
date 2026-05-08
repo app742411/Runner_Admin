@@ -13,7 +13,7 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export function GroupTableToolbar({ filters, onFilters }) {
+export function GroupTableToolbar({ filters, onFilters, isSuperAdmin, companyOptions = [] }) {
   const { t } = useTranslation();
 
   const handleFilterSearch = useCallback(
@@ -30,6 +30,39 @@ export function GroupTableToolbar({ filters, onFilters }) {
       direction={{ xs: 'column', md: 'row' }}
       sx={{ p: 2.5, pr: { xs: 2.5, md: 1 } }}
     >
+      {isSuperAdmin && (
+        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 240 } }}>
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'text.disabled',
+              position: 'absolute',
+              top: -8,
+              left: 14,
+              zIndex: 1,
+              px: 1,
+              bgcolor: 'background.paper',
+            }}
+          >
+            {t('group.table.company') || 'Company'}
+          </Typography>
+          <Select
+            value={filters.companyId || 'all'}
+            onChange={(event) => onFilters('companyId', event.target.value)}
+          >
+            <MenuItem value="all">{t('group.list.allCompanies') || 'All Companies'}</MenuItem>
+            {companyOptions.map((comp) => {
+              const compVal = comp.companyId || comp._id || comp.id;
+              return (
+                <MenuItem key={compVal} value={compVal}>
+                  {comp.companyName || comp.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      )}
+
       <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
         <Typography
           variant="caption"
